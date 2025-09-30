@@ -2,8 +2,8 @@ function App() {
 
   return (
     <>
-      <div>
-          Hello World!
+      <div className="text-3xl font-bold underline">
+        Hello World!
       </div>
     </>
   )
