@@ -1,0 +1,14 @@
+@font-face {
+    font-family: Inter;
+    src: url('./fonts/Inter.ttf') format('truetype');
+}
+
+html {
+    height: 100%;
+    font-family: Inter, sans-serif;
+}
+
+body {
+    background-color: #fafafa;
+    height: 100%;
+}
