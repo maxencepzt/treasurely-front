@@ -19,6 +19,7 @@ function Login() {
         console.log("Login successful:", json);
         console.log("Token:", json.token);
 
+        setError(null);
         setIsLoading(false);
       }).finally(() => {
         setIsLoading(false);
