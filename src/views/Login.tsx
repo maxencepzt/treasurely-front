@@ -1,61 +1,33 @@
-import { useState, FormEvent } from "react";
+import { useState } from 'react';
+import { Loading, LoginForm } from '../components';
+import { login } from '../services/api/login.ts';
 
 function Login() {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
+  function handleSubmit(username: string, password: string) {
+    setIsLoading(true);
+
+    login(username, password)
+      .then((json) => {
+        if (json.code && json.message) {
+          setError(json.message);
+          setIsLoading(false);
+          return;
+        }
+
+        console.log("Login successful:", json);
+        console.log("Token:", json.token);
+
+        setIsLoading(false);
+      });
+  }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      method="post"
-      className="bg-white flex flex-col p-6 sm:p-8 border border-gray-300 rounded-2xl shadow-lg gap-4"
-    >
-      <h1 className="text-3xl font-bold">Connexion</h1>
-
-      <div className="text-red-600 text-sm">Test</div>
-
-      <label htmlFor="username" className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Pseudonyme</span>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          autoComplete="username"
-          required
-          autoFocus
-          placeholder="Pseudonyme"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-green-700"
-        />
-      </label>
-
-      <label htmlFor="password" className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Mot de passe</span>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          autoComplete="current-password"
-          required
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-green-700"
-        />
-      </label>
-
-      <button
-        type="submit"
-        className="px-4 py-2 rounded-lg bg-green-800 text-white text-base font-medium cursor-pointer hover:bg-green-900 transition-colors"
-      >
-        Se connecter
-      </button>
-    </form>
+    <>
+      {isLoading ? (<Loading/>) : (<LoginForm onSubmit={handleSubmit} error={error}/>)}
+    </>
   );
 }
 
