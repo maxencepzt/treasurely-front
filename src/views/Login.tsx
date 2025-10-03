@@ -13,13 +13,14 @@ function Login() {
       .then((json) => {
         if (json.code && json.message) {
           setError(json.message);
-          setIsLoading(false);
           return;
         }
 
         console.log("Login successful:", json);
         console.log("Token:", json.token);
 
+        setIsLoading(false);
+      }).finally(() => {
         setIsLoading(false);
       });
   }
