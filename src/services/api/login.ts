@@ -8,7 +8,7 @@ type loginResponse = {
 
 export async function login(username: string, password: string): Promise<loginResponse>
 {
-  const response = await fetch(`${BASE_URL}/auth`, {
+  const response = await fetch(`${BASE_URL}/api/auth`, {
     method: "POST",
     body: JSON.stringify({ nickname: username, password }),
     headers: {
