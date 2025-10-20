@@ -1,8 +1,10 @@
 import { useState, FormEvent, useCallback } from 'react';
+import { type SerializedError } from '@reduxjs/toolkit';
+import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 type loginFormProps = {
   onSubmit: (username: string, password: string) => void;
-  error?: string | null;
+  error?: FetchBaseQueryError | SerializedError;
 }
 
 function LoginForm ({onSubmit, error}: loginFormProps) {
@@ -22,7 +24,7 @@ function LoginForm ({onSubmit, error}: loginFormProps) {
     >
       <h1 className="text-3xl font-bold">Connexion</h1>
 
-      {error && (<div className="text-red-600 text-sm">{error}</div>)}
+      {error && (<div className="text-red-600 text-sm">{error as string}</div>)}
 
       <label htmlFor="username" className="flex flex-col gap-1">
         <span className="text-sm font-medium">Pseudo</span>

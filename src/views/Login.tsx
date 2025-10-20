@@ -1,30 +1,24 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Loading, LoginForm } from '../components';
-import { login } from '../services/api/login.ts';
+import { useLoginMutation } from '../store/slices/api';
 
 function Login() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loginPost, { data, isLoading, error }] = useLoginMutation();
 
-  function handleSubmit(username: string, password: string) {
-    setIsLoading(true);
-
-    login(username, password)
-      .then((json) => {
-        if (json.code && json.message) {
-          setError(json.message);
-          return;
-        }
-
-        console.log("Login successful:", json);
-        console.log("Token:", json.token);
-
-        setError(null);
-        setIsLoading(false);
-      }).finally(() => {
-        setIsLoading(false);
-      });
+  async function handleSubmit(username: string, password: string) {
+    try {
+      await loginPost({ nickname: username, password }).unwrap();
+    } catch (error) {
+      console.error('Failed to login:', error);
+    }
   }
+
+  useEffect(() => {
+    if (data?.token) {
+      console.log(data?.token);
+      console.log(data);
+    }
+  }, [data]);
 
   return (
     <>
