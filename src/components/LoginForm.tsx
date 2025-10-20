@@ -25,7 +25,7 @@ function LoginForm ({onSubmit, error}: loginFormProps) {
       {error && (<div className="text-red-600 text-sm">{error}</div>)}
 
       <label htmlFor="username" className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Pseudonyme</span>
+        <span className="text-sm font-medium">Pseudo</span>
         <input
           type="text"
           id="username"
@@ -33,10 +33,10 @@ function LoginForm ({onSubmit, error}: loginFormProps) {
           autoComplete="username"
           required
           autoFocus
-          placeholder="Pseudonyme"
+          placeholder="Pseudo"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-green-700"
+          className="text-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-700"
         />
       </label>
 
@@ -51,7 +51,7 @@ function LoginForm ({onSubmit, error}: loginFormProps) {
           placeholder="Mot de passe"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-green-700"
+          className="text-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-700"
         />
       </label>
 
