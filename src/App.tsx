@@ -3,7 +3,6 @@ import { Provider as StoreProvider } from "react-redux";
 import store from "./store";
 
 function App() {
-
   return (
     <StoreProvider store={store}>
       <div className="flex justify-center items-center h-screen m-0 bg-gray-50">
