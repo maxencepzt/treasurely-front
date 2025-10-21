@@ -1,6 +1,7 @@
 import { useState, FormEvent, useCallback } from 'react';
 import { type SerializedError } from '@reduxjs/toolkit';
 import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { getErrorMessage } from '../store/slices/api';
 
 type loginFormProps = {
   onSubmit: (username: string, password: string) => void;
@@ -16,22 +17,6 @@ function LoginForm ({onSubmit, error}: loginFormProps) {
     onSubmit?.(username, password);
   }, [onSubmit, username, password]);
 
-  const getErrorMessage = () => {
-    if (!error) return null;
-
-    if ('status' in error) {
-      // FetchBaseQueryError
-      if ('data' in error && typeof error.data === 'object' && error.data !== null) {
-        const data = error.data as { message?: string };
-        return data.message || `Erreur ${error.status}`;
-      }
-      return `Erreur ${error.status}`;
-    }
-
-    // SerializedError
-    return error.message || 'Une erreur est survenue';
-  };
-
   return (
     <form
       onSubmit={handleSubmit}
@@ -40,7 +25,7 @@ function LoginForm ({onSubmit, error}: loginFormProps) {
     >
       <h1 className="text-3xl font-bold">Connexion</h1>
 
-      {error && (<div className="text-red-600 text-sm">{getErrorMessage()}</div>)}
+      {error && (<div className="text-red-600 text-sm">{getErrorMessage(error)}</div>)}
 
       <label htmlFor="username" className="flex flex-col gap-1">
         <span className="text-sm font-medium">Pseudo</span>
