@@ -9,6 +9,8 @@ function UploadImage() {
   async function handleSubmit() {
     try {
       await userProfilePictureDelete(null).unwrap();
+
+      window.location.reload();
     } catch (error) {
       console.error('Failed to delete profile picture:', error);
     }
@@ -19,6 +21,8 @@ function UploadImage() {
 
     try {
       await uploadImagePost(formData).unwrap();
+
+      window.location.reload();
     } catch (error) {
       console.error('Failed to upload image:', error);
     }
