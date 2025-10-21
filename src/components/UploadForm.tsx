@@ -4,6 +4,7 @@ import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImage, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { getErrorMessage } from '../store/slices/api';
+import UserProfilePicture from './UserProfilePicture';
 
 type uploadFormProps = {
   onSubmit: () => void;
@@ -30,7 +31,7 @@ function UploadForm ({onSubmit, onChange, error}: uploadFormProps) {
     >
       <h1 className="text-3xl font-bold">Télécharger une photo de profil</h1>
 
-      <img src="/user_profile_picture_default.png" alt="Photo de profil" />
+      <UserProfilePicture/>
 
       {error && (<div className="text-red-600 text-sm">{getErrorMessage(error)}</div>)}
 
