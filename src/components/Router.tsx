@@ -1,14 +1,16 @@
-import { Route, Switch } from 'wouter';
+import { BrowserRouter, Routes, Route } from "react-router";
 import { Index, Login, NotFound } from '../views';
 
 function Router() {
   return(
-    <Switch>
-      <Route path="/" component={Index}></Route>
-      <Route path="/login" component={Login}></Route>
+    <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<Index/>}></Route>
+            <Route path="/login" element={<Login/>}></Route>
 
-      <Route component={NotFound} />
-    </Switch>
+            <Route path="*" element={<NotFound/>} />
+        </Routes>
+    </BrowserRouter>
   )
 }
 
