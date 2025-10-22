@@ -1,10 +1,14 @@
 import { useEffect } from 'react';
 
 import { Loading, LoginForm } from '../components';
-import { useLoginMutation } from '../store/slices/api';
+import { useGetAuthentifiedUserQuery, useLoginMutation } from '../store/slices/api';
+import { setCredentials } from '../store/slices/authSlice';
+import { useDispatch } from 'react-redux';
 
 function Login() {
+  const dispatch = useDispatch();
   const [loginPost, { data, isLoading, error }] = useLoginMutation();
+  const { data: userData, error: userError } = useGetAuthentifiedUserQuery(null);
 
   async function handleSubmit(username: string, password: string) {
     try {
@@ -15,12 +19,13 @@ function Login() {
   }
 
   useEffect(() => {
-    if (data?.token) {
-      console.log(data?.token);
-      console.log(data);
     if (data?.token && data?.refresh_token) {
+      dispatch(setCredentials({ token: data.token, refreshToken: data.refresh_token }));
+
+      console.log(userData);
+      console.log(userError);
     }
-  }, [data]);
+  }, [data, dispatch, userData, userError]);
 
   return (
     <>
