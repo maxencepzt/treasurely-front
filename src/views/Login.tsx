@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 
 import { Loading, LoginForm } from '../components';
-import { useGetAuthentifiedUserQuery, useLoginMutation } from '../store/slices/api';
+import { useLoginMutation } from '../store/slices/api';
 import { setCredentials } from '../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 function Login() {
   const dispatch = useDispatch();
   const [loginPost, { data, isLoading, error }] = useLoginMutation();
-  const { data: userData, error: userError } = useGetAuthentifiedUserQuery(null);
+  const navigate = useNavigate();
 
   async function handleSubmit(username: string, password: string) {
     try {
@@ -22,10 +23,9 @@ function Login() {
     if (data?.token && data?.refresh_token) {
       dispatch(setCredentials({ token: data.token, refreshToken: data.refresh_token }));
 
-      console.log(userData);
-      console.log(userError);
+      navigate('/');
     }
-  }, [data, dispatch, userData, userError]);
+  }, [data, dispatch]);
 
   return (
     <>
