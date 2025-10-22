@@ -33,7 +33,7 @@ const api = createApi({
     getAuthentifiedUser: build.query<user, null>({
       query: () => 'me',
     }),
-    login: build.mutation<{ token: string; refreshToken: string }, { nickname: string; password: string }>({
+    login: build.mutation<{ token: string; refresh_token: string }, { nickname: string; password: string }>({
       query: ({ nickname, password }) => ({
         url: 'auth',
         method: 'POST',

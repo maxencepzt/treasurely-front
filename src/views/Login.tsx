@@ -18,6 +18,7 @@ function Login() {
     if (data?.token) {
       console.log(data?.token);
       console.log(data);
+    if (data?.token && data?.refresh_token) {
     }
   }, [data]);
 
