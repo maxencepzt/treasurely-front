@@ -1,2 +1,3 @@
 import api from "./api";
-export { api };
+import authSlice from './authSlice.ts';
+export { api, authSlice };
