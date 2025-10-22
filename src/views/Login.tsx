@@ -21,7 +21,7 @@ function Login() {
 
   useEffect(() => {
     if (data?.token && data?.refresh_token) {
-      dispatch(setCredentials({ token: data.token, refreshToken: data.refresh_token }));
+      dispatch(setCredentials({ token: data.token, refresh_token: data.refresh_token }));
 
       navigate('/');
     }

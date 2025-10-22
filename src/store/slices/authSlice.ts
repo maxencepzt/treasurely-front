@@ -12,13 +12,13 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ token: string; refreshToken: string }>) => {
+    setCredentials: (state, action: PayloadAction<{ token: string; refresh_token: string }>) => {
       state.token = action.payload.token;
-      localStorage.setItem('refreshToken', action.payload.refreshToken);
+      localStorage.setItem('refresh_token', action.payload.refresh_token);
     },
     logout: (state) => {
       state.token = null;
-      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('refresh_token');
     },
   },
 });
