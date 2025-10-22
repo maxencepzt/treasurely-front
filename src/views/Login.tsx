@@ -25,7 +25,7 @@ function Login() {
 
       navigate('/');
     }
-  }, [data, dispatch]);
+  }, [data, dispatch, navigate]);
 
   return (
     <>
