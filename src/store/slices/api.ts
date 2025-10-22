@@ -40,6 +40,13 @@ const api = createApi({
         body: { nickname, password },
       }),
     }),
+    refreshToken: build.mutation<{ token: string; refresh_token: string }, { refresh_token: string }>({
+        query: ({ refresh_token }) => ({
+            url: 'token/refresh',
+            method: 'POST',
+            body: { refresh_token },
+        }),
+    }),
     uploadImage: build.mutation<{ message: string }, FormData>({
       query: (formData) => ({
         url: 'pictures/upload',
@@ -72,5 +79,5 @@ export const getErrorMessage = (error?: FetchBaseQueryError | SerializedError) =
   return error.message || 'Une erreur est survenue';
 };
 
-export const { useGetAuthentifiedUserQuery, useLoginMutation, useUploadImageMutation, useUserProfilePictureDeleteMutation } = api;
+export const { useGetAuthentifiedUserQuery, useLoginMutation, useUploadImageMutation, useUserProfilePictureDeleteMutation, useRefreshTokenMutation } = api;
 export default api;
