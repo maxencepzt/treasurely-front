@@ -1,9 +1,10 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import type { user } from "../../types/api";
-import { API_CONFIG } from '../../config/api';
-import type { rootState } from '../index';
 import type { SerializedError } from '@reduxjs/toolkit';
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+import { API_CONFIG } from '../../config/api';
+import type { user } from "../../types/api";
+import type { rootState } from '../index';
 
 const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
