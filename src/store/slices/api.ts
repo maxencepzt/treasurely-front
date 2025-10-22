@@ -1,12 +1,34 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type {user} from "../../types/api";
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import type { user } from "../../types/api";
 import { API_CONFIG } from '../../config/api';
-import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import type { rootState } from '../index';
 import type { SerializedError } from '@reduxjs/toolkit';
+
+const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+  args,
+  api,
+  extraOptions
+) => {
+  const state = api.getState() as rootState;
+  const token = state.auth?.token;
+
+  const baseQuery = fetchBaseQuery({
+    baseUrl: API_CONFIG.baseUrl,
+    prepareHeaders: (headers) => {
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },
+  });
+
+  return baseQuery(args, api, extraOptions);
+};
 
 const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: API_CONFIG.baseUrl }),
+  baseQuery: baseQueryWithAuth,
   endpoints: (build) => ({
     getAuthentifiedUser: build.query<user, null>({
       query: () => 'me',
