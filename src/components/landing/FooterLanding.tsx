@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 
-function FooterCTA() {
+function FooterLanding() {
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-12 text-center bg-green-700 text-white">
       <div className="max-w-4xl mx-auto">
@@ -22,4 +22,4 @@ function FooterCTA() {
   );
 }
 
-export default FooterCTA;
+export default FooterLanding;
