@@ -1,6 +1,8 @@
-import { useUploadImageMutation, useUserProfilePictureDeleteMutation } from '../store/slices/api';
-import { FormEvent } from 'react';
+import type { FormEvent } from 'react';
+import { NavLink } from 'react-router';
+
 import { Loading, UploadForm } from '../components';
+import { useUploadImageMutation, useUserProfilePictureDeleteMutation } from '../store/slices/api';
 
 function UploadImage() {
   const [userProfilePictureDelete, { isLoading: isLoadingDelete, error: errorDelete }] = useUserProfilePictureDeleteMutation();

@@ -1,8 +1,9 @@
-import { FormEvent, useCallback } from 'react';
+import { type FormEvent, useCallback } from 'react';
+import { faFileImage, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type SerializedError } from '@reduxjs/toolkit';
 import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileImage, faTrash } from '@fortawesome/free-solid-svg-icons'
+
 import { getErrorMessage } from '../store/slices/api';
 import UserProfilePicture from './UserProfilePicture';
 
