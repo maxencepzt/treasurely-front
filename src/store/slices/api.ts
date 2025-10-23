@@ -5,31 +5,63 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_CONFIG } from '../../config/api';
 import type { user } from "../../types/api";
 import type { rootState } from '../index';
+import { logout, setCredentials } from './authSlice';
 
-const baseQueryWithAuth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
-  args,
-  api,
-  extraOptions
-) => {
-  const state = api.getState() as rootState;
-  const token = state.auth?.token;
-
-  const baseQuery = fetchBaseQuery({
+const baseQuery = fetchBaseQuery({
     baseUrl: API_CONFIG.baseUrl,
-    prepareHeaders: (headers) => {
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
+    prepareHeaders: (headers, { getState }) => {
+        const token = (getState() as rootState).auth.token;
+        if (token) {
+            headers.set('Authorization', `Bearer ${token}`);
+        }
+        return headers;
     },
-  });
+});
 
-  return baseQuery(args, api, extraOptions);
+// baseQuery sans authentification pour le refresh
+const baseQueryWithoutAuth = fetchBaseQuery({
+    baseUrl: API_CONFIG.baseUrl,
+});
+
+const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+    args,
+    api,
+    extraOptions
+) => {
+    let result = await baseQuery(args, api, extraOptions);
+
+    if (result.error && result.error.status === 401) {
+        const refreshToken = localStorage.getItem('refresh_token');
+
+        if (refreshToken) {
+            const refreshResult = await baseQueryWithoutAuth(
+                {
+                    url: '/token/refresh',
+                    method: 'POST',
+                    body: { refresh_token: refreshToken },
+                },
+                api,
+                extraOptions
+            );
+
+            if (refreshResult.data) {
+                api.dispatch(setCredentials(refreshResult.data as {token: string; refresh_token: string}));
+                // Réexécuter la requête originale
+                result = await baseQuery(args, api, extraOptions);
+            } else {
+                api.dispatch(logout());
+            }
+        } else {
+            api.dispatch(logout());
+        }
+    }
+
+    return result;
 };
 
 const api = createApi({
   reducerPath: 'api',
-  baseQuery: baseQueryWithAuth,
+  baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
     getAuthentifiedUser: build.query<user, null>({
       query: () => 'me',
