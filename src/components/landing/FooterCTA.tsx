@@ -10,12 +10,13 @@ function FooterCTA() {
         <p className="mb-6 text-green-50">
           Rejoignez des milliers d'explorateurs et commencez votre première chasse au trésor dès maintenant
         </p>
-        <Link
-          to="/signup"
-          className="inline-block px-8 py-3 rounded-lg bg-white text-green-700 text-lg font-semibold hover:bg-green-50 transition-colors shadow-lg"
-        >
-          Commencer maintenant
-        </Link>
+        <div className="mt-8 border-t border-green-600 pt-6">
+          <p className="text-lg font-semibold">Treasurely</p>
+          <p className="text-sm text-green-200">
+            Contact: <Link to="mailto:contact@treasurely.com">contact@treasurely.com</Link>
+          </p>
+          <p className="text-sm text-green-200">© {new Date().getFullYear()} Treasurely. Tous droits réservés.</p>
+        </div>
       </div>
     </div>
   );
