@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import { Loading, LoginForm } from '../components';
 import { useLoginMutation } from '../store/slices/api';
 
@@ -22,7 +23,11 @@ function Login() {
 
   return (
     <>
-      {isLoading ? (<Loading/>) : (<LoginForm onSubmit={handleSubmit} error={error}/>)}
+      {isLoading ? (<Loading/>) : (
+        <div className="px-6 py-12 space-y-8 max-w-md mx-auto">
+          <LoginForm onSubmit={handleSubmit} error={error}/>
+        </div>
+      )}
     </>
   );
 }
