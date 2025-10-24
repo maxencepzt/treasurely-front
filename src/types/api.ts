@@ -1,4 +1,4 @@
-export type user = {
+export type User = {
   "@context": string;
   "@id": string;
   "@type": string;

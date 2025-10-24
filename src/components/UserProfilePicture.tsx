@@ -1,6 +1,6 @@
-import {type user} from "../types/api";
+import { type User } from "../types/api";
 
-function UserProfilePicture({userData}:{userData?: user}) {
+function UserProfilePicture({userData}:{userData?: User}) {
   return (
     <div className="flex justify-center">
       <img src={userData ? "http://localhost:8000" + userData.profilePicture : "/user_profile_picture_default.png"} alt="Photo de profil"

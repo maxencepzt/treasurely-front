@@ -3,7 +3,7 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { API_CONFIG } from '../../config/api';
-import type { user } from "../../types/api";
+import type { User } from "../../types/api";
 import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
 
@@ -63,7 +63,7 @@ const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
-    getAuthentifiedUser: build.query<user, null>({
+    getAuthentifiedUser: build.query<User, null>({
       query: () => 'me',
     }),
     login: build.mutation<{ token: string; refresh_token: string }, { nickname: string; password: string }>({
