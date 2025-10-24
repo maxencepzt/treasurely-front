@@ -4,7 +4,7 @@ import { Loading, LoginForm } from '../components';
 import { useLazyGetAuthentifiedUserQuery, useLoginMutation } from '../store/slices/api';
 import { setCredentials } from '../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
-import { useUser } from '../contexts/user/provider';
+import { useUser } from '../contexts/user';
 import { useNavigate } from 'react-router';
 
 function Login() {

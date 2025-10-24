@@ -2,7 +2,7 @@ import FeaturesSection from '../components/landing/FeatureSection.tsx';
 import FooterLanding from '../components/landing/FooterLanding.tsx';
 import HeroSection from '../components/landing/HeroSection.tsx';
 import MiddleCTA from '../components/landing/MiddleCTA.tsx';
-import { useUser } from '../contexts/user/provider';
+import { useUser } from '../contexts/user';
 import { LogoutButton } from '../components';
 
 function Index() {
