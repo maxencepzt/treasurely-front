@@ -73,6 +73,13 @@ const api = createApi({
         body: { nickname, password },
       }),
     }),
+    logout: build.mutation<{ message: string }, { refresh_token: string }>({
+      query: ({ refresh_token }) => ({
+        url: 'token/invalidate',
+        method: 'POST',
+        body: { refresh_token },
+      }),
+    }),
     refreshToken: build.mutation<{ token: string; refresh_token: string }, { refresh_token: string }>({
         query: ({ refresh_token }) => ({
             url: 'token/refresh',
@@ -113,4 +120,12 @@ export const getErrorMessage = (error?: FetchBaseQueryError | SerializedError) =
 };
 
 export const { useGetAuthentifiedUserQuery, useLoginMutation, useUploadImageMutation, useUserProfilePictureDeleteMutation, useRefreshTokenMutation } = api;
+export const {
+  useGetAuthentifiedUserQuery,
+  useLoginMutation,
+  useUploadImageMutation,
+  useUserProfilePictureDeleteMutation,
+  useRefreshTokenMutation,
+  useLogoutMutation,
+} = api;
 export default api;

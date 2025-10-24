@@ -2,14 +2,17 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { logout } from '../store/slices/authSlice';
+import { useLogoutMutation } from '../store/slices/api';
 
 function LogoutButton() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [logoutPost] = useLogoutMutation();
     
     const handleLogout = () => {
-        dispatch(logout());
-        navigate(0);
+      logoutPost({ refresh_token: localStorage.getItem('refresh_token') as string });
+      dispatch(logout());
+      navigate(0);
     };
     
     return (
