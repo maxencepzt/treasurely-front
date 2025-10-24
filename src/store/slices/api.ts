@@ -64,7 +64,10 @@ const api = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
     getAuthentifiedUser: build.query<User, null>({
-      query: () => 'me',
+      query: () => ({
+        url: 'me',
+        method: 'GET',
+      }),
     }),
     login: build.mutation<{ token: string; refresh_token: string }, { nickname: string; password: string }>({
       query: ({ nickname, password }) => ({
@@ -119,13 +122,13 @@ export const getErrorMessage = (error?: FetchBaseQueryError | SerializedError) =
   return error.message || 'Une erreur est survenue';
 };
 
-export const { useGetAuthentifiedUserQuery, useLoginMutation, useUploadImageMutation, useUserProfilePictureDeleteMutation, useRefreshTokenMutation } = api;
 export const {
   useGetAuthentifiedUserQuery,
   useLoginMutation,
   useUploadImageMutation,
   useUserProfilePictureDeleteMutation,
   useRefreshTokenMutation,
+  useLazyGetAuthentifiedUserQuery,
   useLogoutMutation,
 } = api;
 export default api;

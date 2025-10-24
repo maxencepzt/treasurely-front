@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { Loading, LoginForm } from '../components';
-import { useLoginMutation } from '../store/slices/api';
+import { useLazyGetAuthentifiedUserQuery, useLoginMutation } from '../store/slices/api';
 import { setCredentials } from '../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -9,11 +9,14 @@ import { useNavigate } from 'react-router';
 function Login() {
   const dispatch = useDispatch();
   const [loginPost, { data, isLoading, error }] = useLoginMutation();
+  const [getMe] = useLazyGetAuthentifiedUserQuery();
+
   const navigate = useNavigate();
 
   async function handleSubmit(username: string, password: string) {
     try {
       await loginPost({ nickname: username, password }).unwrap();
+      await getMe(null).unwrap();
     } catch (error) {
       console.error('Failed to login:', error);
     }
