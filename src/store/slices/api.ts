@@ -90,7 +90,7 @@ const api = createApi({
             body: { refresh_token },
         }),
     }),
-    uploadImage: build.mutation<{ message: string }, FormData>({
+    uploadImage: build.mutation<{ message: string|undefined, id: number|undefined, error: string|undefined }, FormData>({
       query: (formData) => ({
         url: 'pictures/upload',
         method: 'POST',
