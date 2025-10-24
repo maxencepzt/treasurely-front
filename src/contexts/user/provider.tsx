@@ -1,15 +1,13 @@
-import { createContext, useContext, type ReactNode } from 'react';
-import type { User } from '../../types/api';
+import { type ReactNode } from 'react';
 import { useGetAuthentifiedUserQuery } from '../../store/slices/api';
 import { Loading } from '../../components';
+import { UserContext } from './';
 
-type UserContextType = {
-  user: User | null;
+type UserProviderProps = {
+  children: ReactNode;
 }
 
-const UserContext = createContext<UserContextType>({ user: null });
-
-export function UserProvider({ children }: { children: ReactNode }) {
+export function UserProvider({ children }: UserProviderProps) {
   const { data: user, isLoading } = useGetAuthentifiedUserQuery(null);
 
   if (isLoading) {
@@ -23,10 +21,3 @@ export function UserProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useUser() {
-  const context = useContext(UserContext);
-  if (context === undefined) {
-    throw new Error('useUser must be used within a UserProvider');
-  }
-  return context;
-}
