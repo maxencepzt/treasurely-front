@@ -1,5 +1,4 @@
 import type { FormEvent } from 'react';
-import { NavLink } from 'react-router';
 
 import { Loading, UploadForm } from '../components';
 import { useUploadImageMutation, useUserProfilePictureDeleteMutation } from '../store/slices/api';
