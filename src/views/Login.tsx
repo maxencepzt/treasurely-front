@@ -4,6 +4,7 @@ import { Loading, LoginForm } from '../components';
 import { useLazyGetAuthentifiedUserQuery, useLoginMutation } from '../store/slices/api';
 import { setCredentials } from '../store/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { useUser } from '../contexts/user/provider';
 import { useNavigate } from 'react-router';
 
 function Login() {
@@ -12,6 +13,7 @@ function Login() {
   const [getMe] = useLazyGetAuthentifiedUserQuery();
 
   const navigate = useNavigate();
+  const { user } = useUser();
 
   async function handleSubmit(username: string, password: string) {
     try {
@@ -23,12 +25,16 @@ function Login() {
   }
 
   useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+
     if (data?.token && data?.refresh_token) {
       dispatch(setCredentials({ token: data.token, refresh_token: data.refresh_token }));
 
       navigate('/');
     }
-  }, [data, dispatch, navigate]);
+  }, [data, dispatch, user]);
 
   return (
     <>
