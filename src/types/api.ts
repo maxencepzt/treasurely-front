@@ -1,4 +1,4 @@
-export type user = {
+export type User = {
   "@context": string;
   "@id": string;
   "@type": string;
@@ -12,7 +12,7 @@ export type user = {
   creationDate: string;
   public: boolean;
   gender: "MAN" | "WOMAN" | "OTHER";
-  profilePicture: object;
+  profilePicture: string;
   totalTime: number;
   totalHunt: number;
 };

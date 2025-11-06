@@ -1,24 +1,96 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type {user} from "../../types/api";
-import { API_CONFIG } from '../../config/api';
-import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { SerializedError } from '@reduxjs/toolkit';
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+import { API_CONFIG } from '../../config/api';
+import type { User } from "../../types/api";
+import type { rootState } from '../index';
+import { logout, setCredentials } from './authSlice';
+
+const baseQuery = fetchBaseQuery({
+    baseUrl: API_CONFIG.baseUrl,
+    prepareHeaders: (headers, { getState }) => {
+        const token = (getState() as rootState).auth.token;
+        if (token) {
+            headers.set('Authorization', `Bearer ${token}`);
+        }
+        return headers;
+    },
+});
+
+// baseQuery sans authentification pour le refresh
+const baseQueryWithoutAuth = fetchBaseQuery({
+    baseUrl: API_CONFIG.baseUrl,
+});
+
+const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+    args,
+    api,
+    extraOptions
+) => {
+    let result = await baseQuery(args, api, extraOptions);
+
+    if (result.error && result.error.status === 401) {
+        const refreshToken = localStorage.getItem('refresh_token');
+
+        if (refreshToken) {
+            const refreshResult = await baseQueryWithoutAuth(
+                {
+                    url: '/token/refresh',
+                    method: 'POST',
+                    body: { refresh_token: refreshToken },
+                },
+                api,
+                extraOptions
+            );
+
+            if (refreshResult.data) {
+                api.dispatch(setCredentials(refreshResult.data as {token: string; refresh_token: string}));
+                // Réexécuter la requête originale
+                result = await baseQuery(args, api, extraOptions);
+            } else {
+                api.dispatch(logout());
+            }
+        } else {
+            api.dispatch(logout());
+        }
+    }
+
+    return result;
+};
 
 const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: API_CONFIG.baseUrl }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
-    getAuthentifiedUser: build.query<user, null>({
-      query: () => 'me',
+    getAuthentifiedUser: build.query<User, null>({
+      query: () => ({
+        url: 'me',
+        method: 'GET',
+      }),
     }),
-    login: build.mutation<{ token: string; refreshToken: string }, { nickname: string; password: string }>({
+    login: build.mutation<{ token: string; refresh_token: string }, { nickname: string; password: string }>({
       query: ({ nickname, password }) => ({
         url: 'auth',
         method: 'POST',
         body: { nickname, password },
       }),
     }),
-    uploadImage: build.mutation<{ message: string }, FormData>({
+    logout: build.mutation<{ message: string }, { refresh_token: string }>({
+      query: ({ refresh_token }) => ({
+        url: 'token/invalidate',
+        method: 'POST',
+        body: { refresh_token },
+      }),
+    }),
+    refreshToken: build.mutation<{ token: string; refresh_token: string }, { refresh_token: string }>({
+        query: ({ refresh_token }) => ({
+            url: 'token/refresh',
+            method: 'POST',
+            body: { refresh_token },
+        }),
+    }),
+    uploadImage: build.mutation<{ message: string|undefined, id: number|undefined, error: string|undefined }, FormData>({
       query: (formData) => ({
         url: 'pictures/upload',
         method: 'POST',
@@ -50,5 +122,13 @@ export const getErrorMessage = (error?: FetchBaseQueryError | SerializedError) =
   return error.message || 'Une erreur est survenue';
 };
 
-export const { useGetAuthentifiedUserQuery, useLoginMutation, useUploadImageMutation, useUserProfilePictureDeleteMutation } = api;
+export const {
+  useGetAuthentifiedUserQuery,
+  useLoginMutation,
+  useUploadImageMutation,
+  useUserProfilePictureDeleteMutation,
+  useRefreshTokenMutation,
+  useLazyGetAuthentifiedUserQuery,
+  useLogoutMutation,
+} = api;
 export default api;
