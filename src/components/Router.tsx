@@ -1,6 +1,7 @@
 import { BrowserRouter, Route,Routes } from "react-router";
 
-import { Index, Login, NotFound, UploadImage } from '../views';
+import { Index, Login, UploadImage } from '../views';
+import ErrorView from '../views/Error.tsx';
 import ErrorRouteWrapper from '../views/ErrorRouteWrapper.tsx';
 
 function Router() {
@@ -12,7 +13,7 @@ function Router() {
         <Route path="/upload" element={<UploadImage/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />
 
-        <Route path="*" element={<NotFound/>} />
+        <Route path="*" element={<ErrorView status={404} message="Page introuvable" />} />
       </Routes>
     </BrowserRouter>
   )
