@@ -1,16 +1,20 @@
-import { BrowserRouter, Routes, Route } from "react-router";
-import { Index, Login, NotFound, UploadImage } from '../views';
+import { BrowserRouter, Route,Routes } from "react-router";
+
+import { Index, Login, UploadImage } from '../views';
+import ErrorView from '../views/Error.tsx';
+import ErrorRouteWrapper from '../views/ErrorRouteWrapper.tsx';
 
 function Router() {
   return(
     <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<Index/>}></Route>
-            <Route path="/login" element={<Login/>}></Route>
-            <Route path="/upload" element={<UploadImage/>}></Route>
+      <Routes>
+        <Route path="/" element={<Index/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/upload" element={<UploadImage/>} />
+        <Route path="/error" element={<ErrorRouteWrapper />} />
 
-            <Route path="*" element={<NotFound/>} />
-        </Routes>
+        <Route path="*" element={<ErrorView status={404} message="Page introuvable" />} />
+      </Routes>
     </BrowserRouter>
   )
 }
