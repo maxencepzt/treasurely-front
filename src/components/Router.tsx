@@ -1,16 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Route,Routes } from "react-router";
+
 import { Index, Login, NotFound, UploadImage } from '../views';
+import ErrorRouteWrapper from '../views/ErrorRouteWrapper.tsx';
 
 function Router() {
   return(
     <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<Index/>}></Route>
-            <Route path="/login" element={<Login/>}></Route>
-            <Route path="/upload" element={<UploadImage/>}></Route>
+      <Routes>
+        <Route path="/" element={<Index/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/upload" element={<UploadImage/>} />
+        <Route path="/error" element={<ErrorRouteWrapper />} />
 
-            <Route path="*" element={<NotFound/>} />
-        </Routes>
+        <Route path="*" element={<NotFound/>} />
+      </Routes>
     </BrowserRouter>
   )
 }
