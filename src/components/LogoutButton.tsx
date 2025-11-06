@@ -1,16 +1,20 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { useLogoutMutation, useLogoutSSOMutation } from '../store/slices/api';
 import { logout } from '../store/slices/authSlice';
+import { Loading } from './';
 
 function LogoutButton() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [logoutPost] = useLogoutMutation();
     const [logoutSSOPost] = useLogoutSSOMutation();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleLogout = async () => {
+      setIsLoading(true);
       try {
         // Logout SSO first
         await logoutSSOPost().unwrap().catch((error) => {
@@ -30,7 +34,11 @@ function LogoutButton() {
         navigate(0);
       }
     };
-    
+
+    if (isLoading) {
+        return <Loading />;
+    }
+
     return (
         <button
             type="button"
