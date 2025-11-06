@@ -1,6 +1,7 @@
-import { useState, type FormEvent, useCallback } from 'react';
+import { type FormEvent, useCallback, useState } from 'react';
 import { type SerializedError } from '@reduxjs/toolkit';
 import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
+
 import { getErrorMessage } from '../store/slices/api';
 
 type loginFormProps = {
@@ -38,7 +39,7 @@ function LoginForm ({onSubmit, error}: loginFormProps) {
           autoFocus
           placeholder="Pseudo"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value.replaceAll(' ', ''))}
           className="text-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-700"
         />
       </label>
@@ -53,7 +54,7 @@ function LoginForm ({onSubmit, error}: loginFormProps) {
           required
           placeholder="Mot de passe"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value.replaceAll(' ', ''))}
           className="text-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-700"
         />
       </label>
