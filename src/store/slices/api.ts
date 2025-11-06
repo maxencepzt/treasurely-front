@@ -83,6 +83,12 @@ const api = createApi({
         body: { refresh_token },
       }),
     }),
+    logoutSSO: build.mutation<{ message: string }, void>({
+      query: () => ({
+        url: 'sso/logout',
+        method: 'POST',
+      }),
+    }),
     refreshToken: build.mutation<{ token: string; refresh_token: string }, { refresh_token: string }>({
         query: ({ refresh_token }) => ({
             url: 'token/refresh',
@@ -137,5 +143,6 @@ export const {
   useLazyGetAuthentifiedUserQuery,
   useLogoutMutation,
   useUserByIdQuery,
+  useLogoutSSOMutation,
 } = api;
 export default api;
