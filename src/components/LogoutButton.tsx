@@ -1,33 +1,34 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
+import { useLogoutMutation, useLogoutSSOMutation } from '../store/slices/api';
 import { logout } from '../store/slices/authSlice';
-import { useLogoutMutation } from '../store/slices/api';
-import { API_CONFIG } from '../config/api';
 
 function LogoutButton() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [logoutPost] = useLogoutMutation();
+    const [logoutSSOPost] = useLogoutSSOMutation();
 
-    const logoutSSO = () => {
-      // TODO : fixer la requête
-        fetch(API_CONFIG.baseUrl + '/sso/logout/api', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }).catch((error) => {
+    const handleLogout = async () => {
+      try {
+        // Logout SSO first
+        await logoutSSOPost().unwrap().catch((error) => {
           console.error('Error during SSO logout:', error);
         });
-    }
-    
-    const handleLogout = () => {
-      logoutSSO();
-      logoutPost({ refresh_token: localStorage.getItem('refresh_token') as string });
-      dispatch(logout());
-      navigate(0);
+
+        // Then logout from API
+        const refreshToken = localStorage.getItem('refresh_token');
+        if (refreshToken) {
+          await logoutPost({ refresh_token: refreshToken }).unwrap().catch((error) => {
+            console.error('Error during logout:', error);
+          });
+        }
+      } finally {
+        // Always clear local state and navigate
+        dispatch(logout());
+        navigate(0);
+      }
     };
     
     return (
