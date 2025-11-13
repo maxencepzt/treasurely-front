@@ -1,5 +1,6 @@
-import { useUserProfile } from '../hooks/useUserProfile.ts';
+import { useUserProfile } from '../../hooks/useUserProfile.ts';
 import { ProfilePrivate } from './ProfilePrivate.tsx';
+import { ProfilePublic } from './ProfilePublic.tsx';
 
 export default function Profile() {
   const { user, loading, error } = useUserProfile();
@@ -10,6 +11,6 @@ export default function Profile() {
   if (!user.public) return <ProfilePrivate user={user} />;
 
   return (
-    <div>Profile View</div>
+    <ProfilePublic user={user} />
   );
 }
