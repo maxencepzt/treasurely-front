@@ -1,0 +1,57 @@
+{
+  "users": [
+    {
+      "@context": "/api/contexts/User",
+      "@id": "/api/users/1",
+      "@type": "User",
+      "id": 1,
+      "nickname": "jdoe",
+      "firstname": "John",
+      "lastname": "Doe",
+      "email": "jdoe@example.com",
+      "birthDate": "1990-05-15T00:00:00+00:00",
+      "phone": "+33612345678",
+      "creationDate": "2025-01-01T00:00:00+00:00",
+      "public": true,
+      "gender": "MAN",
+      "profilePicture": "https://example.com/profile.jpg",
+      "totalTime": 15000,
+      "totalHunt": 2500
+    },
+    {
+      "@context": "/api/contexts/User",
+      "@id": "/api/users/2",
+      "@type": "User",
+      "id": 2,
+      "nickname": "msmith",
+      "firstname": "Marie",
+      "lastname": "Smith",
+      "email": "msmith@example.com",
+      "birthDate": "1985-03-22T00:00:00+00:00",
+      "phone": "+33698765432",
+      "creationDate": "2025-02-10T00:00:00+00:00",
+      "public": false,
+      "gender": "WOMAN",
+      "profilePicture": "https://example.com/marie.jpg",
+      "totalTime": 28500,
+      "totalHunt": 4200
+    },
+    {
+      "@context": "/api/contexts/User",
+      "@id": "/api/users/3",
+      "@type": "User",
+      "id": 3,
+      "nickname": "adurand",
+      "firstname": "Alex",
+      "lastname": "Durand",
+      "email": "adurand@example.com",
+      "birthDate": "1995-11-08T00:00:00+00:00",
+      "phone": "+33756432198",
+      "creationDate": "2025-03-15T00:00:00+00:00",
+      "public": true,
+      "gender": "OTHER",
+      "totalTime": 12300,
+      "totalHunt": 1850
+    }
+  ]
+}
