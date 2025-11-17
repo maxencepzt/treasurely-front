@@ -3,7 +3,7 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { API_CONFIG } from '../../config/api';
-import type { User } from "../../types/api";
+import type { TreasureHuntAPI, User } from "../../types/api";
 import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
 
@@ -109,6 +109,12 @@ const api = createApi({
         method: 'DELETE',
       }),
     }),
+    treasureHuntGetById: build.query<TreasureHuntAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `treasure_hunts/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -137,5 +143,6 @@ export const {
   useLazyGetAuthentifiedUserQuery,
   useLogoutMutation,
   useLogoutSSOMutation,
+  useTreasureHuntGetByIdQuery,
 } = api;
 export default api;
