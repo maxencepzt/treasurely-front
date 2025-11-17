@@ -1,0 +1,111 @@
+[
+  {
+    "id": 1,
+    "title": "Le Mystère de la Louve d’Or",
+    "description": "Une ancienne légende raconte qu’une louve en or massif serait cachée dans les ruines d’un vieux monastère. Les indices laissés par les moines sont cryptés.",
+    "public": true,
+    "difficulty": 2,
+    "riddleCount": 5,
+    "huntType": [
+      {
+        "@context": "/api/contexts/HuntType",
+        "@id": "/api/hunt_types/1",
+        "@type": "HuntType",
+        "id": 1,
+        "title": "outdoor"
+      }
+    ],
+    "team": [],
+    "owner": "/api/users/3"
+  },
+  {
+    "id": 2,
+    "title": "La Crypte des Échos",
+    "description": "Des voix étranges résonnent dans une crypte oubliée. Chaque écho semble indiquer un passage secret menant à un artefact mystique.",
+    "public": false,
+    "difficulty": 4,
+    "riddleCount": 7,
+    "huntType": [
+      {
+        "@context": "/api/contexts/HuntType",
+        "@id": "/api/hunt_types/2",
+        "@type": "HuntType",
+        "id": 2,
+        "title": "indoor"
+      },
+      {
+        "@context": "/api/contexts/HuntType",
+        "@id": "/api/hunt_types/3",
+        "@type": "HuntType",
+        "id": 3,
+        "title": "urban"
+      }
+    ],
+    "team": [],
+    "owner": "/api/users/5"
+  },
+  {
+    "id": 3,
+    "title": "L’Odyssée des Trois Trésors",
+    "description": "Trois trésors légendaires dispersés aux quatre coins d’une île mystérieuse. Seuls les plus persévérants en trouveront un seul.",
+    "public": true,
+    "difficulty": 3,
+    "riddleCount": 6,
+    "huntType": [
+      {
+      "@context": "/api/contexts/HuntType",
+      "@id": "/api/hunt_types/3",
+      "@type": "HuntType",
+      "id": 3,
+      "title": "urban"
+      }
+    ],
+    "team": [],
+    "owner": "/api/users/2"
+  },
+  {
+    "id": 4,
+    "title": "Les Secrets du Marchand Fantôme",
+    "description": "Un marchand autrefois célèbre serait revenu sous forme de fantôme pour protéger son ultime cargaison. Ses indices mènent à un coffre enchanté.",
+    "public": true,
+    "difficulty": 1,
+    "riddleCount": 3,
+    "huntType": [
+      {
+        "@context": "/api/contexts/HuntType",
+        "@id": "/api/hunt_types/4",
+        "@type": "HuntType",
+        "id": 4,
+        "title": "horror"
+      }
+    ],
+    "team": [],
+    "owner": "/api/users/8"
+  },
+  {
+    "id": 5,
+    "title": "La Forteresse des Brumes",
+    "description": "Une forteresse engloutie dans les brumes. Chaque salle contient une épreuve logique et une histoire ancienne.",
+    "public": false,
+    "difficulty": 5,
+    "riddleCount": 10,
+    "huntType": [
+      {
+        "@context": "/api/contexts/HuntType",
+        "@id": "/api/hunt_types/4",
+        "@type": "HuntType",
+        "id": 4,
+        "title": "horror"
+      },
+      {
+        "@context": "/api/contexts/HuntType",
+        "@id": "/api/hunt_types/7",
+        "@type": "HuntType",
+        "id": 7,
+        "title": "sea"
+      }
+    ],
+    "team": [],
+    "owner": "/api/users/1"
+  }
+]
