@@ -8,7 +8,7 @@ import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: API_CONFIG.baseUrl + 'api',
+    baseUrl: API_CONFIG.baseUrl + '/api',
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as rootState).auth.token;
         if (token) {
@@ -20,7 +20,7 @@ const baseQuery = fetchBaseQuery({
 
 // baseQuery sans authentification pour le refresh
 const baseQueryWithoutAuth = fetchBaseQuery({
-    baseUrl: API_CONFIG.baseUrl + 'api',
+    baseUrl: API_CONFIG.baseUrl + '/api',
 });
 
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
