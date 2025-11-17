@@ -1,10 +1,10 @@
+import { LogoutButton } from '../components';
 import FeaturesSection from '../components/landing/FeatureSection.tsx';
 import FooterLanding from '../components/landing/FooterLanding.tsx';
 import HeroSection from '../components/landing/HeroSection.tsx';
 import MiddleCTA from '../components/landing/MiddleCTA.tsx';
+import LoginSSOButton from '../components/LoginSSOButton';
 import { useUser } from '../contexts/user';
-import { LogoutButton } from '../components';
-import LoginSymfonyButton from '../components/LoginSymfonyButton';
 
 function Index() {
   const { user } = useUser();
@@ -14,7 +14,7 @@ function Index() {
       {(user && (
         <>
           <LogoutButton/>
-          <LoginSymfonyButton/>
+          <LoginSSOButton/>
         </>
       ))}
       <HeroSection />
