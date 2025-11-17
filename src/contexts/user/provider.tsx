@@ -1,6 +1,7 @@
-import { type ReactNode } from 'react';
-import { useGetAuthentifiedUserQuery } from '../../store/slices/api';
+import { type ReactNode, useMemo } from 'react';
+
 import { Loading } from '../../components';
+import { useGetAuthentifiedUserQuery } from '../../store/slices/api';
 import { UserContext } from './';
 
 type UserProviderProps = {
@@ -10,14 +11,16 @@ type UserProviderProps = {
 export function UserProvider({ children }: UserProviderProps) {
   const { data: user, isLoading } = useGetAuthentifiedUserQuery(null);
 
+  // Memoize the context value so it's stable between renders
+  const value = useMemo(() => ({ user: user ?? null }), [user]);
+
   if (isLoading) {
     return (<Loading/>);
   }
 
   return (
-    <UserContext.Provider value={{ user: user ?? null }}>
+    <UserContext value={value}>
       {children}
-    </UserContext.Provider>
+    </UserContext>
   );
 }
-
