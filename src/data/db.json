@@ -1,5 +1,8 @@
 [
   {
+    "@context": "/api/contexts/TreasureHunt",
+    "@id": "/api/treasure_hunts/1",
+    "@type": "TreasureHunt",
     "id": 1,
     "title": "Le Mystère de la Louve d’Or",
     "description": "Une ancienne légende raconte qu’une louve en or massif serait cachée dans les ruines d’un vieux monastère. Les indices laissés par les moines sont cryptés.",
@@ -19,6 +22,9 @@
     "owner": "/api/users/3"
   },
   {
+    "@context": "/api/contexts/TreasureHunt",
+    "@id": "/api/treasure_hunts/2",
+    "@type": "TreasureHunt",
     "id": 2,
     "title": "La Crypte des Échos",
     "description": "Des voix étranges résonnent dans une crypte oubliée. Chaque écho semble indiquer un passage secret menant à un artefact mystique.",
@@ -45,6 +51,9 @@
     "owner": "/api/users/5"
   },
   {
+    "@context": "/api/contexts/TreasureHunt",
+    "@id": "/api/treasure_hunts/3",
+    "@type": "TreasureHunt",
     "id": 3,
     "title": "L’Odyssée des Trois Trésors",
     "description": "Trois trésors légendaires dispersés aux quatre coins d’une île mystérieuse. Seuls les plus persévérants en trouveront un seul.",
@@ -64,6 +73,9 @@
     "owner": "/api/users/2"
   },
   {
+    "@context": "/api/contexts/TreasureHunt",
+    "@id": "/api/treasure_hunts/4",
+    "@type": "TreasureHunt",
     "id": 4,
     "title": "Les Secrets du Marchand Fantôme",
     "description": "Un marchand autrefois célèbre serait revenu sous forme de fantôme pour protéger son ultime cargaison. Ses indices mènent à un coffre enchanté.",
@@ -83,6 +95,9 @@
     "owner": "/api/users/8"
   },
   {
+    "@context": "/api/contexts/TreasureHunt",
+    "@id": "/api/treasure_hunts/5",
+    "@type": "TreasureHunt",
     "id": 5,
     "title": "La Forteresse des Brumes",
     "description": "Une forteresse engloutie dans les brumes. Chaque salle contient une épreuve logique et une histoire ancienne.",
