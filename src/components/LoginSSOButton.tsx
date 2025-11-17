@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import type { rootState } from '../store';
+
 import { API_CONFIG } from '../config/api';
 import { useUser } from '../contexts/user';
+import type { rootState } from '../store';
 
 function LoginSSOButton() {
   const token = useSelector((state: rootState) => state.auth.token);
