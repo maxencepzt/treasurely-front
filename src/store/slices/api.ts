@@ -124,6 +124,10 @@ const api = createApi({
   }),
 });
 
+/**
+ * Récupère un message d'erreur lisible à partir d'une erreur FetchBaseQueryError ou SerializedError
+ * @param error
+ */
 export const getErrorMessage = (error?: FetchBaseQueryError | SerializedError) =>{
   if (!error) return null;
 
