@@ -89,22 +89,25 @@ const api = createApi({
       }),
     }),
     refreshToken: build.mutation<{ token: string; refresh_token: string }, { refresh_token: string }>({
-        query: ({ refresh_token }) => ({
-            url: 'token/refresh',
-            method: 'POST',
-            body: { refresh_token },
-        }),
+      query: ({ refresh_token }) => ({
+        url: 'token/refresh',
+        method: 'POST',
+        body: { refresh_token },
+      }),
     }),
-    uploadImage: build.mutation<{ message: string|undefined, id: number|undefined, error: string|undefined }, FormData>({
-      query: (formData) => ({
-        url: 'pictures/upload',
+    userUploadProfilePicture: build.mutation<
+      { message: string | undefined; id: number | undefined; error: string | undefined },
+      { userId: number, formData: FormData }
+    >({
+      query: ({ userId, formData }) => ({
+        url: `users/${userId}/picture`,
         method: 'POST',
         body: formData,
       }),
     }),
-    userProfilePictureDelete: build.mutation<{ message: string }, null>({
-      query: () => ({
-        url: 'users/picture',
+    userProfilePictureDelete: build.mutation<{ message: string }, number>({
+      query: (userId) => ({
+        url: `users/${userId}/picture`,
         method: 'DELETE',
       }),
     }),
@@ -150,7 +153,7 @@ const api = createApi({
 export const {
   useGetAuthentifiedUserQuery,
   useLoginMutation,
-  useUploadImageMutation,
+  useUserUploadProfilePictureMutation,
   useUserProfilePictureDeleteMutation,
   useRefreshTokenMutation,
   useLazyGetAuthentifiedUserQuery,
