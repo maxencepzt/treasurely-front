@@ -16,3 +16,26 @@ export type User = {
   totalTime: number;
   totalHunt: number;
 };
+
+export type HuntTypeAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  id: number;
+  title: string;
+}
+
+export type TreasureHuntAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  id: number;
+  title: string;
+  description: string;
+  public: boolean;
+  difficulty: number;
+  riddleCount: number;
+  huntType: HuntTypeAPI[];
+  team: string[];
+  owner: string;
+}
