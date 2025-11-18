@@ -29,11 +29,11 @@ export default function THTeamButton({teamRoute}: {teamRoute: string}) {
   return (
     <button
       type="button"
-      className="p-2 ml-4 gap-2 flex items-center justify-center rounded-lg bg-gray-200 hover:bg-gray-300 active:bg-gray-400 transition-colors cursor-pointer"
+      className="p-2 ml-4 gap-2 flex items-center justify-center rounded-lg bg-gray-200 hover:bg-gray-300 active:bg-gray-400 transition-colors cursor-pointer self-start"
       onClick={() => { navigate(`/teams/${team.id}`) }}
     >
       <FontAwesomeIcon icon={ faUsers } />
       <span>{team.name}</span>
     </button>
-  )
+  );
 }
