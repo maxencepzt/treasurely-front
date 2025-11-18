@@ -36,6 +36,16 @@ export type TreasureHuntAPI = {
   difficulty: number;
   riddleCount: number;
   huntType: HuntTypeAPI[];
-  team: string[];
+  team: string;
+  owner: string;
+}
+
+export type TeamAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  id: number;
+  name: string;
+  description: string;
   owner: string;
 }
