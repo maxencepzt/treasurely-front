@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import THButton from "../../components/treasure-hunt/thButton.tsx";
 import THTeamButton from "../../components/treasure-hunt/thTeamButton.tsx";
 import type { TreasureHuntAPI } from "../../types/api.ts";
 
@@ -13,7 +14,7 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
 
   return (
     <div className="min-h-screen flex justify-center">
-      <div className="w-full max-w-md bg-white min-h-screen">
+      <div className="w-full max-w-md bg-white min-h-screen flex flex-col">
         <img src={import.meta.env.VITE_API_BASE_URL + treasureHunt["@id"] + "/picture"} alt={"Photo de " + treasureHunt.title} className="w-full h-60 object-cover rounded-b-xl" />
         <div className="flex flex-row justify-between w-full p-4">
           <strong className="text-lg">{treasureHunt.title}</strong>
@@ -36,9 +37,7 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
         {/* Modal pour la description complete */}
         {showModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/25">
-            <div
-              className="bg-white rounded-lg p-6 w-full max-w-md max-h-screen overflow-y-auto relative"
-            >
+            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-screen overflow-y-auto relative">
               <button
                 type="button"
                 className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl"
@@ -53,7 +52,21 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
           </div>
         )}
         <h2 className="px-4 pt-2 pb-1 text-lg font-semibold text-gray-800">Catégories</h2>
-
+        <div className="px-4 pb-4">
+          <div className="flex flex-row gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            {treasureHunt.huntType.map((cat) => (
+              <span
+                key={cat.id}
+                className="whitespace-nowrap bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium border border-blue-200"
+              >
+                {cat.title}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="mt-auto px-4">
+          <THButton onClick={() => {alert('Implémente ça !')}}>Participer</THButton>
+        </div>
       </div>
     </div>
   );
