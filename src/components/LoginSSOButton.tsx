@@ -10,7 +10,7 @@ function LoginSSOButton() {
   const { user } = useUser();
 
   const redirectToBackend = useCallback(async () => {
-    const response = await fetch(API_CONFIG.baseUrl + 'sso/login', {
+    const response = await fetch(API_CONFIG.baseUrl + '/sso/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
