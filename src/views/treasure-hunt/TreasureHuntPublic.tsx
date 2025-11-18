@@ -7,6 +7,12 @@ import THTeamButton from "../../components/treasure-hunt/thTeamButton.tsx";
 import type { TreasureHuntAPI } from "../../types/api.ts";
 
 export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: TreasureHuntAPI}) {
+  // TODO: Implémenter la participation à une chasse au trésor (création d'une équipe ou rejoindre une équipe existante)
+  // TODO: Implémenter l'affichage de la ville
+  // TODO: Revoir avec les villes, l'affichage des catégories
+  // TODO: Ajouter le bouton d'edtition si l'utilisateur est le créateur de la chasse au trésor
+  // TODO: Ajouter le bouton de retour arrière
+
   const [showModal, setShowModal] = useState(false);
   const maxLength = 250;
   const isLong = treasureHunt.description?.length > maxLength;
