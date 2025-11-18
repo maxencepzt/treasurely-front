@@ -2,6 +2,7 @@ import { useParams } from "react-router";
 
 import {Loading} from "../../components";
 import { useTreasureHuntGetByIdQuery } from "../../store/slices/api.ts";
+import {parseApiError} from "../../utils/api.ts";
 import ErrorView from "../Error.tsx";
 import TreasureHuntPrivate from "./TreasureHuntPrivate.tsx";
 import TreasureHuntPublic from "./TreasureHuntPublic.tsx";
@@ -16,18 +17,7 @@ export default function TreasureHunt() {
   if (isLoading) return <Loading />;
 
   if (error) {
-    let status = 500;
-    let message = "Une erreur est survenue";
-
-    if ("status" in error) {
-      status = typeof error.status === "number" ? error.status : 500;
-      message = (error.data && typeof error.data === "object" && "message" in error.data)
-        ? (error.data as any).message
-        : "Erreur serveur";
-    } else if ("message" in error) {
-      message = error.message || message;
-    }
-
+    const { status, message } = parseApiError(error);
     return <ErrorView status={status} message={message} />;
   }
 
