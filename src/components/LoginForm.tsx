@@ -2,7 +2,7 @@ import { type FormEvent, useCallback, useState } from 'react';
 import { type SerializedError } from '@reduxjs/toolkit';
 import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
-import { getErrorMessage } from '../store/slices/api';
+import { getErrorMessage } from '../utils/api';
 
 type loginFormProps = {
   onSubmit: (username: string, password: string) => void;
