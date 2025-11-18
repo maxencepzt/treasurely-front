@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type SerializedError } from '@reduxjs/toolkit';
 import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
-import { getErrorMessage } from '../utils/api';
+import { parseApiError } from '../utils/api';
 import UserProfilePicture from './UserProfilePicture';
 
 type uploadFormProps = {
@@ -34,7 +34,7 @@ function UploadForm ({onSubmit, onChange, error}: uploadFormProps) {
 
       <UserProfilePicture/>
 
-      {error && (<div className="text-red-600 text-sm">{getErrorMessage(error)}</div>)}
+      {error && (<div className="text-red-600 text-sm">{parseApiError(error).message}</div>)}
 
       <label className="cursor-pointer">
         <FontAwesomeIcon icon={faFileImage} className="me-1" />
