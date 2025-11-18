@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type SerializedError } from '@reduxjs/toolkit';
 import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
-import { getErrorMessage } from '../store/slices/api';
+import { getErrorMessage } from '../utils/api';
 import UserProfilePicture from './UserProfilePicture';
 
 type uploadFormProps = {
