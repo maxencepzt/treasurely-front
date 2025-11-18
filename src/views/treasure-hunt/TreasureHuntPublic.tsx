@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import THTeamButton from "../../components/treasure-hunt/thTeamButton.tsx";
 import type { TreasureHuntAPI } from "../../types/api.ts";
 
 export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: TreasureHuntAPI}) {
@@ -21,6 +22,9 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
             <span>{"🔥".repeat(treasureHunt.difficulty)}</span>
           </div>
         </div>
+        <THTeamButton teamRoute={treasureHunt.team} />
+        {/* Title for the description section */}
+        <h2 className="px-4 pt-2 pb-1 text-lg font-semibold text-gray-800">A propos</h2>
         {/* Description section */}
         <div
           className={`px-4 pb-4 text-gray-700 ${isLong ? "cursor-pointer select-none" : ""}`}
