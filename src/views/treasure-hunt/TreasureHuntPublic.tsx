@@ -52,6 +52,8 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
             </div>
           </div>
         )}
+        <h2 className="px-4 pt-2 pb-1 text-lg font-semibold text-gray-800">Catégories</h2>
+
       </div>
     </div>
   );
