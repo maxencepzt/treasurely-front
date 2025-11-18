@@ -1,17 +1,20 @@
 import { useState } from "react";
-import {faMapLocationDot} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router";
+import {faAngleLeft, faCog, faMapLocationDot} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import THButton from "../../components/treasure-hunt/thButton.tsx";
 import THTeamButton from "../../components/treasure-hunt/thTeamButton.tsx";
+import { useUser } from "../../contexts/user";
 import type { TreasureHuntAPI } from "../../types/api.ts";
+import { getIdFromUrl } from "../../utils/api.ts";
 
 export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: TreasureHuntAPI}) {
   // TODO: Implémenter la participation à une chasse au trésor (création d'une équipe ou rejoindre une équipe existante)
   // TODO: Implémenter l'affichage de la ville
-  // TODO: Revoir avec les villes, l'affichage des catégories
-  // TODO: Ajouter le bouton d'edtition si l'utilisateur est le créateur de la chasse au trésor
-  // TODO: Ajouter le bouton de retour arrière
+  // TODO: Revoir l'affichage des catégories
+  const navigate = useNavigate();
+  const { user } = useUser();
 
   const [showModal, setShowModal] = useState(false);
   const maxLength = 250;
@@ -20,10 +23,34 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
     ? treasureHunt.description.slice(0, maxLength) + '...'
     : treasureHunt.description;
 
+  const isOwner = user && getIdFromUrl(treasureHunt.owner) === user.id;
+
   return (
     <div className="min-h-screen flex justify-center">
       <div className="w-full max-w-md bg-white min-h-screen flex flex-col">
-        <img src={import.meta.env.VITE_API_BASE_URL + treasureHunt["@id"] + "/picture"} alt={"Photo de " + treasureHunt.title} className="w-full h-60 object-cover rounded-b-xl" />
+        <div className="relative">
+          <img src={import.meta.env.VITE_API_BASE_URL + treasureHunt["@id"] + "/picture"} alt={"Photo de " + treasureHunt.title} className="w-full h-60 object-cover rounded-b-xl" />
+          <button
+            type="button"
+            className="absolute top-4 left-4 w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+            onClick={() => navigate(-1)}
+            aria-label="Retour"
+            title="Retour à la page précédente"
+          >
+            <FontAwesomeIcon icon={faAngleLeft} className="text-2xl text-gray-100" />
+          </button>
+          {isOwner && (
+            <button
+              type="button"
+              className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+              onClick={() => navigate(`/treasure-hunts/${treasureHunt.id}/edit`)}
+              aria-label="Éditer"
+              title="Éditer la chasse au trésor"
+            >
+              <FontAwesomeIcon icon={faCog} className="text-2xl text-gray-100" />
+            </button>
+          )}
+        </div>
         <div className="flex flex-row justify-between w-full p-4">
           <strong className="text-lg">{treasureHunt.title}</strong>
           <div className="flex flex-row gap-1 items-center">
