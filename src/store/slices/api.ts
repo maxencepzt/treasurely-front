@@ -103,6 +103,12 @@ const api = createApi({
         method: 'DELETE',
       }),
     }),
+    userById: build.query<User, { id: number }>({
+      query: ({ id }) => ({
+        url: `users/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -130,5 +136,6 @@ export const {
   useRefreshTokenMutation,
   useLazyGetAuthentifiedUserQuery,
   useLogoutMutation,
+  useUserByIdQuery,
 } = api;
 export default api;
