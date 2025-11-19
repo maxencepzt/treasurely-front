@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import {faAngleLeft, faCog, faMapLocationDot} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
 import THTeamButton from "../../components/treasure-hunt/thTeamButton.tsx";
 import { useUser } from "../../contexts/user";
@@ -12,7 +13,6 @@ import { getIdFromUrl } from "../../utils/api.ts";
 export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: TreasureHuntAPI}) {
   // TODO: Implémenter la participation à une chasse au trésor (création d'une équipe ou rejoindre une équipe existante)
   // TODO: Implémenter l'affichage de la ville
-  // TODO: Revoir l'affichage des catégories
   const navigate = useNavigate();
   const { user } = useUser();
 
@@ -94,12 +94,9 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
         <div className="px-4 pb-4">
           <div className="flex flex-row gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {treasureHunt.huntType.map((cat) => (
-              <span
-                key={cat.id}
-                className="whitespace-nowrap bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium border border-blue-200"
-              >
+              <HuntTypeBadge key={cat.id}>
                 {cat.title}
-              </span>
+              </HuntTypeBadge>
             ))}
           </div>
         </div>
