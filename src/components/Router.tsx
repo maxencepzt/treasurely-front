@@ -12,7 +12,7 @@ function Router() {
         <Route path="/" element={<Index/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/upload" element={<UploadImage/>} />
-        <Route path="/profile/:userId" element={<Profile/>} />
+        <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />
 
         <Route path="*" element={<ErrorView status={404} message="Page introuvable" />} />
