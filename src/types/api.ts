@@ -38,6 +38,7 @@ export type TreasureHuntAPI = {
   huntType: HuntTypeAPI[];
   team: string;
   owner: string;
+  location: string;
 }
 
 export type TeamAPI = {

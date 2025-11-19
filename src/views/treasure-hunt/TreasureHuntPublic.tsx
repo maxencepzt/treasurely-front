@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import {faAngleLeft, faCog, faMapLocationDot} from "@fortawesome/free-solid-svg-icons";
+import {faAngleLeft, faCog, faLocationDot, faMapLocationDot} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
@@ -60,8 +60,9 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
         </div>
         <THTeamButton teamRoute={treasureHunt.team} />
         {/* Stats */}
-        <div className="flex flex-row pl-4 pt-4">
+        <div className="flex flex-row pl-4 pt-4 gap-4">
           <div className="flex flex-row text-lg font-medium gap-1 items-center" title={`${treasureHunt.riddleCount} énigmes`}><FontAwesomeIcon icon={faMapLocationDot} className="text-xl" />{treasureHunt.riddleCount}</div>
+          <div className="flex flex-row text-lg font-medium gap-1 items-center" title={treasureHunt.location}><FontAwesomeIcon icon={faLocationDot} className="text-xl" />{treasureHunt.location}</div>
         </div>
         {/* Title for the description section */}
         <h2 className="px-4 pt-2 pb-1 text-lg font-semibold text-gray-800">A propos</h2>
