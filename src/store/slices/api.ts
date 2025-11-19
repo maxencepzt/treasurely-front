@@ -141,6 +141,5 @@ export const {
   useLogoutSSOMutation,
   useTreasureHuntGetByIdQuery,
   useTeamByIdQuery,
-  useUserByIdQuery,
 } = api;
 export default api;
