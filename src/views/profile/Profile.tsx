@@ -1,6 +1,9 @@
 import { useParams } from "react-router";
 
-import { getErrorMessage, useUserByIdQuery } from "../../store/slices/api.ts";
+import { Loading } from "../../components";
+import { useUserByIdQuery } from "../../store/slices/api.ts";
+import { parseApiError } from "../../utils/api.ts";
+import ErrorView from "../Error.tsx";
 import { ProfilePrivate } from './ProfilePrivate.tsx';
 import { ProfilePublic } from './ProfilePublic.tsx';
 
@@ -11,9 +14,14 @@ export default function Profile() {
   }
   const { data: user, isLoading, error } = useUserByIdQuery({id: parseInt(params.id)});
 
-  if (isLoading) return <div>Chargement...</div>;
-  if (error) return <div>Erreur: {getErrorMessage(error)}</div>;
-  if (!user) return <div>Utilisateur non trouvé</div>;
+  if (isLoading) return <Loading />;
+
+  if (error) {
+    const { status, message } = parseApiError(error);
+    return <ErrorView status={status} message={message} />;
+  }
+
+  if (!user) return <ErrorView status={404} message="Utilisateur non trouvé" />;
   if (!user.public) return <ProfilePrivate user={user} />;
 
   return (
