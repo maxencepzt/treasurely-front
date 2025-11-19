@@ -2,7 +2,7 @@ import { type FormEvent, useCallback, useState } from 'react';
 import { type SerializedError } from '@reduxjs/toolkit';
 import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
-import { getErrorMessage } from '../store/slices/api';
+import { parseApiError } from '../utils/api';
 
 type loginFormProps = {
   onSubmit: (username: string, password: string) => void;
@@ -11,7 +11,7 @@ type loginFormProps = {
 
 function LoginForm ({onSubmit, error}: loginFormProps) {
   const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [password, setPassword] = useState<string>("")
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ function LoginForm ({onSubmit, error}: loginFormProps) {
     >
       <h1 className="text-3xl font-bold">Connexion</h1>
 
-      {error && (<div className="text-red-600 text-sm">{getErrorMessage(error)}</div>)}
+      {error && (<div className="text-red-600 text-sm">{parseApiError(error).message}</div>)}
 
       <label htmlFor="username" className="flex flex-col gap-1">
         <span className="text-sm font-medium">Pseudo</span>

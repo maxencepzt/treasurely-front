@@ -1,14 +1,13 @@
-import type { SerializedError } from '@reduxjs/toolkit';
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { API_CONFIG } from '../../config/api';
-import type { User } from "../../types/api";
+import type {TeamAPI, TreasureHuntAPI, User} from "../../types/api";
 import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: API_CONFIG.baseUrl + 'api',
+    baseUrl: API_CONFIG.baseUrl + '/api',
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as rootState).auth.token;
         if (token) {
@@ -20,7 +19,7 @@ const baseQuery = fetchBaseQuery({
 
 // baseQuery sans authentification pour le refresh
 const baseQueryWithoutAuth = fetchBaseQuery({
-    baseUrl: API_CONFIG.baseUrl + 'api',
+    baseUrl: API_CONFIG.baseUrl + '/api',
 });
 
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
@@ -109,24 +108,20 @@ const api = createApi({
         method: 'DELETE',
       }),
     }),
+    treasureHuntGetById: build.query<TreasureHuntAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `treasure_hunts/${id}`,
+        method: 'GET',
+      }),
+    }),
+    teamById: build.query<TeamAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `teams/${id}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
-
-export const getErrorMessage = (error?: FetchBaseQueryError | SerializedError) =>{
-  if (!error) return null;
-
-  if ('status' in error) {
-    // FetchBaseQueryError
-    if ('data' in error && typeof error.data === 'object' && error.data !== null) {
-      const data = error.data as { message?: string };
-      return data.message || `Erreur ${error.status}`;
-    }
-    return `Erreur ${error.status}`;
-  }
-
-  // SerializedError
-  return error.message || 'Une erreur est survenue';
-};
 
 export const {
   useGetAuthentifiedUserQuery,
@@ -137,5 +132,7 @@ export const {
   useLazyGetAuthentifiedUserQuery,
   useLogoutMutation,
   useLogoutSSOMutation,
+  useTreasureHuntGetByIdQuery,
+  useTeamByIdQuery,
 } = api;
 export default api;
