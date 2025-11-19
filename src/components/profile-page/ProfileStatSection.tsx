@@ -7,8 +7,8 @@ export default function ProfileStatSection({ user }: { user: User }) {
   // TODO: Number of score should come from the API
   return (
     <>
-      <span className="pl-4">Stats</span>
-      <div className="flex flex-wrap justify-between p-4 gap-y-6">
+      <h2 className="px-4 pt-2 pb-3 text-lg font-semibold text-gray-800">Stats</h2>
+      <div className="flex flex-wrap justify-between px-4 gap-3">
         <ProfileStatCard title="Chasses" emoji="💎" value={user.totalHunt} />
         <ProfileStatCard title="Temps de jeu" emoji="⏲️" value={formatDuration(user.totalTime)} />
         <ProfileStatCard title="Enigmes" emoji="🧩" value={420} />
