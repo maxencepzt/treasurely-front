@@ -1,13 +1,16 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Loading } from "../../components";
-import TeamMemberItem from "../../components/teams/TeamMemberItem";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
 import { parseApiError } from "../../utils/api.ts";
 import ErrorView from "../Error.tsx";
 
 export default function Teams() {
   const params = useParams();
+  const navigate = useNavigate();
+
   if (!params.id) {
     throw new Error('No id provided.');
   }
@@ -31,27 +34,21 @@ export default function Teams() {
           <p className="text-gray-700">{team.description}</p>
         </div>
 
-        {/* Section membres */}
+        {/* Section membres cliquable */}
         <div className="mt-4">
-          <h2 className="px-4 pb-3 text-lg font-semibold text-gray-800">
-            Membres ({team.members?.length || 0})
-          </h2>
-
-          <div className="bg-white">
-            {team.members && team.members.length > 0 ? (
-              team.members.map((member, index) => (
-                <TeamMemberItem
-                  key={member["@id"]}
-                  member={member}
-                  isLast={index === team.members!.length - 1}
-                />
-              ))
-            ) : (
-              <div className="px-4 py-6">
-                <p className="text-gray-500 italic text-center">Aucun membre dans cette équipe</p>
-              </div>
-            )}
-          </div>
+          <button
+            type="button"
+            onClick={() => navigate(`/teams/${params.id}/members`)}
+            className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 active:bg-gray-100 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-semibold text-gray-800">Membres</span>
+              <span className="bg-gray-200 text-gray-700 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                {team.members?.length || 0}
+              </span>
+            </div>
+            <FontAwesomeIcon icon={faChevronRight} className="text-gray-400" />
+          </button>
         </div>
       </div>
     </div>
