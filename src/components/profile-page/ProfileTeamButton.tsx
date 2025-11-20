@@ -6,7 +6,6 @@ import { useTeamByIdQuery } from "../../store/slices/api.ts";
 import { getIdFromUrl } from "../../utils/api.ts";
 import { parseApiError } from "../../utils/api.ts";
 import ErrorView from "../../views/Error.tsx";
-import { Loading } from "../index.ts";
 
 /**
  * Button affichant une équipe d'un utilisateur
@@ -21,7 +20,7 @@ export default function ProfileTeamButton({teamRoute}: {teamRoute: string}) {
     const { status, message } = parseApiError(error);
     return <ErrorView status={status} message={message} />;
   }
-  if (isLoading) return <Loading />;
+  if (isLoading) return null;
   if (!team) {
     return <ErrorView status={404} message="Team not found" />;
   }

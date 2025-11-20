@@ -1,9 +1,12 @@
 import { ProfileIdentity } from '../../components/profile-page/ProfileIdentity.tsx';
 import ProfileStatSection from '../../components/profile-page/ProfileStatSection.tsx';
-import ProfileTeamButton from '../../components/profile-page/ProfileTeamButton.tsx';
+import ProfileTeamsList from '../../components/profile-page/ProfileTeamsList.tsx';
+import { useUserTeamsByIdQuery } from '../../store/slices/api.ts';
 import type { User } from '../../types/api.ts';
 
 export function ProfilePublic({ user, isOwner = false }: { user: User, isOwner?: boolean }) {
+  const { data: userTeams, isLoading } = useUserTeamsByIdQuery({ id: user.id });
+
   return (
     <div className="min-h-screen flex justify-center bg-gray-50">
       {/* Conteneur téléphone avec bordures */}
@@ -24,15 +27,8 @@ export function ProfilePublic({ user, isOwner = false }: { user: User, isOwner?:
         )}
 
         {/* Teams section */}
-        {user.teams && user.teams.length > 0 && (
-          <div className="px-4 pb-4">
-            <h2 className="text-lg font-semibold text-gray-800 mb-3">Équipes</h2>
-            <div className="flex flex-wrap gap-2">
-              {user.teams.map((teamRoute) => (
-                <ProfileTeamButton key={teamRoute} teamRoute={teamRoute} />
-              ))}
-            </div>
-          </div>
+        {!isLoading && userTeams && userTeams.teams && userTeams.teams.length > 0 && (
+          <ProfileTeamsList teamRoutes={userTeams.teams} />
         )}
 
         {/* Stats section */}
