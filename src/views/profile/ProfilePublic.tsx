@@ -8,9 +8,9 @@ export function ProfilePublic({ user, isOwner = false }: { user: User, isOwner?:
   const { data: userTeams, isLoading } = useUserTeamsByIdQuery({ id: user.id });
 
   return (
-    <div className="min-h-screen flex justify-center bg-gray-50">
+    <div className="min-h-screen flex justify-center bg-gradient-to-br from-gray-50 to-green-50">
       {/* Conteneur téléphone avec bordures */}
-      <div className="w-full max-w-md bg-white min-h-screen">
+      <div className="w-full max-w-md bg-white min-h-screen shadow-2xl">
         {/* Profile Identity */}
         <div>
           <ProfileIdentity user={user} editable={isOwner} />
@@ -18,9 +18,12 @@ export function ProfilePublic({ user, isOwner = false }: { user: User, isOwner?:
 
         {/* Description section */}
         {user.description && (
-          <div className="px-4 pb-4">
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">À propos</h2>
-            <p className="text-gray-700 text-sm leading-relaxed">
+          <div className="px-4 pb-6">
+            <h2 className="pb-3 text-xl font-bold text-gray-900 flex items-center gap-2">
+              <span className="text-2xl">📝</span>
+              <span>À propos</span>
+            </h2>
+            <p className="text-gray-700 text-base leading-relaxed bg-gradient-to-br from-white to-green-50 rounded-2xl p-4 border-2 border-green-100 shadow-sm">
               {user.description.slice(0, 150)}
             </p>
           </div>
