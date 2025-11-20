@@ -52,3 +52,10 @@ export type TeamAPI = {
   description: string;
   owner: string;
 }
+
+export type UserTeamsAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  teams: string[];
+}
