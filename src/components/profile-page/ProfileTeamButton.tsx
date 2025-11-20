@@ -28,7 +28,7 @@ export default function ProfileTeamButton({teamRoute}: {teamRoute: string}) {
   return (
     <button
       type="button"
-      className="px-4 py-2 gap-2 flex items-center justify-center rounded-lg bg-green-100 hover:bg-green-200 active:bg-green-300 border border-green-300 transition-colors cursor-pointer text-green-800 font-medium"
+      className="px-5 py-3 gap-2 flex items-center justify-center rounded-2xl bg-gradient-to-br from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 active:scale-95 shadow-md hover:shadow-lg border-2 border-green-800 transition-all duration-200 cursor-pointer text-white font-semibold"
       onClick={() => { navigate(`/teams/${team.id}`) }}
     >
       <FontAwesomeIcon icon={ faUsers } />

@@ -27,9 +27,12 @@ export default function ProfileTeamsList({ teamRoutes }: { teamRoutes: string[] 
   }
 
   return (
-    <div className="px-4 pb-4">
-      <h2 className="text-lg font-semibold text-gray-800 mb-3">Équipes</h2>
-      <div className="flex flex-wrap gap-2">
+    <div className="px-4 pb-6">
+      <h2 className="pb-3 text-xl font-bold text-gray-900 flex items-center gap-2">
+        <span className="text-2xl">👥</span>
+        <span>Équipes</span>
+      </h2>
+      <div className="flex flex-wrap gap-3">
         {teamRoutes.map((teamRoute) => (
           <ProfileTeamButton key={teamRoute} teamRoute={teamRoute} />
         ))}
