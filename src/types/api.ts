@@ -43,6 +43,13 @@ export type TreasureHuntAPI = {
   location: string;
 }
 
+export type TeamMember = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  nickname: string;
+}
+
 export type TeamAPI = {
   "@context": string;
   "@id": string;
@@ -51,6 +58,14 @@ export type TeamAPI = {
   name: string;
   description: string;
   owner: string;
+  members?: TeamMember[];
+}
+
+export type TeamMembersResponse = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  members: TeamMember[];
 }
 
 export type UserTeamsAPI = {
