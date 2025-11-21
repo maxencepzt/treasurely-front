@@ -13,6 +13,7 @@ function Router() {
         <Route path="/" element={<Index/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/upload" element={<UploadImage/>} />
+        <Route path="/profile" element={<Profile/>} />
         <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />
         <Route path="/treasure-hunt/:id" element={<TreasureHunt />} />
