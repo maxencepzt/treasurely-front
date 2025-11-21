@@ -12,7 +12,6 @@ import { getIdFromUrl } from "../../utils/api.ts";
 
 export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: TreasureHuntAPI}) {
   // TODO: Implémenter la participation à une chasse au trésor (création d'une équipe ou rejoindre une équipe existante)
-  // TODO: Implémenter l'affichage de la ville
   const navigate = useNavigate();
   const { user } = useUser();
 

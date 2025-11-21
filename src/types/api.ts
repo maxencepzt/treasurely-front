@@ -20,7 +20,7 @@ export type User = {
 };
 
 export type HuntTypeAPI = {
-  "@context": string;
+  "@context"?: string;
   "@id": string;
   "@type": string;
   id: number;
@@ -41,6 +41,7 @@ export type TreasureHuntAPI = {
   team: string;
   owner: string;
   location: string;
+  estimatedTime: number;
 }
 
 export type TeamMember = {
@@ -59,6 +60,7 @@ export type TeamAPI = {
   description: string;
   owner: string;
   members?: TeamMember[];
+  code?: string;
 }
 
 export type TeamMembersAPI = {
