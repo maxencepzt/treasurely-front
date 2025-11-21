@@ -6,7 +6,6 @@ import { Loading } from "../../components";
 import TeamProfilePicture from "../../components/teams/TeamProfilePicture";
 import TeamTreasureHuntCard from "../../components/teams/TeamTreasureHuntCard";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
-import { useTeamTreasureHuntsByIdQuery } from "../../store/slices/api";
 import { parseApiError } from "../../utils/api.ts";
 import ErrorView from "../Error.tsx";
 
@@ -18,10 +17,8 @@ export default function Teams() {
     throw new Error('No id provided.');
   }
   const { data: team, isLoading, error } = useTeamWithMembers(parseInt(params.id));
-  const { data: treasureHuntsData, isLoading: isLoadingHunts } = useTeamTreasureHuntsByIdQuery({ id: parseInt(params.id) });
-  const treasureHunts = treasureHuntsData?.hunts || [];
 
-  if (isLoading || isLoadingHunts) return <Loading />;
+  if (isLoading) return <Loading />;
 
   if (error) {
     const { status, message } = parseApiError(error);
@@ -62,9 +59,9 @@ export default function Teams() {
         {/* Liste des chasses au trésor */}
         <div className="p-4 bg-gray-50">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Chasses au trésor</h2>
-          {treasureHunts && treasureHunts.length > 0 ? (
+          {team.treasureHunts && team.treasureHunts.length > 0 ? (
             <div className="grid grid-cols-2 gap-3">
-              {treasureHunts.map((hunt) => (
+              {team.treasureHunts.map((hunt) => (
                 <TeamTreasureHuntCard
                   key={hunt["@id"]}
                   teamTreasureHunt={hunt}

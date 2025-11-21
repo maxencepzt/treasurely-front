@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 
-import { useTeamByIdQuery, useTeamMembersByIdQuery } from '../store/slices/api';
-import type { TeamAPI } from '../types/api';
+import { useTeamByIdQuery, useTeamMembersByIdQuery, useTeamTreasureHuntsByIdQuery } from '../store/slices/api';
+import type { TeamAPI, TeamTreasureHuntsAPI } from '../types/api';
 
 /**
- * Hook custom qui combine les données d'une équipe avec ses membres
+ * Hook custom qui combine les données d'une équipe avec ses membres et ses chasses au trésor
  * @param id - L'ID de l'équipe
- * @returns Les données de l'équipe avec les membres, l'état de chargement et les erreurs
+ * @returns Les données de l'équipe avec les membres et les chasses, l'état de chargement et les erreurs
  */
 export function useTeamWithMembers(id: number) {
   const {
@@ -21,19 +21,25 @@ export function useTeamWithMembers(id: number) {
     error: membersError
   } = useTeamMembersByIdQuery({ id });
 
-  const teamWithMembers = useMemo<TeamAPI | undefined>(() => {
+  const {
+    data: treasureHuntsResponse,
+    isLoading: isLoadingHunts,
+    error: huntsError
+  } = useTeamTreasureHuntsByIdQuery({ id });
+
+  const teamWithMembersAndHunts = useMemo<(TeamAPI & { treasureHunts: TeamTreasureHuntsAPI[] }) | undefined>(() => {
     if (!team) return undefined;
 
     return {
       ...team,
-      members: membersResponse?.members || []
+      members: membersResponse?.members || [],
+      treasureHunts: treasureHuntsResponse?.hunts || []
     };
-  }, [team, membersResponse]);
+  }, [team, membersResponse, treasureHuntsResponse]);
 
   return {
-    data: teamWithMembers,
-    isLoading: isLoadingTeam || isLoadingMembers,
-    error: teamError || membersError
+    data: teamWithMembersAndHunts,
+    isLoading: isLoadingTeam || isLoadingMembers || isLoadingHunts,
+    error: teamError || membersError || huntsError
   };
 }
-
