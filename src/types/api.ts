@@ -61,7 +61,7 @@ export type TeamAPI = {
   members?: TeamMember[];
 }
 
-export type TeamMembersResponse = {
+export type TeamMembersAPI = {
   "@context": string;
   "@id": string;
   "@type": string;
