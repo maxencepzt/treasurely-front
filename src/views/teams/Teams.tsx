@@ -4,7 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Loading } from "../../components";
 import TeamProfilePicture from "../../components/teams/TeamProfilePicture";
+import TeamTreasureHuntCard from "../../components/teams/TeamTreasureHuntCard";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
+import { useTeamTreasureHuntsByIdQuery } from "../../store/slices/api";
 import { parseApiError } from "../../utils/api.ts";
 import ErrorView from "../Error.tsx";
 
@@ -16,8 +18,10 @@ export default function Teams() {
     throw new Error('No id provided.');
   }
   const { data: team, isLoading, error } = useTeamWithMembers(parseInt(params.id));
+  const { data: treasureHuntsData, isLoading: isLoadingHunts } = useTeamTreasureHuntsByIdQuery({ id: parseInt(params.id) });
+  const treasureHunts = treasureHuntsData?.hunts || [];
 
-  if (isLoading) return <Loading />;
+  if (isLoading || isLoadingHunts) return <Loading />;
 
   if (error) {
     const { status, message } = parseApiError(error);
@@ -53,6 +57,25 @@ export default function Teams() {
             </div>
             <FontAwesomeIcon icon={faChevronRight} className="text-gray-400" />
           </button>
+        </div>
+
+        {/* Liste des chasses au trésor */}
+        <div className="p-4 bg-gray-50">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Chasses au trésor</h2>
+          {treasureHunts && treasureHunts.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3">
+              {treasureHunts.map((hunt) => (
+                <TeamTreasureHuntCard
+                  key={hunt["@id"]}
+                  teamTreasureHunt={hunt}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="px-4 py-12 bg-white rounded-lg">
+              <p className="text-gray-500 italic text-center">Aucune chasse au trésor</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
