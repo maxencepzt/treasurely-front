@@ -68,6 +68,17 @@ export type TeamMembersAPI = {
   members: TeamMember[];
 }
 
+export type TeamTreasureHuntsAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  title: string;
+  difficulty: number;
+  riddleCount: number;
+  location: string;
+  estimatedTime: number;
+}
+
 export type UserTeamsAPI = {
   "@context": string;
   "@id": string;
