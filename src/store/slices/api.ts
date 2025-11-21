@@ -2,7 +2,7 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { API_CONFIG } from '../../config/api';
-import type { TeamAPI, TeamMembersResponse, TreasureHuntAPI, User, UserTeamsAPI, TeamMembersAPI } from "../../types/api";
+import type { TeamAPI, TreasureHuntAPI, TeamTreasureHuntsAPI, User, UserTeamsAPI, TeamMembersAPI } from "../../types/api";
 import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
 
@@ -138,6 +138,12 @@ const api = createApi({
         method: 'GET',
       }),
     }),
+    teamTreasureHuntsById: build.query<{ hunts: TeamTreasureHuntsAPI[] }, { id: number }>({
+      query: ({ id }) => ({
+        url: `teams/${id}/treasure_hunts`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -155,5 +161,6 @@ export const {
   useTeamByIdQuery,
   useUserTeamsByIdQuery,
   useTeamMembersByIdQuery,
+  useTeamTreasureHuntsByIdQuery,
 } = api;
 export default api;
