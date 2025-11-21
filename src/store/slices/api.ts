@@ -2,7 +2,7 @@ import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolk
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { API_CONFIG } from '../../config/api';
-import type {TeamAPI, TreasureHuntAPI, User} from "../../types/api";
+import type {TeamAPI, TreasureHuntAPI, User, UserTeamsAPI} from "../../types/api";
 import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
 
@@ -108,6 +108,12 @@ const api = createApi({
         method: 'DELETE',
       }),
     }),
+    userById: build.query<User, { id: number }>({
+      query: ({ id }) => ({
+        url: `users/${id}`,
+        method: 'GET',
+      }),
+    }),
     treasureHuntGetById: build.query<TreasureHuntAPI, { id: number }>({
       query: ({ id }) => ({
         url: `treasure_hunts/${id}`,
@@ -117,6 +123,12 @@ const api = createApi({
     teamById: build.query<TeamAPI, { id: number }>({
       query: ({ id }) => ({
         url: `teams/${id}`,
+        method: 'GET',
+      }),
+    }),
+    userTeamsById: build.query<UserTeamsAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `users/${id}/teams`,
         method: 'GET',
       }),
     }),
@@ -131,8 +143,10 @@ export const {
   useRefreshTokenMutation,
   useLazyGetAuthentifiedUserQuery,
   useLogoutMutation,
+  useUserByIdQuery,
   useLogoutSSOMutation,
   useTreasureHuntGetByIdQuery,
   useTeamByIdQuery,
+  useUserTeamsByIdQuery,
 } = api;
 export default api;

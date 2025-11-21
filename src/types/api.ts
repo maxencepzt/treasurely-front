@@ -15,6 +15,8 @@ export type User = {
   profilePicture: string;
   totalTime: number;
   totalHunt: number;
+  description?: string;
+  teams?: string[];
 };
 
 export type HuntTypeAPI = {
@@ -49,4 +51,11 @@ export type TeamAPI = {
   name: string;
   description: string;
   owner: string;
+}
+
+export type UserTeamsAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  teams: string[];
 }
