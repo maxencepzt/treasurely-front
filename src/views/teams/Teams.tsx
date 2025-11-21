@@ -3,6 +3,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Loading } from "../../components";
+import TeamProfilePicture from "../../components/teams/TeamProfilePicture";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
 import { parseApiError } from "../../utils/api.ts";
 import ErrorView from "../Error.tsx";
@@ -30,7 +31,10 @@ export default function Teams() {
       <div className="w-full max-w-md bg-white min-h-screen">
         {/* Header avec nom et description */}
         <div className="p-4 border-b border-gray-200">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{team.name}</h1>
+          <div className="flex items-center gap-3 mb-3">
+            <TeamProfilePicture teamId={team.id} size="md" />
+            <h1 className="text-2xl font-bold text-gray-900">{team.name}</h1>
+          </div>
           <p className="text-gray-700">{team.description}</p>
         </div>
 
