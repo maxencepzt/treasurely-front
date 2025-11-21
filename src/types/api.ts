@@ -77,6 +77,7 @@ export type TeamTreasureHuntsAPI = {
   riddleCount: number;
   location: string;
   estimatedTime: number;
+  members?: TeamMember[];
 }
 
 export type UserTeamsAPI = {
