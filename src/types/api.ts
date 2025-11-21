@@ -38,7 +38,7 @@ export type TreasureHuntAPI = {
   difficulty: number;
   riddleCount: number;
   huntType: HuntTypeAPI[];
-  team: string;
+  designerTeam: string;
   owner: string;
   location: string;
   estimatedTime: number;

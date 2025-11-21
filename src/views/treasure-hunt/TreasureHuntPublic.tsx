@@ -57,7 +57,7 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
             <span>{"🔥".repeat(treasureHunt.difficulty)}</span>
           </div>
         </div>
-        <THTeamButton teamRoute={treasureHunt.team} />
+        <THTeamButton teamRoute={treasureHunt.designerTeam} />
         {/* Stats */}
         <div className="flex flex-row pl-4 pt-4 gap-4">
           <div className="flex flex-row text-lg font-medium gap-1 items-center" title={`${treasureHunt.riddleCount} énigmes`}><FontAwesomeIcon icon={faMapLocationDot} className="text-xl" />{treasureHunt.riddleCount}</div>
