@@ -1,4 +1,4 @@
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import type { User } from '../../types/api.ts';
@@ -7,11 +7,16 @@ import UserProfilePicture from '../UserProfilePicture.tsx';
 export function ProfileIdentity({ user, editable = false }: { user: User, editable?: boolean }) {
   return (
     <div className="relative bg-gradient-to-br from-green-600 to-green-700 px-4 py-6 mb-4 shadow-lg">
-      {/* Icon d'édition en haut à droite */}
+      {/* Bouton d'édition en haut à droite */}
       {editable && (
-        <div className="absolute top-4 right-4">
-          <FontAwesomeIcon icon={faGear} className="text-2xl text-white hover:text-green-100 transition-colors cursor-pointer" />
-        </div>
+        <button
+          type="button"
+          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-800/70 hover:bg-gray-800 flex items-center justify-center transition-colors cursor-pointer"
+          aria-label="Éditer le profil"
+          title="Éditer le profil"
+        >
+          <FontAwesomeIcon icon={faCog} className="text-xl text-white" />
+        </button>
       )}
 
       {/* Avatar et Nickname centrés */}
