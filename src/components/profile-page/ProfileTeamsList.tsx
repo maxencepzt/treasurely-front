@@ -1,6 +1,6 @@
 import { useTeamByIdQuery } from '../../store/slices/api.ts';
 import { getIdFromUrl } from '../../utils/api.ts';
-import ProfileTeamButton from './ProfileTeamButton.tsx';
+import { TeamButton } from "../index.ts";
 
 /**
  * Liste des équipes d'un utilisateur
@@ -34,7 +34,7 @@ export default function ProfileTeamsList({ teamRoutes }: { teamRoutes: string[] 
       </h2>
       <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {teamRoutes.map((teamRoute) => (
-          <ProfileTeamButton key={teamRoute} teamRoute={teamRoute} />
+          <TeamButton key={teamRoute} teamRoute={teamRoute} />
         ))}
       </div>
     </div>

@@ -20,7 +20,7 @@ export type User = {
 };
 
 export type HuntTypeAPI = {
-  "@context": string;
+  "@context"?: string;
   "@id": string;
   "@type": string;
   id: number;
@@ -38,9 +38,17 @@ export type TreasureHuntAPI = {
   difficulty: number;
   riddleCount: number;
   huntType: HuntTypeAPI[];
-  team: string;
+  designerTeam: string;
   owner: string;
   location: string;
+  estimatedTime: number;
+}
+
+export type TeamMember = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  nickname: string;
 }
 
 export type TeamAPI = {
@@ -51,6 +59,27 @@ export type TeamAPI = {
   name: string;
   description: string;
   owner: string;
+  members?: TeamMember[];
+  code?: string;
+}
+
+export type TeamMembersAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  members: TeamMember[];
+}
+
+export type TeamTreasureHuntsAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  title: string;
+  difficulty: number;
+  riddleCount: number;
+  location: string;
+  estimatedTime: number;
+  members?: TeamMember[];
 }
 
 export type UserTeamsAPI = {

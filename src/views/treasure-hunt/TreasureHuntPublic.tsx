@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import {faAngleLeft, faCog, faLocationDot, faMapLocationDot} from "@fortawesome/free-solid-svg-icons";
+import {faCog, faLocationDot, faMapLocationDot, faStopwatch} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { BackButton, CoverImage, DescriptionModal, TeamButton } from "../../components";
 import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
-import THTeamButton from "../../components/treasure-hunt/thTeamButton.tsx";
 import { useUser } from "../../contexts/user";
 import type { TreasureHuntAPI } from "../../types/api.ts";
 import { getIdFromUrl } from "../../utils/api.ts";
+import formatDuration from "../../utils/formatDuration.ts";
 
 export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: TreasureHuntAPI}) {
-  // TODO: Implémenter la participation à une chasse au trésor (création d'une équipe ou rejoindre une équipe existante)
-  // TODO: Implémenter l'affichage de la ville
   const navigate = useNavigate();
   const { user } = useUser();
 
@@ -26,73 +25,93 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
   const isOwner = user && getIdFromUrl(treasureHunt.owner) === user.id;
 
   return (
-    <div className="min-h-screen flex justify-center">
-      <div className="w-full max-w-md bg-white min-h-screen flex flex-col">
-        <div className="relative">
-          <img src={import.meta.env.VITE_API_BASE_URL + treasureHunt["@id"] + "/picture"} alt={"Photo de " + treasureHunt.title} className="w-full h-60 object-cover rounded-b-xl" />
-          <button
-            type="button"
-            className="absolute top-4 left-4 w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-            onClick={() => navigate(-1)}
-            aria-label="Retour"
-            title="Retour à la page précédente"
-          >
-            <FontAwesomeIcon icon={faAngleLeft} className="text-2xl text-gray-100" />
-          </button>
-          {isOwner && (
-            <button
-              type="button"
-              className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-              onClick={() => navigate(`/treasure-hunts/${treasureHunt.id}/edit`)}
-              aria-label="Éditer"
-              title="Éditer la chasse au trésor"
-            >
-              <FontAwesomeIcon icon={faCog} className="text-2xl text-gray-100" />
-            </button>
-          )}
-        </div>
-        <div className="flex flex-row justify-between w-full p-4">
-          <strong className="text-lg">{treasureHunt.title}</strong>
-          <div className="flex flex-row gap-1 items-center">
-            <span className="text-lg">Difficulté</span>
-            <span>{"🔥".repeat(treasureHunt.difficulty)}</span>
-          </div>
-        </div>
-        <THTeamButton teamRoute={treasureHunt.team} />
-        {/* Stats */}
-        <div className="flex flex-row pl-4 pt-4 gap-4">
-          <div className="flex flex-row text-lg font-medium gap-1 items-center" title={`${treasureHunt.riddleCount} énigmes`}><FontAwesomeIcon icon={faMapLocationDot} className="text-xl" />{treasureHunt.riddleCount}</div>
-          <div className="flex flex-row text-lg font-medium gap-1 items-center" title={treasureHunt.location}><FontAwesomeIcon icon={faLocationDot} className="text-xl" />{treasureHunt.location}</div>
-        </div>
-        {/* Title for the description section */}
-        <h2 className="px-4 pt-2 pb-1 text-lg font-semibold text-gray-800">A propos</h2>
-        {/* Description section */}
-        <div
-          className={`px-4 pb-4 text-gray-700 whitespace-pre-line ${isLong ? "cursor-pointer select-none" : ""}`}
-          onClick={() => isLong && setShowModal(true)}
-          title={isLong ? "Voir la description complète" : undefined}
-        >
-          {description}
-        </div>
-        {/* Modal pour la description complete */}
-        {showModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/25">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-screen overflow-y-auto relative">
+    <div className="min-h-screen flex justify-center bg-gradient-to-br from-green-50 to-emerald-100">
+      <div className="w-full max-w-md bg-white min-h-screen shadow-2xl flex flex-col">
+        {/* Image de couverture avec boutons */}
+        <CoverImage
+          type="treasure-hunt"
+          id={treasureHunt.id}
+          alt={"Photo de " + treasureHunt.title}
+          backButton={<BackButton variant="dark" />}
+          actionButton={
+            isOwner ? (
               <button
                 type="button"
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl"
-                onClick={() => setShowModal(false)}
-                aria-label="Fermer"
+                className="w-10 h-10 rounded-full bg-gray-800/70 hover:bg-gray-800 flex items-center justify-center transition-colors cursor-pointer"
+                onClick={() => navigate(`/treasure-hunts/${treasureHunt.id}/edit`)}
+                aria-label="Éditer"
+                title="Éditer la chasse au trésor"
               >
-                &times;
+                <FontAwesomeIcon icon={faCog} className="text-xl text-white" />
               </button>
-              <h2 className="text-lg font-bold mb-2">Description complète</h2>
-              <div className="text-gray-800 whitespace-pre-line">{treasureHunt.description}</div>
+            ) : undefined
+          }
+        />
+
+        {/* Titre et difficulté */}
+        <div className="px-6 pt-6 pb-4 bg-gradient-to-b from-white to-green-50">
+          <div className="flex flex-row justify-between items-start gap-4 mb-4">
+            <h1 className="text-2xl font-bold text-gray-900 flex-1">{treasureHunt.title}</h1>
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-sm font-medium text-gray-600">Difficulté</span>
+              <div className="flex items-center gap-1">
+                <span className="text-xl">{"🔥".repeat(treasureHunt.difficulty)}</span>
+              </div>
             </div>
           </div>
-        )}
-        <h2 className="px-4 pt-2 pb-1 text-lg font-semibold text-gray-800">Catégories</h2>
-        <div className="px-4 pb-4">
+
+          {/* Équipe conceptrice */}
+          <TeamButton teamRoute={treasureHunt.designerTeam} />
+        </div>
+
+        {/* Stats */}
+        <div className="px-6 pb-4 bg-gradient-to-b from-green-50 to-white">
+          <div className="flex flex-row gap-6 bg-white rounded-2xl p-4 border-2 border-green-100 shadow-sm">
+            <div className="flex flex-row items-center gap-2" title={`${treasureHunt.riddleCount} énigmes`}>
+              <FontAwesomeIcon icon={faMapLocationDot} className="text-xl text-green-600" />
+              <span className="text-base font-semibold text-gray-800">{treasureHunt.riddleCount} énigmes</span>
+            </div>
+            <div className="flex flex-row items-center gap-2" title={treasureHunt.location}>
+              <FontAwesomeIcon icon={faLocationDot} className="text-xl text-green-600" />
+              <span className="text-base font-semibold text-gray-800">{treasureHunt.location}</span>
+            </div>
+            <div className="flex flex-row items-center gap-2" title={formatDuration(treasureHunt.estimatedTime*60)}>
+              <FontAwesomeIcon icon={faStopwatch} className="text-xl text-green-600" />
+              <span className="text-base font-semibold text-gray-800">{formatDuration(treasureHunt.estimatedTime*60)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className="px-6 pb-4">
+          <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span className="text-2xl">📝</span>
+            <span>À propos</span>
+          </h2>
+          <div
+            className={`text-gray-700 text-base leading-relaxed whitespace-pre-line bg-gradient-to-br from-white to-green-50 rounded-2xl p-4 border-2 border-green-100 shadow-sm ${
+              isLong ? "cursor-pointer hover:border-green-200" : ""
+            }`}
+            onClick={() => isLong && setShowModal(true)}
+            title={isLong ? "Voir la description complète" : undefined}
+          >
+            {description}
+          </div>
+        </div>
+
+        {/* Modal pour la description complete */}
+        <DescriptionModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          description={treasureHunt.description}
+        />
+
+        {/* Catégories */}
+        <div className="px-6 pb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <span className="text-2xl">🏷️</span>
+            <span>Catégories</span>
+          </h2>
           <div className="flex flex-row gap-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {treasureHunt.huntType.map((cat) => (
               <HuntTypeBadge key={cat.id}>
@@ -101,7 +120,9 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
             ))}
           </div>
         </div>
-        <div className="mt-auto px-4">
+
+        {/* Bouton participer */}
+        <div className="mt-auto px-6 pb-6">
           <THButton onClick={() => {alert('Implémente ça !')}}>Participer</THButton>
         </div>
       </div>
