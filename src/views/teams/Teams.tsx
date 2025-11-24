@@ -3,7 +3,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { BackButton, Loading } from "../../components";
-import TeamProfilePicture from "../../components/teams/TeamProfilePicture";
+import ProfilePicture from "../../components/ProfilePicture";
 import TeamTreasureHuntCard from "../../components/teams/TeamTreasureHuntCard";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
 import { parseApiError } from "../../utils/api.ts";
@@ -40,7 +40,7 @@ export default function Teams() {
           {/* Contenu centré */}
           <div className="flex flex-col items-center gap-4 mt-8">
             <div className="ring-4 ring-white rounded-full">
-              <TeamProfilePicture teamId={team.id} size="lg" />
+              <ProfilePicture type="team" id={team.id} size="lg" alt={`Photo de ${team.name}`} />
             </div>
             <h1 className="text-3xl font-bold text-white text-center drop-shadow-md">
               {team.name}

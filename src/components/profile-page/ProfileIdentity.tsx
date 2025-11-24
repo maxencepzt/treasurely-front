@@ -2,7 +2,7 @@ import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import type { User } from '../../types/api.ts';
-import UserProfilePicture from '../UserProfilePicture.tsx';
+import ProfilePicture from '../ProfilePicture.tsx';
 
 export function ProfileIdentity({ user, editable = false }: { user: User, editable?: boolean }) {
   return (
@@ -22,7 +22,7 @@ export function ProfileIdentity({ user, editable = false }: { user: User, editab
       {/* Avatar et Nickname centrés */}
       <div className="flex flex-col items-center gap-3">
         <div className="ring-4 ring-white rounded-full">
-          <UserProfilePicture userData={user} size={80} />
+          <ProfilePicture type="user" id={user.id} size={80} alt={`Photo de ${user.nickname}`} />
         </div>
         <span className="text-2xl font-bold text-white drop-shadow-md">{user.nickname}</span>
       </div>

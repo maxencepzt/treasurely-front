@@ -4,8 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type SerializedError } from '@reduxjs/toolkit';
 import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
+import { useUser } from '../contexts/user';
 import { parseApiError } from '../utils/api';
-import UserProfilePicture from './UserProfilePicture';
+import ProfilePicture from './ProfilePicture';
 
 type uploadFormProps = {
   onSubmit: () => void;
@@ -14,6 +15,8 @@ type uploadFormProps = {
 }
 
 function UploadForm ({onSubmit, onChange, error}: uploadFormProps) {
+  const { user } = useUser();
+
   const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit();
@@ -24,6 +27,8 @@ function UploadForm ({onSubmit, onChange, error}: uploadFormProps) {
     onChange(e);
   }, [onChange]);
 
+  if (!user) return null;
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -32,7 +37,7 @@ function UploadForm ({onSubmit, onChange, error}: uploadFormProps) {
     >
       <h1 className="text-3xl font-bold">Télécharger une photo de profil</h1>
 
-      <UserProfilePicture/>
+      <ProfilePicture type="user" id={user.id} size={80} />
 
       {error && (<div className="text-red-600 text-sm">{parseApiError(error).message}</div>)}
 
