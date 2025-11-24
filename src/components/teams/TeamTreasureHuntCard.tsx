@@ -4,23 +4,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import type {TeamTreasureHuntsAPI} from "../../types/api.ts";
 import { getIdFromUrl } from "../../utils/api.ts";
+import formatDuration from "../../utils/formatDuration.ts";
 
 export default function TeamTreasureHuntCard({teamTreasureHunt}: {teamTreasureHunt: TeamTreasureHuntsAPI}) {
   const navigate = useNavigate();
-
   const treasureHuntId = getIdFromUrl(teamTreasureHunt["@id"]);
 
-  const formatTime = (minutes: number) => {
-    if (minutes < 60) {
-      return `${minutes}min`;
-    }
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return mins > 0 ? `${hours}h${mins}` : `${hours}h`;
-  };
-
   return (
-    <div
+    <button
+      type="button"
       onClick={() => navigate(`/treasure-hunt/${treasureHuntId}`)}
       className="bg-white rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200"
     >
@@ -46,7 +38,7 @@ export default function TeamTreasureHuntCard({teamTreasureHunt}: {teamTreasureHu
         {/* Temps estimé */}
         <div className="flex items-center gap-1" title="Temps estimé">
           <FontAwesomeIcon icon={faStopwatch} className="text-purple-600" />
-          <span>{formatTime(teamTreasureHunt.estimatedTime)}</span>
+          <span>{formatDuration(teamTreasureHunt.estimatedTime)}</span>
         </div>
 
         {/* Difficulté */}
@@ -54,6 +46,6 @@ export default function TeamTreasureHuntCard({teamTreasureHunt}: {teamTreasureHu
           {"🔥".repeat(teamTreasureHunt.difficulty)}
         </div>
       </div>
-    </div>
+    </button>
   );
 }
