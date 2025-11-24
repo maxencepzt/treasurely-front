@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { BackButton, CoverImage, Loading } from "../../components";
+import { BackButton, CoverImage, DescriptionModal, Loading } from "../../components";
 import TeamTreasureHuntCard from "../../components/teams/TeamTreasureHuntCard";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
 import { parseApiError } from "../../utils/api.ts";
@@ -11,6 +12,7 @@ import ErrorView from "../Error.tsx";
 export default function Teams() {
   const params = useParams();
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
   if (!params.id) {
     throw new Error('No id provided.');
@@ -25,6 +27,12 @@ export default function Teams() {
   }
 
   if (!team) return <ErrorView status={404} message="Team introuvable" />;
+
+  const maxLength = 250;
+  const isLong = team.description && team.description.length > maxLength;
+  const description = isLong
+    ? team.description.slice(0, maxLength) + '...'
+    : team.description;
 
   return (
     <div className="min-h-screen flex justify-center bg-gradient-to-br from-green-50 to-emerald-100">
@@ -51,13 +59,24 @@ export default function Teams() {
               <span className="text-2xl">📝</span>
               <span>À propos</span>
             </h2>
-            <p className="text-gray-700 text-base leading-relaxed bg-white rounded-2xl p-4 border-2 border-green-100 shadow-sm">
-              {team.description.length > 250
-                ? `${team.description.slice(0, 250)}...`
-                : team.description}
-            </p>
+            <div
+              className={`text-gray-700 text-base leading-relaxed bg-white rounded-2xl p-4 border-2 border-green-100 shadow-sm ${
+                isLong ? "cursor-pointer hover:border-green-200" : ""
+              }`}
+              onClick={() => isLong && setShowModal(true)}
+              title={isLong ? "Voir la description complète" : undefined}
+            >
+              {description}
+            </div>
           </div>
         )}
+
+        {/* Modal pour la description complete */}
+        <DescriptionModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          description={team.description || ""}
+        />
 
         {/* Section membres cliquable */}
         <div className="px-6 pb-4">
