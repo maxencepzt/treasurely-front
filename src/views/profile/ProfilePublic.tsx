@@ -29,7 +29,9 @@ export function ProfilePublic({ user, isOwner = false }: { user: User, isOwner?:
               <span>À propos</span>
             </h2>
             <p className="text-gray-700 text-base leading-relaxed bg-white rounded-2xl p-4 border-2 border-green-100 shadow-sm">
-              {user.description.slice(0, 150)}
+              {user.description.length > 150
+                ? `${user.description.slice(0, 150)}...`
+                : user.description}
             </p>
           </div>
         )}

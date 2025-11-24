@@ -52,7 +52,9 @@ export default function Teams() {
               <span>À propos</span>
             </h2>
             <p className="text-gray-700 text-base leading-relaxed bg-white rounded-2xl p-4 border-2 border-green-100 shadow-sm">
-              {team.description.slice(0, 250)}
+              {team.description.length > 250
+                ? `${team.description.slice(0, 250)}...`
+                : team.description}
             </p>
           </div>
         )}
