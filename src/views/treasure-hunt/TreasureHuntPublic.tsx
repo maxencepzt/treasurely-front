@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { faCog, faLocationDot, faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { BackButton } from "../../components";
+import { BackButton, CoverImage } from "../../components";
 import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
 import THTeamButton from "../../components/treasure-hunt/thTeamButton.tsx";
@@ -28,32 +28,25 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
     <div className="min-h-screen flex justify-center bg-gradient-to-br from-green-50 to-emerald-100">
       <div className="w-full max-w-md bg-white min-h-screen shadow-2xl flex flex-col">
         {/* Image de couverture avec boutons */}
-        <div className="relative">
-          <img
-            src={import.meta.env.VITE_API_BASE_URL + treasureHunt["@id"] + "/picture"}
-            alt={"Photo de " + treasureHunt.title}
-            className="w-full h-64 object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-
-          {/* Bouton retour */}
-          <div className="absolute top-4 left-4">
-            <BackButton variant="dark" />
-          </div>
-
-          {/* Bouton éditer (si propriétaire) */}
-          {isOwner && (
-            <button
-              type="button"
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-800/70 hover:bg-gray-800 flex items-center justify-center transition-colors cursor-pointer"
-              onClick={() => navigate(`/treasure-hunts/${treasureHunt.id}/edit`)}
-              aria-label="Éditer"
-              title="Éditer la chasse au trésor"
-            >
-              <FontAwesomeIcon icon={faCog} className="text-xl text-white" />
-            </button>
-          )}
-        </div>
+        <CoverImage
+          type="treasure-hunt"
+          id={treasureHunt.id}
+          alt={"Photo de " + treasureHunt.title}
+          backButton={<BackButton variant="dark" />}
+          actionButton={
+            isOwner ? (
+              <button
+                type="button"
+                className="w-10 h-10 rounded-full bg-gray-800/70 hover:bg-gray-800 flex items-center justify-center transition-colors cursor-pointer"
+                onClick={() => navigate(`/treasure-hunts/${treasureHunt.id}/edit`)}
+                aria-label="Éditer"
+                title="Éditer la chasse au trésor"
+              >
+                <FontAwesomeIcon icon={faCog} className="text-xl text-white" />
+              </button>
+            ) : undefined
+          }
+        />
 
         {/* Titre et difficulté */}
         <div className="px-6 pt-6 pb-4 bg-gradient-to-b from-white to-green-50">

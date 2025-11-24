@@ -2,8 +2,7 @@ import { useNavigate, useParams } from "react-router";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { BackButton, Loading } from "../../components";
-import ProfilePicture from "../../components/ProfilePicture";
+import { BackButton, CoverImage, Loading } from "../../components";
 import TeamTreasureHuntCard from "../../components/teams/TeamTreasureHuntCard";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
 import { parseApiError } from "../../utils/api.ts";
@@ -30,22 +29,19 @@ export default function Teams() {
   return (
     <div className="min-h-screen flex justify-center bg-gradient-to-br from-green-50 to-emerald-100">
       <div className="w-full max-w-md bg-white min-h-screen shadow-2xl">
-        {/* Header avec gradient et nom de l'équipe */}
-        <div className="relative bg-gradient-to-br from-green-600 to-green-700 px-6 py-8 shadow-lg">
-          {/* Bouton retour */}
-          <div className="absolute top-4 left-4">
-            <BackButton variant="dark" />
-          </div>
+        {/* Image de couverture avec bouton retour */}
+        <CoverImage
+          type="team"
+          id={team.id}
+          alt={`Photo de ${team.name}`}
+          backButton={<BackButton variant="dark" />}
+        />
 
-          {/* Contenu centré */}
-          <div className="flex flex-col items-center gap-4 mt-8">
-            <div className="ring-4 ring-white rounded-full">
-              <ProfilePicture type="team" id={team.id} size="lg" alt={`Photo de ${team.name}`} />
-            </div>
-            <h1 className="text-3xl font-bold text-white text-center drop-shadow-md">
-              {team.name}
-            </h1>
-          </div>
+        {/* Nom de l'équipe */}
+        <div className="px-6 pt-6 pb-4 bg-gradient-to-b from-white to-green-50">
+          <h1 className="text-3xl font-bold text-gray-900 text-center">
+            {team.name}
+          </h1>
         </div>
 
         {/* Description section */}
