@@ -1,15 +1,19 @@
 import type { FormEvent } from 'react';
 
 import { Loading, UploadForm } from '../components';
-import { useUploadImageMutation, useUserProfilePictureDeleteMutation } from '../store/slices/api';
+import { useUser } from '../contexts/user';
+import { useUserProfilePictureDeleteMutation,useUserUploadProfilePictureMutation } from '../store/slices/api';
 
-function UploadImage() {
+function UserUploadProfilePicture() {
   const [userProfilePictureDelete, { isLoading: isLoadingDelete, error: errorDelete }] = useUserProfilePictureDeleteMutation();
-  const [uploadImagePost, { isLoading: isLoadingUpload, error: errorUpload }] = useUploadImageMutation();
+  const [userUploadProfilePicturePost, { isLoading: isLoadingUpload, error: errorUpload }] = useUserUploadProfilePictureMutation();
+  const { user } = useUser();
 
   async function handleSubmit() {
+    if (!user) return;
+
     try {
-      await userProfilePictureDelete(null).unwrap();
+      await userProfilePictureDelete(user.id).unwrap();
 
       window.location.reload();
     } catch (error) {
@@ -18,10 +22,12 @@ function UploadImage() {
   }
 
   async function handleChange(e: FormEvent<HTMLInputElement>) {
+    if (!user) return;
+
     const formData = new FormData(e.currentTarget.form!);
 
     try {
-      await uploadImagePost(formData).unwrap();
+      await userUploadProfilePicturePost({userId: user.id, formData }).unwrap();
 
       window.location.reload();
     } catch (error) {
@@ -36,4 +42,4 @@ function UploadImage() {
   );
 }
 
-export default UploadImage;
+export default UserUploadProfilePicture;
