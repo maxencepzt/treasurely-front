@@ -5,6 +5,7 @@ import LoginForm from './LoginForm';
 import LogoutButton from './LogoutButton.tsx';
 import ProfilePicture from './ProfilePicture.tsx';
 import Router from './Router';
+import TeamButton from './TeamButton.tsx';
 import UploadForm from './UploadForm';
 
 export {
@@ -15,5 +16,6 @@ export {
   LogoutButton,
   ProfilePicture,
   Router,
+  TeamButton,
   UploadForm,
 };

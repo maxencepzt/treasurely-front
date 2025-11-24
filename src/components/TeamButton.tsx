@@ -2,18 +2,17 @@ import { useNavigate } from "react-router";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { useTeamByIdQuery } from "../../store/slices/api.ts";
-import { getIdFromUrl } from "../../utils/api.ts";
-import { parseApiError } from "../../utils/api.ts";
-import ErrorView from "../../views/Error.tsx";
-import { Loading } from "../index.ts";
+import { useTeamByIdQuery } from "../store/slices/api.ts";
+import { getIdFromUrl } from "../utils/api.ts";
+import { parseApiError } from "../utils/api.ts";
+import ErrorView from "../views/Error.tsx";
 
 /**
- * Button affichant l'équipe d'une chasse au trésor
+ * Composant bouton affichant une équipe
  * @param teamRoute Forme "/api/teams/1"
- * @example <THTeamButton team={treasureHunt.team} />
+ * @example <TeamButton teamRoute={team} />
  */
-export default function THTeamButton({teamRoute}: {teamRoute: string}) {
+export default function TeamButton({teamRoute}: {teamRoute: string}) {
   const navigate = useNavigate();
   const { data: team, isLoading, error } = useTeamByIdQuery({id: getIdFromUrl(teamRoute)});
 
@@ -21,7 +20,7 @@ export default function THTeamButton({teamRoute}: {teamRoute: string}) {
     const { status, message } = parseApiError(error);
     return <ErrorView status={status} message={message} />;
   }
-  if (isLoading) return <Loading />;
+  if (isLoading) return null;
   if (!team) {
     return <ErrorView status={404} message="Team not found" />;
   }
@@ -29,7 +28,7 @@ export default function THTeamButton({teamRoute}: {teamRoute: string}) {
   return (
     <button
       type="button"
-      className="p-2 ml-4 gap-2 flex items-center justify-center rounded-lg bg-gray-200 hover:bg-gray-300 active:bg-gray-400 transition-colors cursor-pointer self-start"
+      className="px-5 py-3 gap-2 flex items-center justify-center rounded-2xl bg-gradient-to-br from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 active:scale-95 shadow-md hover:shadow-lg border-2 border-green-800 transition-all duration-200 cursor-pointer text-white font-semibold whitespace-nowrap flex-shrink-0"
       onClick={() => { navigate(`/teams/${team.id}`) }}
     >
       <FontAwesomeIcon icon={ faUsers } />
@@ -37,3 +36,4 @@ export default function THTeamButton({teamRoute}: {teamRoute: string}) {
     </button>
   );
 }
+

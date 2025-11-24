@@ -3,10 +3,9 @@ import { useNavigate } from "react-router";
 import { faCog, faLocationDot, faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { BackButton, CoverImage } from "../../components";
+import { BackButton, CoverImage, TeamButton } from "../../components";
 import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
-import THTeamButton from "../../components/treasure-hunt/thTeamButton.tsx";
 import { useUser } from "../../contexts/user";
 import type { TreasureHuntAPI } from "../../types/api.ts";
 import { getIdFromUrl } from "../../utils/api.ts";
@@ -61,7 +60,7 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
           </div>
 
           {/* Équipe conceptrice */}
-          <THTeamButton teamRoute={treasureHunt.designerTeam} />
+          <TeamButton teamRoute={treasureHunt.designerTeam} />
         </div>
 
         {/* Stats */}
