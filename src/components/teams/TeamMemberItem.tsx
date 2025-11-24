@@ -2,9 +2,9 @@ import { useNavigate } from "react-router";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { API_CONFIG } from "../../config/api";
 import type { TeamMember } from "../../types/api";
 import { getIdFromUrl } from "../../utils/api";
+import ProfilePicture from "../ProfilePicture";
 
 interface TeamMemberItemProps {
   member: TeamMember;
@@ -32,14 +32,7 @@ export default function TeamMemberItem({ member, isLast = false }: TeamMemberIte
         className="w-full flex items-center gap-3 py-3 px-2 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer"
       >
         {/* Photo de profil */}
-        <img
-          src={`${API_CONFIG.baseUrl}/api/users/${memberId}/picture`}
-          alt={`Photo de ${member.nickname}`}
-          className="w-12 h-12 rounded-full border-2 border-green-200 object-cover"
-          onError={(e) => {
-            e.currentTarget.src = "/user_profile_picture_default.png";
-          }}
-        />
+        <ProfilePicture type="user" id={memberId} size="md" alt={`Photo de ${member.nickname}`} />
 
         {/* Pseudo */}
         <span className="flex-1 text-left text-gray-900 font-medium">
@@ -55,4 +48,3 @@ export default function TeamMemberItem({ member, isLast = false }: TeamMemberIte
     </>
   );
 }
-
