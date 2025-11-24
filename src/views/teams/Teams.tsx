@@ -62,7 +62,7 @@ export default function Teams() {
           <button
             type="button"
             onClick={() => navigate(`/teams/${params.id}/members`)}
-            className="w-full flex items-center justify-between px-5 py-4 bg-white hover:bg-green-50 active:bg-green-100 transition-colors rounded-2xl border-2 border-green-100 shadow-sm"
+            className="w-full flex items-center justify-between px-5 py-4 bg-white hover:bg-green-50 active:bg-green-100 transition-colors rounded-2xl border-2 border-green-100 shadow-sm cursor-pointer"
           >
             <div className="flex items-center gap-3">
               <span className="text-lg font-semibold text-gray-800">Membres</span>

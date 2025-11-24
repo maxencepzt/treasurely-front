@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { faCog, faLocationDot, faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
+import {faCog, faLocationDot, faMapLocationDot, faStopwatch} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { BackButton, CoverImage, TeamButton } from "../../components";
@@ -9,6 +9,7 @@ import THButton from "../../components/treasure-hunt/thButton.tsx";
 import { useUser } from "../../contexts/user";
 import type { TreasureHuntAPI } from "../../types/api.ts";
 import { getIdFromUrl } from "../../utils/api.ts";
+import formatDuration from "../../utils/formatDuration.ts";
 
 export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: TreasureHuntAPI}) {
   const navigate = useNavigate();
@@ -73,6 +74,10 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
             <div className="flex flex-row items-center gap-2" title={treasureHunt.location}>
               <FontAwesomeIcon icon={faLocationDot} className="text-xl text-green-600" />
               <span className="text-base font-semibold text-gray-800">{treasureHunt.location}</span>
+            </div>
+            <div className="flex flex-row items-center gap-2" title={formatDuration(treasureHunt.estimatedTime*60)}>
+              <FontAwesomeIcon icon={faStopwatch} className="text-xl text-green-600" />
+              <span className="text-base font-semibold text-gray-800">{formatDuration(treasureHunt.estimatedTime*60)}</span>
             </div>
           </div>
         </div>
