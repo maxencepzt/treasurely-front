@@ -117,3 +117,5 @@ export interface QRRiddle extends RiddleAPI {
 export interface TextRiddleAPI extends RiddleAPI {
   answer: string;
 }
+
+export type AnyRiddleAPI = MCQRiddleAPI | GPSRiddleAPI | QRRiddle | TextRiddleAPI;
