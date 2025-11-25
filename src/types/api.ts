@@ -103,6 +103,7 @@ export interface RiddleAPI {
   title: string;
   description: string;
   difficulty: 1 | 2 | 3;
+  orderNumber: number;
 }
 
 export interface MCQRiddleAPI extends RiddleAPI {
