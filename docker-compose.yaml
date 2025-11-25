@@ -1,0 +1,6 @@
+services:
+  sae5-01-front-prod:
+    restart: always
+    image: ${TREASURELY_IMAGE:?Image Treasurely requise}:${APP_VERSION:?Version du projet requis}
+    ports:
+      - 80:80
