@@ -15,6 +15,8 @@ export type User = {
   profilePicture: string;
   totalTime: number;
   totalHunt: number;
+  totalRiddles: number;
+  totalScore: number;
   description?: string;
   teams?: string[];
 };
