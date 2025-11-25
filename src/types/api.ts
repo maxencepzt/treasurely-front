@@ -15,6 +15,8 @@ export type User = {
   profilePicture: string;
   totalTime: number;
   totalHunt: number;
+  totalRiddles: number;
+  totalScore: number;
   description?: string;
   teams?: string[];
 };
@@ -35,7 +37,7 @@ export type TreasureHuntAPI = {
   title: string;
   description: string;
   public: boolean;
-  difficulty: number;
+  difficulty: 1 | 2 | 3;
   riddleCount: number;
   huntType: HuntTypeAPI[];
   designerTeam: string;
@@ -75,7 +77,7 @@ export type TeamTreasureHuntsAPI = {
   "@id": string;
   "@type": string;
   title: string;
-  difficulty: number;
+  difficulty: 1 | 2 | 3;
   riddleCount: number;
   location: string;
   estimatedTime: number;
@@ -88,3 +90,32 @@ export type UserTeamsAPI = {
   "@type": string;
   teams: string[];
 }
+
+export interface RiddleAPI {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  title: string;
+  description: string;
+  difficulty: 1 | 2 | 3;
+}
+
+export interface MCQRiddleAPI extends RiddleAPI {
+  choices: string[];
+  answers: string[];
+}
+
+export interface GPSRiddleAPI extends RiddleAPI {
+  latitude: number;
+  longitude: number;
+}
+
+export interface QRRiddle extends RiddleAPI {
+  code: string;
+}
+
+export interface TextRiddleAPI extends RiddleAPI {
+  answer: string;
+}
+
+export type AnyRiddleAPI = MCQRiddleAPI | GPSRiddleAPI | QRRiddle | TextRiddleAPI;
