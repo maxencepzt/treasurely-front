@@ -90,3 +90,30 @@ export type UserTeamsAPI = {
   "@type": string;
   teams: string[];
 }
+
+export interface RiddleAPI {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  title: string;
+  description: string;
+  difficulty: number;
+}
+
+export interface MCQRiddleAPI extends RiddleAPI {
+  choices: string[];
+  answers: string[];
+}
+
+export interface GPSRiddleAPI extends RiddleAPI {
+  latitude: number;
+  longitude: number;
+}
+
+export interface QRRiddle extends RiddleAPI {
+  code: string;
+}
+
+export interface TextRiddleAPI extends RiddleAPI {
+  answer: string;
+}
