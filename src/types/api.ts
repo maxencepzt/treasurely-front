@@ -37,7 +37,7 @@ export type TreasureHuntAPI = {
   title: string;
   description: string;
   public: boolean;
-  difficulty: number;
+  difficulty: 1 | 2 | 3;
   riddleCount: number;
   huntType: HuntTypeAPI[];
   designerTeam: string;
@@ -77,7 +77,7 @@ export type TeamTreasureHuntsAPI = {
   "@id": string;
   "@type": string;
   title: string;
-  difficulty: number;
+  difficulty: 1 | 2 | 3;
   riddleCount: number;
   location: string;
   estimatedTime: number;
@@ -97,7 +97,7 @@ export interface RiddleAPI {
   "@type": string;
   title: string;
   description: string;
-  difficulty: number;
+  difficulty: 1 | 2 | 3;
 }
 
 export interface MCQRiddleAPI extends RiddleAPI {
