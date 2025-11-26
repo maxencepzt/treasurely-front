@@ -23,10 +23,6 @@ export default function UserHuntsList({ teamIds, isLoading: isLoadingTeams }: Us
     handleTeamError,
   } = useUserHuntsList(teamIds, isLoadingTeams);
 
-  if (isLoading && sortedHunts.length === 0) {
-    return <Loading />;
-  }
-
   return (
     <>
       {/* Invisible loaders for each team using the hook */}
@@ -39,38 +35,45 @@ export default function UserHuntsList({ teamIds, isLoading: isLoadingTeams }: Us
         />
       ))}
 
-      {/* Resume hunt section */}
-      {mostRecentInProgress && (
-        <div className="px-6 pt-6 pb-4">
-          <ResumeHuntCard participateHunt={mostRecentInProgress} />
-        </div>
+      {/* Affichage conditionnel : Loading ou Contenu */}
+      {isLoading && sortedHunts.length === 0 ? (
+        <Loading />
+      ) : (
+        <>
+          {/* Resume hunt section */}
+          {mostRecentInProgress && (
+            <div className="px-6 pt-6 pb-4">
+              <ResumeHuntCard participateHunt={mostRecentInProgress} />
+            </div>
+          )}
+
+          {/* List of all hunts */}
+          <div className="px-6 pb-8">
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <span className="text-2xl">🗺️</span>
+              <span>Vos chasses au trésor</span>
+            </h2>
+
+            {sortedHunts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {sortedHunts.map((participateHunt) => (
+                  <UserHuntCard
+                    key={participateHunt["@id"]}
+                    participateHunt={participateHunt}
+                  />
+                ))}
+              </div>
+            ) : (
+              // Afficher le message "vide" uniquement si on ne charge plus
+              <div className="px-4 py-12 bg-white rounded-2xl border-2 border-green-100 shadow-sm">
+                <p className="text-gray-500 italic text-center">
+                  Vous n'avez participé à aucune chasse au trésor pour le moment
+                </p>
+              </div>
+            )}
+          </div>
+        </>
       )}
-
-      {/* List of all hunts */}
-      <div className="px-6 pb-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <span className="text-2xl">🗺️</span>
-          <span>Vos chasses au trésor</span>
-        </h2>
-
-        {sortedHunts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {sortedHunts.map((participateHunt) => (
-              <UserHuntCard
-                key={participateHunt["@id"]}
-                participateHunt={participateHunt}
-              />
-            ))}
-          </div>
-        ) : !isLoading ? (
-          <div className="px-4 py-12 bg-white rounded-2xl border-2 border-green-100 shadow-sm">
-            <p className="text-gray-500 italic text-center">
-              Vous n'avez participé à aucune chasse au trésor pour le moment
-            </p>
-          </div>
-        ) : null}
-      </div>
     </>
   );
 }
-

@@ -12,8 +12,20 @@ import type { ParticipateHuntAPI } from '../types/api';
  */
 export function useUserHuntsList(teamIds: number[], isLoadingTeams?: boolean) {
   const [allHunts, setAllHunts] = useState<ParticipateHuntAPI[]>([]);
-  const [loadingStates, setLoadingStates] = useState<Record<number, boolean>>({});
-  const previousTeamIdsRef = useRef<string>('[]');
+
+  // Initialisation synchrone de loadingStates
+  // Si on a des teamIds dès le départ, on considère qu'ils sont en chargement
+  const [loadingStates, setLoadingStates] = useState<Record<number, boolean>>(() => {
+    if (teamIds.length > 0) {
+      const initial: Record<number, boolean> = {};
+      teamIds.forEach(id => initial[id] = true);
+      return initial;
+    }
+    return {};
+  });
+
+  // On initialise la ref avec la valeur actuelle pour éviter un double déclenchement inutile
+  const previousTeamIdsRef = useRef<string>(JSON.stringify(teamIds));
 
   // Store serialized teamIds to detect real changes
   const teamIdsString = useMemo(() => JSON.stringify(teamIds), [teamIds]);
@@ -87,4 +99,3 @@ export function useUserHuntsList(teamIds: number[], isLoadingTeams?: boolean) {
     handleTeamError,
   };
 }
-
