@@ -24,5 +24,5 @@ export default function Settings() {
     return <ErrorView status={403} message="Accès interdit : vous ne pouvez pas modifier ce profil" />;
   }
 
-  return <UserSettings user={user} />;
+  return <UserSettings user={user} isOwner={isOwner}/>;
 }
