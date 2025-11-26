@@ -24,19 +24,24 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex justify-center bg-gradient-to-br from-green-50 to-emerald-100">
-      <div className="w-full max-w-md bg-white min-h-screen shadow-2xl">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-emerald-100">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header avec bouton retour */}
-        <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 relative">
-          <div className="absolute top-6 left-6">
-            <BackButton variant="dark" />
+        <div className="mb-8">
+          <div className="mb-6">
+            <BackButton variant="light" />
           </div>
-          <h1 className="text-2xl font-bold text-white text-center mt-8">
-            Mon Tableau de Bord
-          </h1>
-          <p className="text-green-100 text-center mt-2">
-            Bienvenue, {user.nickname}!
-          </p>
+          <div className="text-center">
+            <div className="text-5xl mb-4">
+              🎯
+            </div>
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+              Mon Tableau de Bord
+            </h1>
+            <p className="text-lg sm:text-xl text-gray-700">
+              Bienvenue, <span className="font-semibold text-green-700">{user.nickname}</span> !
+            </p>
+          </div>
         </div>
 
         {/* Liste des chasses avec section de reprise intégrée */}
