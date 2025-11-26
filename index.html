@@ -12,6 +12,16 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
 
     <title>Treasurely</title>
+
+    <!-- Capturer l'événement beforeinstallprompt le plus tôt possible -->
+    <script>
+      window.deferredPrompt = null;
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        window.deferredPrompt = e;
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
