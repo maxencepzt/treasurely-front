@@ -99,12 +99,100 @@ export function getGPSCoordinates(riddle: AnyRiddleAPI): { latitude: number; lon
 /**
  * Récupère le code QR d'un riddle
  * @param riddle - L'énigme QR
- * @returns Le code QR, ou null si ce n'est pas un QR riddle
- * @example getQRCode(riddle) => "treasurely_853769154"
  */
 export function getQRCode(riddle: AnyRiddleAPI): string | null {
   if (isQRRiddle(riddle)) {
     return riddle.code;
   }
   return null;
+}
+
+/**
+ * Désérialise une chaîne PHP sérialisée en tableau
+ * @param serialized - La chaîne sérialisée PHP (ex: a:2:{i:0;s:9:"réponse1";i:1;s:9:"réponse3";})
+ * @returns Un tableau de strings
+ */
+export function unserializePhpArray(serialized: string | string[]): string[] {
+  // Si c'est déjà un tableau, le retourner tel quel
+  if (Array.isArray(serialized)) {
+    return serialized;
+  }
+
+  // Si ce n'est pas une chaîne sérialisée PHP, retourner un tableau avec la valeur
+  if (!serialized.startsWith('a:')) {
+    return [serialized];
+  }
+
+  const values: string[] = [];
+  // Pattern pour extraire les valeurs de type string: s:LENGTH:"VALUE"
+  const stringPattern = /s:\d+:"([^"]*)"/g;
+  let match;
+
+  while ((match = stringPattern.exec(serialized)) !== null) {
+    values.push(match[1]);
+  }
+
+  return values;
+}
+
+/**
+ * Valide une réponse pour une énigme de type texte
+ * @param riddle - L'énigme texte
+ * @param userAnswer - La réponse de l'utilisateur
+ * @returns true si la réponse est correcte (case-insensitive)
+ */
+export function validateTextAnswer(riddle: TextRiddleAPI, userAnswer: string): boolean {
+  return riddle.answer.toLowerCase().trim() === userAnswer.toLowerCase().trim();
+}
+
+/**
+ * Valide une réponse pour une énigme de type MCQ
+ * @param riddle - L'énigme MCQ
+ * @param userAnswers - Les réponses sélectionnées par l'utilisateur
+ * @returns true si toutes les réponses correctes sont sélectionnées et seulement elles
+ */
+export function validateMCQAnswer(riddle: MCQRiddleAPI, userAnswers: string[]): boolean {
+  // Désérialiser les réponses correctes si elles sont au format PHP
+  const correctAnswers = unserializePhpArray(riddle.answers);
+
+  if (userAnswers.length !== correctAnswers.length) {
+    return false;
+  }
+
+  const sortedUserAnswers = [...userAnswers].sort();
+  const sortedCorrectAnswers = [...correctAnswers].sort();
+
+  return sortedUserAnswers.every((answer, index) => answer === sortedCorrectAnswers[index]);
+}
+
+/**
+ * Valide une réponse pour une énigme de type QR
+ * @param riddle - L'énigme QR
+ * @param userCode - Le code scanné/saisi par l'utilisateur
+ * @returns true si le code correspond
+ */
+export function validateQRAnswer(riddle: QRRiddle, userCode: string): boolean {
+  return riddle.code.trim() === userCode.trim();
+}
+
+/**
+ * Valide une réponse pour n'importe quel type d'énigme
+ * @param riddle - L'énigme
+ * @param userAnswer - La réponse de l'utilisateur (string pour text/qr, string[] pour MCQ)
+ * @returns true si la réponse est correcte
+ */
+export function validateRiddleAnswer(riddle: AnyRiddleAPI, userAnswer: string | string[]): boolean {
+  if (isTextRiddle(riddle) && typeof userAnswer === 'string') {
+    return validateTextAnswer(riddle, userAnswer);
+  }
+
+  if (isMCQRiddle(riddle) && Array.isArray(userAnswer)) {
+    return validateMCQAnswer(riddle, userAnswer);
+  }
+
+  if (isQRRiddle(riddle) && typeof userAnswer === 'string') {
+    return validateQRAnswer(riddle, userAnswer);
+  }
+
+  return false;
 }
