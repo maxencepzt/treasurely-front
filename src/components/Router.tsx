@@ -4,7 +4,7 @@ import { Index, Login, UserUploadProfilePicture } from '../views';
 import ErrorView from '../views/Error.tsx';
 import ErrorRouteWrapper from '../views/ErrorRouteWrapper.tsx';
 import Profile from '../views/profile/Profile.tsx';
-import UserSettings from "../views/settings/UserSettings.tsx";
+import Settings from "../views/settings/Settings.tsx";
 import TeamMembers from '../views/teams/TeamMembers.tsx';
 import Teams from "../views/teams/Teams.tsx";
 import TreasureHunt from "../views/treasure-hunt/TreasureHunt.tsx";
@@ -18,7 +18,7 @@ function Router() {
         <Route path="/profile" element={<Profile/>} />
         <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />
-        <Route path="/settings/profile/:id" element={<UserSettings />} />
+        <Route path="/settings/profile/:id" element={<Settings />} />
         <Route path="/settings/profile/:id/upload" element={<UserUploadProfilePicture/>} />
         <Route path="/treasure-hunt/:id" element={<TreasureHunt />} />
         <Route path="/teams/:id" element={<Teams />} />
