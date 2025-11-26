@@ -161,11 +161,10 @@ const api = createApi({
         method: 'GET',
       }),
     }),
-    userDelete: build.mutation<{ message: string }, { userId: number, password: string }>({
-      query: ({ userId, password }) => ({
+    userDelete: build.mutation<{ message: string }, { userId: number }>({
+      query: ({ userId }) => ({
         url: `users/${userId}`,
         method: 'DELETE',
-        body: { password },
       }),
     }),
   }),

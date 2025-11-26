@@ -4,20 +4,20 @@ import { useDispatch } from "react-redux";
 import { useUserDeleteMutation } from "../store/slices/api";
 import { logout } from "../store/slices/authSlice";
 
-export default function DeleteAccountButton({ userId, isOwner, }: { userId: number; isOwner: boolean; }) {
+export default function DeleteAccountButton({ userId, isOwner }: { userId: number; isOwner: boolean }) {
   const [showModal, setShowModal] = useState(false);
-
   const dispatch = useDispatch();
+
   const [deleteUser, { isLoading }] = useUserDeleteMutation();
 
   const handleDelete = async () => {
     if (!isOwner) {
       console.error("Tentative de suppression d’un autre utilisateur");
-      return; // Protection supplémentaire
+      return;
     }
 
     try {
-      await deleteUser({ userId, password: "" }).unwrap();
+      await deleteUser({ userId }).unwrap();
 
       dispatch(logout());
       localStorage.clear();
