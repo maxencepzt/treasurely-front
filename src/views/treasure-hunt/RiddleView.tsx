@@ -3,56 +3,57 @@ import { faCheckCircle, faLightbulb, faSpinner, faTimesCircle } from '@fortaweso
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { BackButton, Loading } from '../../components';
-import { useRiddleGetByIdQuery, useSubmitRiddleAnswerMutation } from '../../store/slices/api';
+import { useRiddleGetByIdQuery } from '../../store/slices/api';
 import type { AnyRiddleAPI, MCQRiddleAPI, ParticipateHuntAPI } from '../../types/api';
-import { parseApiError } from '../../utils/api';
+import { validateRiddleAnswer, unserializePhpArray } from '../../utils/riddleHelpers';
 
 type RiddleViewProps = {
   participateHunt: ParticipateHuntAPI;
-  onComplete: (score: number, totalTime: number) => void;
   onRiddleChange: () => void;
 };
 
-export default function RiddleView({ participateHunt, onComplete, onRiddleChange }: RiddleViewProps) {
+export default function RiddleView({ participateHunt, onRiddleChange }: RiddleViewProps) {
   const { data: riddle, isLoading, error } = useRiddleGetByIdQuery({ id: participateHunt.currentRiddle });
-  const [submitAnswer, { isLoading: isSubmitting }] = useSubmitRiddleAnswerMutation();
 
-  const [answer, setAnswer] = useState<string | number>('');
+  const [answer, setAnswer] = useState<string | number | string[]>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFeedback(null);
+    setIsSubmitting(true);
 
-    try {
-      const result = await submitAnswer({
-        participateHuntId: participateHunt.id,
-        riddleId: participateHunt.currentRiddle,
-        answer,
-      }).unwrap();
+    // Simuler un délai de validation
+    await new Promise(resolve => setTimeout(resolve, 500));
 
-      if (result.correct) {
-        if (result.completed) {
-          // Chasse terminée
-          setFeedback({ type: 'success', message: '🎉 Félicitations ! Vous avez terminé la chasse !' });
-          setTimeout(() => {
-            onComplete(result.score || 0, result.totalTime || 0);
-          }, 2000);
-        } else {
-          // Bonne réponse, passer à l'énigme suivante
-          setFeedback({ type: 'success', message: '✅ Bonne réponse ! Passage à l\'énigme suivante...' });
-          setTimeout(() => {
-            setAnswer('');
-            setFeedback(null);
-            onRiddleChange();
-          }, 2000);
-        }
-      } else {
-        setFeedback({ type: 'error', message: '❌ Réponse incorrecte. Réessayez !' });
-      }
-    } catch (err) {
-      const { message } = parseApiError(err);
-      setFeedback({ type: 'error', message: `Erreur : ${message}` });
+    if (!riddle) {
+      setFeedback({ type: 'error', message: 'Erreur : énigme non trouvée' });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Convertir answer en format approprié pour la validation
+    let answerToValidate: string | string[];
+    if (Array.isArray(answer)) {
+      answerToValidate = answer;
+    } else {
+      answerToValidate = String(answer);
+    }
+
+    const isCorrect = validateRiddleAnswer(riddle, answerToValidate);
+
+    if (isCorrect) {
+      setFeedback({ type: 'success', message: '✅ Bonne réponse ! Passage à l\'énigme suivante...' });
+      setTimeout(() => {
+        setAnswer(Array.isArray(answer) ? [] : '');
+        setFeedback(null);
+        setIsSubmitting(false);
+        onRiddleChange();
+      }, 2000);
+    } else {
+      setFeedback({ type: 'error', message: '❌ Réponse incorrecte. Réessayez !' });
+      setIsSubmitting(false);
     }
   };
 
@@ -142,35 +143,76 @@ export default function RiddleView({ participateHunt, onComplete, onRiddleChange
 
 function renderAnswerInput(
   riddle: AnyRiddleAPI,
-  answer: string | number,
-  setAnswer: (value: string | number) => void
+  answer: string | number | string[],
+  setAnswer: (value: string | number | string[]) => void
 ) {
-  // MCQ Riddle
+  // MCQ Riddle - Support pour réponses multiples
   if ('choices' in riddle) {
     const mcqRiddle = riddle as MCQRiddleAPI;
+    // Désérialiser les choices et answers
+    const choices = unserializePhpArray(mcqRiddle.choices);
+    const answers = unserializePhpArray(mcqRiddle.answers);
+    const isMultiple = answers.length > 1;
+    const selectedAnswers = Array.isArray(answer) ? answer : [];
+
+    const handleChoiceClick = (choice: string) => {
+      if (isMultiple) {
+        // Mode checkbox - plusieurs réponses possibles
+        if (selectedAnswers.includes(choice)) {
+          setAnswer(selectedAnswers.filter(a => a !== choice));
+        } else {
+          setAnswer([...selectedAnswers, choice]);
+        }
+      } else {
+        // Mode radio - une seule réponse
+        setAnswer([choice]);
+      }
+    };
+
     return (
       <div className="space-y-3">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Choisissez votre réponse :</label>
-        {mcqRiddle.choices.map((choice, index) => (
-          <div
-            key={index}
-            className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
-              answer === choice ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'
-            }`}
-            onClick={() => setAnswer(choice)}
-          >
-            <div className="flex items-center gap-3">
-              <div
-                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                  answer === choice ? 'border-green-500' : 'border-gray-300'
-                }`}
-              >
-                {answer === choice && <div className="w-3 h-3 rounded-full bg-green-500" />}
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          {isMultiple ? 'Choisissez vos réponses (plusieurs possibles) :' : 'Choisissez votre réponse :'}
+        </label>
+        {choices.map((choice) => {
+          const isSelected = selectedAnswers.includes(choice);
+          return (
+            <div
+              key={choice}
+              className={`border-2 rounded-xl p-4 cursor-pointer transition-all ${
+                isSelected ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'
+              }`}
+              onClick={() => handleChoiceClick(choice)}
+            >
+              <div className="flex items-center gap-3">
+                {isMultiple ? (
+                  // Checkbox pour réponses multiples
+                  <div
+                    className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+                      isSelected ? 'border-green-500 bg-green-500' : 'border-gray-300'
+                    }`}
+                  >
+                    {isSelected && (
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                ) : (
+                  // Radio pour réponse unique
+                  <div
+                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                      isSelected ? 'border-green-500' : 'border-gray-300'
+                    }`}
+                  >
+                    {isSelected && <div className="w-3 h-3 rounded-full bg-green-500" />}
+                  </div>
+                )}
+                <p className="text-gray-900">{choice}</p>
               </div>
-              <p className="text-gray-900">{choice}</p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     );
   }
