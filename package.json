@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "watch": "npm-watch build",
+    "serve": "php -S localhost:9000 -t dist",
     "preview": "vite preview",
     "json-server": "npx json-server --watch src/data/db.json --port 3000"
   },
