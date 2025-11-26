@@ -1,4 +1,4 @@
-import { BackButton } from '../../components';
+import { LogoutButton } from '../../components';
 import UserHuntsList from '../../components/dashboard/UserHuntsList';
 import { useUser } from '../../contexts/user';
 import { useUserParticipateHunts } from '../../hooks/useUserParticipateHunts';
@@ -26,10 +26,10 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-emerald-100">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header avec bouton retour */}
+        {/* Header avec bouton de déconnexion */}
         <div className="mb-8">
-          <div className="mb-6">
-            <BackButton variant="light" />
+          <div className="mb-6 flex justify-end">
+            <LogoutButton />
           </div>
           <div className="text-center">
             <div className="text-5xl mb-4">
