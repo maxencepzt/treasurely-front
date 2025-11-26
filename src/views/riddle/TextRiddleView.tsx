@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { faKeyboard } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faKeyboard, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { BackButton } from '../../components';
 import type { TextRiddleAPI } from '../../types/api';
+import { validateTextAnswer } from '../../utils/riddleHelpers';
 
 interface TextRiddleViewProps {
   riddle: TextRiddleAPI;
@@ -11,10 +12,32 @@ interface TextRiddleViewProps {
 
 export default function TextRiddleView({ riddle }: TextRiddleViewProps) {
   const [userAnswer, setUserAnswer] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Réponse soumise:', userAnswer);
+    setFeedback(null);
+    setIsSubmitting(true);
+
+    // Simuler un délai de validation
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const isCorrect = validateTextAnswer(riddle, userAnswer);
+
+    if (isCorrect) {
+      setFeedback({
+        type: 'success',
+        message: '✅ Bonne réponse ! Félicitations !',
+      });
+    } else {
+      setFeedback({
+        type: 'error',
+        message: '❌ Réponse incorrecte. Réessayez !',
+      });
+    }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -78,16 +101,34 @@ export default function TextRiddleView({ riddle }: TextRiddleViewProps) {
               </div>
             )}
 
+            {feedback && (
+              <div
+                className={`rounded-xl p-4 border-2 flex items-center gap-3 ${
+                  feedback.type === 'success'
+                    ? 'bg-green-50 border-green-300'
+                    : 'bg-red-50 border-red-300'
+                }`}
+              >
+                <FontAwesomeIcon
+                  icon={feedback.type === 'success' ? faCheckCircle : faTimesCircle}
+                  className={`text-2xl ${feedback.type === 'success' ? 'text-green-600' : 'text-red-600'}`}
+                />
+                <p className={`font-semibold ${feedback.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
+                  {feedback.message}
+                </p>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={!userAnswer.trim()}
+              disabled={!userAnswer.trim() || isSubmitting}
               className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all shadow-lg ${
-                !userAnswer.trim()
+                !userAnswer.trim() || isSubmitting
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-green-600 text-white hover:bg-green-700 active:scale-95'
               }`}
             >
-              Valider
+              {isSubmitting ? 'Validation...' : 'Valider'}
             </button>
           </form>
         </div>
