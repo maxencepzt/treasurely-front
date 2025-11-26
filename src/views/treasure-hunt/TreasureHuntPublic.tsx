@@ -6,8 +6,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BackButton, CoverImage, DescriptionModal, TeamButton } from "../../components";
 import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
+import TeamSelectionModal from "../../components/treasure-hunt/TeamSelectionModal.tsx";
 import { useUser } from "../../contexts/user";
-import type { TreasureHuntAPI } from "../../types/api.ts";
+import {
+  useCreateParticipateHuntMutation,
+  useGetTreasureHuntRiddlesQuery,
+  useLazyGetParticipateHuntByUserAndHuntQuery,
+  useTeamByIdQuery,
+  useUserTeamsByIdQuery,
+} from "../../store/slices/api.ts";
+import type { TeamAPI, TreasureHuntAPI } from "../../types/api.ts";
 import { getIdFromUrl } from "../../utils/api.ts";
 import formatDuration from "../../utils/formatDuration.ts";
 
@@ -16,6 +24,33 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
   const { user } = useUser();
 
   const [showModal, setShowModal] = useState(false);
+  const [showTeamModal, setShowTeamModal] = useState(false);
+
+  const [checkParticipation] = useLazyGetParticipateHuntByUserAndHuntQuery();
+  const [createParticipation, { isLoading: isCreating }] = useCreateParticipateHuntMutation();
+  const { data: userTeamsData } = useUserTeamsByIdQuery(
+    { id: user?.id || 0 },
+    { skip: !user }
+  );
+  const { data: riddlesList } = useGetTreasureHuntRiddlesQuery({ huntId: treasureHunt.id });
+
+  // Charger les détails des équipes de l'utilisateur
+  const { data: team1 } = useTeamByIdQuery(
+    { id: userTeamsData && userTeamsData.teams.length > 0 ? getIdFromUrl(userTeamsData.teams[0]) : 0 },
+    { skip: !userTeamsData || userTeamsData.teams.length === 0 }
+  );
+  const { data: team2 } = useTeamByIdQuery(
+    { id: userTeamsData && userTeamsData.teams.length > 1 ? getIdFromUrl(userTeamsData.teams[1]) : 0 },
+    { skip: !userTeamsData || userTeamsData.teams.length < 2 }
+  );
+  const { data: team3 } = useTeamByIdQuery(
+    { id: userTeamsData && userTeamsData.teams.length > 2 ? getIdFromUrl(userTeamsData.teams[2]) : 0 },
+    { skip: !userTeamsData || userTeamsData.teams.length < 3 }
+  );
+
+  // Construire le tableau des équipes
+  const teams: TeamAPI[] = [team1, team2, team3].filter((t): t is TeamAPI => t !== undefined);
+
   const maxLength = 250;
   const isLong = treasureHunt.description?.length > maxLength;
   const description = isLong
@@ -23,6 +58,92 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
     : treasureHunt.description;
 
   const isOwner = user && getIdFromUrl(treasureHunt.owner) === user.id;
+
+  const handleParticipate = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    console.log('🔍 Vérification participation pour user:', user.id, 'hunt:', treasureHunt.id);
+
+    try {
+      // Vérifier si une participation existe déjà
+      const result = await checkParticipation({
+        userId: user.id,
+        huntId: treasureHunt.id,
+      });
+
+      console.log('📊 Résultat checkParticipation:', result);
+
+      if (result.data) {
+        console.log('✅ Participation existante trouvée:', result.data);
+        // Rediriger vers l'énigme en cours
+        const riddleId = typeof result.data.currentRiddle === 'string'
+          ? getIdFromUrl(result.data.currentRiddle)
+          : result.data.currentRiddle;
+        console.log('➡️ Redirection vers riddle:', riddleId);
+        navigate(`/riddle/${riddleId}`);
+        return;
+      }
+
+      console.log('❌ Aucune participation existante (result.data est null/undefined)');
+    } catch (error) {
+      console.log('⚠️ Erreur lors de la vérification:', error);
+    }
+
+    // Aucune participation existante, afficher le modal de sélection d'équipe
+    console.log('🎯 Affichage du modal de sélection d\'équipe');
+    setShowTeamModal(true);
+  };
+
+  const handleTeamSelect = async (teamId?: number) => {
+    if (!user) return;
+
+    // Récupérer le premier riddle de la chasse
+    const firstRiddle = riddlesList && riddlesList.length > 0 ? riddlesList[0] : null;
+
+    if (!firstRiddle) {
+      alert('Erreur: Aucune énigme trouvée pour cette chasse');
+      return;
+    }
+
+    try {
+      const body: {
+        lastParticipate: string;
+        hunter: string;
+        hunt: string;
+        currentRiddle: string;
+        playerTeam?: string;
+      } = {
+        lastParticipate: new Date().toISOString(),
+        hunter: `/api/users/${user.id}`,
+        hunt: `/api/treasure_hunts/${treasureHunt.id}`,
+        currentRiddle: firstRiddle['@id'],
+      };
+
+      if (teamId) {
+        body.playerTeam = `/api/teams/${teamId}`;
+      }
+
+      const participation = await createParticipation(body).unwrap();
+
+      // Rediriger vers l'énigme en cours
+      const riddleId = typeof participation.currentRiddle === 'string'
+        ? getIdFromUrl(participation.currentRiddle)
+        : participation.currentRiddle;
+      navigate(`/riddle/${riddleId}`);
+    } catch (error) {
+      const errorMessage = error && typeof error === 'object' && 'data' in error &&
+        typeof error.data === 'object' && error.data && 'detail' in error.data
+        ? String(error.data.detail)
+        : 'Impossible de créer la participation';
+
+      console.error('Erreur lors de la création de la participation:', error);
+      alert(`Erreur: ${errorMessage}`);
+    }
+  };
+
 
   return (
     <div className="min-h-screen flex justify-center bg-gradient-to-br from-green-50 to-emerald-100">
@@ -123,8 +244,17 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
 
         {/* Bouton participer */}
         <div className="mt-auto px-6 pb-6">
-          <THButton onClick={() => {alert('Implémente ça !')}}>Participer</THButton>
+          <THButton onClick={handleParticipate}>Participer</THButton>
         </div>
+
+        {/* Modal de sélection d'équipe */}
+        <TeamSelectionModal
+          isOpen={showTeamModal}
+          onClose={() => setShowTeamModal(false)}
+          onSelectTeam={handleTeamSelect}
+          teams={teams}
+          isLoading={isCreating}
+        />
       </div>
     </div>
   );
