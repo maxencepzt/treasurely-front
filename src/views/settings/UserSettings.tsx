@@ -1,17 +1,19 @@
 import { useNavigate, useParams } from 'react-router';
 
 import { BackButton, LogoutButton } from "../../components";
+import DeleteAccountButton from '../../components/DeleteAccountButton.tsx';
 
 export default function UserSettings() {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const buttons = [
-    { label: "Informations du compte", action: () => {} },
-    { label: "Modifier la photo de profil", action: () => navigate(`/settings/profile/${id}/upload`) },
-    { type: "logout" },
-    { label: "Supprimer son compte", action: () => {}, danger: true },
+    { id: "account", label: "Informations du compte", action: () => {} },
+    { id: "photo", label: "Modifier la photo de profil", action: () => navigate(`/settings/profile/${id}/upload`) },
+    { id: "logout", type: "logout" },
+    { id: "delete", type: "delete" },
   ];
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center">
@@ -25,20 +27,17 @@ export default function UserSettings() {
 
         <div className="flex flex-col gap-4">
 
-          {buttons.map((btn, i) => {
-            if (btn.type === "logout") {
-              return <LogoutButton key={i}/>;
-            }
+          {buttons.map((btn) => {
+            if (btn.type === "logout") return <LogoutButton key={btn.id} />;
+            if (btn.type === "delete") return <DeleteAccountButton key={btn.id} userId={Number(id)} />;
 
             return (
-              <button type="button"
-                key={i}
+              <button
+                type="button"
+                key={btn.id}
                 onClick={btn.action}
                 className={
-                  `w-full text-left px-5 py-4 rounded-xl border-2 shadow-sm transition hover:shadow-md active:scale-[0.98]
-                   ${btn.danger
-                    ? "border-red-200 bg-red-50 text-red-800 hover:bg-red-100"
-                    : "border-green-200 bg-white hover:bg-green-50"}`
+                  `w-full text-left px-5 py-4 rounded-xl border-2 shadow-sm transition hover:shadow-md active:scale-[0.98] border-green-200 bg-white hover:bg-green-50}`
                 }
               >
                 {btn.label}

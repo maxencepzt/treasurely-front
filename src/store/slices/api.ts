@@ -161,6 +161,13 @@ const api = createApi({
         method: 'GET',
       }),
     }),
+    userDelete: build.mutation<{ message: string }, { userId: number, password: string }>({
+      query: ({ userId, password }) => ({
+        url: `users/${userId}`,
+        method: 'DELETE',
+        body: { password },
+      }),
+    }),
   }),
 });
 
@@ -180,5 +187,6 @@ export const {
   useTeamTreasureHuntsByIdQuery,
   useUserTeamsByIdQuery,
   useRiddleGetByIdQuery,
+  useUserDeleteMutation,
 } = api;
 export default api;
