@@ -100,6 +100,7 @@ export interface RiddleAPI {
   "@context": string;
   "@id": string;
   "@type": string;
+  id: number;
   title: string;
   description: string;
   difficulty: 1 | 2 | 3;
@@ -124,3 +125,20 @@ export interface TextRiddleAPI extends RiddleAPI {
 }
 
 export type AnyRiddleAPI = MCQRiddleAPI | GPSRiddleAPI | QRRiddle | TextRiddleAPI;
+
+export type ParticipateHuntAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  id: number;
+  user: string;
+  treasureHunt: string;
+  gameTeam?: string;
+  currentRiddle: number;
+  startedAt: string;
+  completedAt?: string;
+  totalTime?: number;
+  score?: number;
+  status: 'in_progress' | 'completed';
+}
+
