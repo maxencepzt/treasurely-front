@@ -1,4 +1,3 @@
-import { LogoutButton } from '../components';
 import FeaturesSection from '../components/landing/FeatureSection.tsx';
 import FooterLanding from '../components/landing/FooterLanding.tsx';
 import HeroSection from '../components/landing/HeroSection.tsx';
@@ -13,7 +12,6 @@ function Index() {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-emerald-100">
       {(user && (
         <>
-          <LogoutButton/>
           <LoginSSOButton/>
         </>
       ))}

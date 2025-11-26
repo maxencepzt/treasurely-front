@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
 
 import { useLogoutMutation, useLogoutSSOMutation } from '../store/slices/api';
 import { logout } from '../store/slices/authSlice';
@@ -8,7 +7,6 @@ import { Loading } from './';
 
 function LogoutButton() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [logoutPost] = useLogoutMutation();
     const [logoutSSOPost] = useLogoutSSOMutation();
     const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +29,7 @@ function LogoutButton() {
       } finally {
         // Always clear local state and navigate
         dispatch(logout());
-        navigate(0);
+        window.location.href = "/";
       }
     };
 
@@ -39,15 +37,19 @@ function LogoutButton() {
         return <Loading />;
     }
 
-    return (
-        <button
-            type="button"
-            onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition cursor-pointer"
-        >
-            Se déconnecter
-        </button>
-    );
+  return (
+    <button
+      type="button"
+      onClick={handleLogout}
+      className="
+        w-full text-left px-5 py-4 rounded-xl border-2 shadow-sm transition
+        hover:shadow-md active:scale-[0.98]
+        border-red-200 bg-red-50 text-red-800 hover:bg-red-100
+      "
+    >
+      Se déconnecter
+    </button>
+  );
 }
 
 export default LogoutButton;
