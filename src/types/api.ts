@@ -125,3 +125,27 @@ export interface TextRiddleAPI extends RiddleAPI {
 }
 
 export type AnyRiddleAPI = MCQRiddleAPI | GPSRiddleAPI | QRRiddle | TextRiddleAPI;
+
+export type ParticipateHuntAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  id: number;
+  rate: 0 | 1 | 2 | 3 | 4 | 5 | null;
+  time: number;
+  score: number;
+  finished: boolean;
+  lastParticipate: string;
+  hunter: string;
+  hunt: string;
+  playerTeam: string | null;
+  currentRiddle: string;
+}
+
+export type TeamParticipateHuntsAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  participateHunts: ParticipateHuntAPI[];
+}
+
