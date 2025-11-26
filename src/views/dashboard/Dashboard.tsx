@@ -7,14 +7,17 @@ import ErrorView from '../error/Error.tsx';
 export default function Dashboard() {
   const { user } = useUser();
 
-  // Call all hooks unconditionally (even if user is null)
-  const { teamIds, isLoading, error } = useUserParticipateHunts(user?.id ?? 0);
+  // Si le provider fait son travail, user est chargé.
+  // On passe user.id s'il existe, sinon on évite de passer 0 si possible,
+  // mais gardons le comportement actuel en sécurisant juste la logique.
+  const userId = user?.id;
 
-  // NOW check conditions after all hooks are called
+  // Note: Idéalement le hook useUserParticipateHunts devrait accepter 'skip' ou null
+  const { teamIds, isLoading, error } = useUserParticipateHunts(userId ?? 0);
+
   if (!user) {
     return <ErrorView status={401} message="Vous devez être connecté pour accéder à cette page" />;
   }
-
 
   if (error) {
     return <ErrorView status={500} message="Erreur lors du chargement du tableau de bord" />;
@@ -37,9 +40,13 @@ export default function Dashboard() {
         </div>
 
         {/* Liste des chasses avec section de reprise intégrée */}
-        <UserHuntsList teamIds={teamIds} isLoading={isLoading} />
+        {/* Ajout d'une clé key basée sur l'ID user pour forcer le remount si l'utilisateur change */}
+        <UserHuntsList
+          key={user.id}
+          teamIds={teamIds}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );
 }
-
