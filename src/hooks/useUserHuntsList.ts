@@ -57,14 +57,17 @@ export function useUserHuntsList(teamIds: number[], isLoadingTeams?: boolean) {
   }, [teamIdsString]);
 
   // Memoize callbacks to prevent infinite loops
-  const handleTeamDataLoaded = useCallback((teamId: number, hunts: ParticipateHuntAPI[]) => {
+  const handleTeamDataLoaded = useCallback((teamId: number, newHunts: ParticipateHuntAPI[]) => {
     setAllHunts(prev => {
-      // Remove existing hunts from this team and add new ones
-      const filtered = prev.filter(h => {
-        const huntTeamId = h.playerTeam ? parseInt(h.playerTeam.split('/').pop() || '0') : 0;
-        return huntTeamId !== teamId;
-      });
-      return [...filtered, ...hunts];
+      // On récupère les IDs des nouvelles chasses pour comparaison
+      const newHuntIds = new Set(newHunts.map(h => h['@id']));
+
+      // On garde les anciennes chasses SEULEMENT si elles ne sont pas dans le nouveau lot
+      // Cela évite les doublons même si le composant est monté deux fois (Strict Mode)
+      const filtered = prev.filter(h => !newHuntIds.has(h['@id']));
+
+      // On fusionne
+      return [...filtered, ...newHunts];
     });
 
     setLoadingStates(prev => ({ ...prev, [teamId]: false }));
