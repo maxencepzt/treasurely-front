@@ -10,7 +10,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       strategies: 'injectManifest',
-      includeAssets: ['/icons/favicon.ico', '/icons/apple-touch-icon.png', '/icons/android-chrome-512x512.png'],
+      includeAssets: ['icons/favicon.ico', 'icons/apple-touch-icon.png', 'icons/android-chrome-512x512.png'],
       manifest: {
         "short_name": "Treasurely",
         "name": "Treasurely",
@@ -40,7 +40,9 @@ export default defineConfig({
         ],
         "description": "An app to create and play treasure hunts",
         "start_url": "/",
-        "display": "standalone"
+        "display": "standalone",
+        "theme_color": "#008235",
+        "background_color": "#ffffff"
       }
     }),
   ],
