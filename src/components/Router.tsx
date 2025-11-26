@@ -7,6 +7,7 @@ import Profile from '../views/profile/Profile.tsx';
 import TeamMembers from '../views/teams/TeamMembers.tsx';
 import Teams from "../views/teams/Teams.tsx";
 import TreasureHunt from "../views/treasure-hunt/TreasureHunt.tsx";
+import Riddle from "../views/riddle/Riddle.tsx";
 
 function Router() {
   return(
@@ -19,6 +20,7 @@ function Router() {
         <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />
         <Route path="/treasure-hunt/:id" element={<TreasureHunt />} />
+        <Route path="/riddle/:id" element={<Riddle />} />
         <Route path="/teams/:id" element={<Teams />} />
         <Route path="/teams/:id/members" element={<TeamMembers />} />
 
