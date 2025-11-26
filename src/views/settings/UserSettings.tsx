@@ -1,10 +1,14 @@
+import { useNavigate, useParams } from 'react-router';
+
 import { BackButton, LogoutButton } from "../../components";
 
-export default function ProfileSettings() {
+export default function UserSettings() {
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   const buttons = [
     { label: "Informations du compte", action: () => {} },
-    { label: "Double authentification", action: () => {} },
+    { label: "Modifier la photo de profil", action: () => navigate(`/settings/profile/${id}/upload`) },
     { type: "logout" },
     { label: "Supprimer son compte", action: () => {}, danger: true },
   ];
