@@ -36,7 +36,7 @@ export type TreasureHuntAPI = {
   id: number;
   title: string;
   description: string;
-  public: boolean;
+  status: 'opened' | 'closed' | 'draft';
   difficulty: 1 | 2 | 3;
   riddleCount: number;
   huntType: HuntTypeAPI[];
@@ -44,7 +44,12 @@ export type TreasureHuntAPI = {
   owner: string;
   location: string;
   estimatedTime: number;
+  creationAt: string;
 }
+
+export const TreasureHuntStatusOpened = 'opened';
+export const TreasureHuntStatusClosed = 'closed';
+export const TreasureHuntStatusDraft = 'draft';
 
 export type TeamMember = {
   "@context": string;

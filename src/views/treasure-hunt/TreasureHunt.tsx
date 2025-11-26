@@ -6,6 +6,7 @@ import {parseApiError} from "../../utils/api.ts";
 import ErrorView from "../Error.tsx";
 import TreasureHuntPrivate from "./TreasureHuntPrivate.tsx";
 import TreasureHuntPublic from "./TreasureHuntPublic.tsx";
+import { TreasureHuntStatusClosed } from '../../types/api';
 
 export default function TreasureHunt() {
   const params = useParams();
@@ -22,7 +23,7 @@ export default function TreasureHunt() {
   }
 
   if (!treasureHunt) return <ErrorView status={404} message="Chasse introuvable" />;
-  if (!treasureHunt.public) return <TreasureHuntPrivate />;
+  if (treasureHunt.status === TreasureHuntStatusClosed) return <TreasureHuntPrivate />;
 
   return (
     <TreasureHuntPublic treasureHunt={treasureHunt}  />
