@@ -35,34 +35,34 @@ export default function ResumeHuntCard({ participateHunt }: ResumeHuntCardProps)
   }
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl p-6 shadow-lg border-2 border-green-200">
+    <div className="bg-gradient-to-br from-green-100 to-emerald-200 rounded-2xl p-8 shadow-lg border-2 border-green-300">
       {/* Titre de la section */}
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-2xl">🎯</span>
-        <h2 className="text-xl font-bold text-gray-900">Reprendre votre chasse</h2>
+      <div className="flex items-center gap-3 mb-6 justify-center">
+        <span className="text-4xl">🎯</span>
+        <h2 className="text-2xl font-bold text-gray-900">Reprendre votre chasse</h2>
       </div>
 
       {/* Nom de la TreasureHunt */}
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+      <h3 className="text-xl font-semibold text-gray-800 mb-6 text-center">
         {treasureHunt.title}
       </h3>
 
       {/* Step Progress Bar */}
-      <div className="mb-4">
+      <div className="mb-6">
         <StepProgressBar completedSteps={completedSteps} totalSteps={totalSteps} />
       </div>
 
       {/* Texte de progression */}
-      <p className="text-sm text-gray-700 mb-4 text-center">
-        <span className="font-semibold text-green-700">{completedSteps}</span> énigme{completedSteps > 1 ? 's' : ''} sur{' '}
-        <span className="font-semibold">{totalSteps}</span> résolue{completedSteps > 1 ? 's' : ''}
+      <p className="text-base text-gray-700 mb-6 text-center">
+        <span className="font-bold text-green-700 text-lg">{completedSteps}</span> énigme{completedSteps > 1 ? 's' : ''} sur{' '}
+        <span className="font-bold text-lg">{totalSteps}</span> résolue{completedSteps > 1 ? 's' : ''}
       </p>
 
       {/* Bouton Reprendre */}
       <button
         type="button"
         onClick={() => navigate(`/treasure-hunt/${treasureHuntId}`)}
-        className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors"
+        className="w-full bg-green-700 hover:bg-green-800 active:bg-green-900 text-white font-bold py-4 px-6 rounded-xl shadow-md transition-colors text-lg"
       >
         Reprendre
       </button>
