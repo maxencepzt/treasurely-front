@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { faCheckCircle, faListCheck } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faListCheck, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { BackButton } from '../../components';
 import type { MCQRiddleAPI } from '../../types/api';
+import { validateMCQAnswer, unserializePhpArray } from '../../utils/riddleHelpers';
 
 interface MCQRiddleViewProps {
   riddle: MCQRiddleAPI;
@@ -11,6 +12,11 @@ interface MCQRiddleViewProps {
 
 export default function MCQRiddleView({ riddle }: MCQRiddleViewProps) {
   const [selectedChoices, setSelectedChoices] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  // Désérialiser les choix si nécessaire
+  const choices = unserializePhpArray(riddle.choices);
 
   const handleChoiceToggle = (choice: string) => {
     setSelectedChoices((prev) =>
@@ -20,9 +26,29 @@ export default function MCQRiddleView({ riddle }: MCQRiddleViewProps) {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Réponses sélectionnées:', selectedChoices);
+    setFeedback(null);
+    setIsSubmitting(true);
+
+    // Simuler un délai de validation
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const isCorrect = validateMCQAnswer(riddle, selectedChoices);
+
+    if (isCorrect) {
+      setFeedback({
+        type: 'success',
+        message: '✅ Bonne réponse ! Félicitations !',
+      });
+    } else {
+      setFeedback({
+        type: 'error',
+        message: '❌ Réponse incorrecte. Réessayez !',
+      });
+    }
+
+    setIsSubmitting(false);
   };
 
   return (
@@ -52,9 +78,9 @@ export default function MCQRiddleView({ riddle }: MCQRiddleViewProps) {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-3">
-              {riddle.choices.map((choice, index) => (
+              {choices.map((choice) => (
                 <label
-                  key={index}
+                  key={choice}
                   className={`flex items-center p-4 rounded-xl cursor-pointer transition-all border-2 ${
                     selectedChoices.includes(choice)
                       ? 'border-blue-500 bg-blue-50'
@@ -83,16 +109,34 @@ export default function MCQRiddleView({ riddle }: MCQRiddleViewProps) {
               </div>
             )}
 
+            {feedback && (
+              <div
+                className={`rounded-xl p-4 border-2 flex items-center gap-3 ${
+                  feedback.type === 'success'
+                    ? 'bg-green-50 border-green-300'
+                    : 'bg-red-50 border-red-300'
+                }`}
+              >
+                <FontAwesomeIcon
+                  icon={feedback.type === 'success' ? faCheckCircle : faTimesCircle}
+                  className={`text-2xl ${feedback.type === 'success' ? 'text-green-600' : 'text-red-600'}`}
+                />
+                <p className={`font-semibold ${feedback.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
+                  {feedback.message}
+                </p>
+              </div>
+            )}
+
             <button
               type="submit"
-              disabled={selectedChoices.length === 0}
+              disabled={selectedChoices.length === 0 || isSubmitting}
               className={`w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all shadow-lg ${
-                selectedChoices.length === 0
+                selectedChoices.length === 0 || isSubmitting
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95'
               }`}
             >
-              Valider
+              {isSubmitting ? 'Validation...' : 'Valider'}
             </button>
           </form>
         </div>
