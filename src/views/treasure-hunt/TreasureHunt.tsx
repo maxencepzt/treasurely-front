@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import {Loading} from "../../components";
 import { useTreasureHuntGetByIdQuery } from "../../store/slices/api.ts";
 import {parseApiError} from "../../utils/api.ts";
-import ErrorView from "../Error.tsx";
+import ErrorView from "../error/Error.tsx";
 import TreasureHuntPrivate from "./TreasureHuntPrivate.tsx";
 import TreasureHuntPublic from "./TreasureHuntPublic.tsx";
 import { TreasureHuntStatusClosed } from '../../types/api';

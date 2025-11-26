@@ -2,7 +2,7 @@ import { Loading } from "../../components";
 import { useUser } from "../../contexts/user";
 import { useProfileUser } from "../../hooks/useProfileUser.ts";
 import { parseApiError } from "../../utils/api.ts";
-import ErrorView from "../Error.tsx";
+import ErrorView from "../error/Error.tsx";
 import { ProfilePrivate } from './ProfilePrivate.tsx';
 import { ProfilePublic } from './ProfilePublic.tsx';
 

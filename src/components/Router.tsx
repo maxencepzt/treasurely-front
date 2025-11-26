@@ -1,8 +1,8 @@
 import { BrowserRouter, Route,Routes } from "react-router";
 
 import { Dashboard, Index, Login, UserUploadProfilePicture } from '../views';
-import ErrorView from '../views/Error.tsx';
-import ErrorRouteWrapper from '../views/ErrorRouteWrapper.tsx';
+import ErrorView from '../views/error/Error.tsx';
+import ErrorRouteWrapper from '../views/error/ErrorRouteWrapper.tsx';
 import Profile from '../views/profile/Profile.tsx';
 import TeamMembers from '../views/teams/TeamMembers.tsx';
 import Teams from "../views/teams/Teams.tsx";

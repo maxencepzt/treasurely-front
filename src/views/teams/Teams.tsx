@@ -7,7 +7,7 @@ import { BackButton, CoverImage, DescriptionModal, Loading } from "../../compone
 import TeamTreasureHuntCard from "../../components/teams/TeamTreasureHuntCard";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
 import { parseApiError } from "../../utils/api.ts";
-import ErrorView from "../Error.tsx";
+import ErrorView from "../error/Error.tsx";
 
 export default function Teams() {
   const params = useParams();

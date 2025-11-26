@@ -4,7 +4,7 @@ import { BackButton, Loading } from "../../components";
 import TeamMemberItem from "../../components/teams/TeamMemberItem";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
 import { parseApiError } from "../../utils/api";
-import ErrorView from "../Error";
+import ErrorView from "../error/Error.tsx";
 
 export default function TeamMembers() {
   const params = useParams();
