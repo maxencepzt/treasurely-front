@@ -44,6 +44,7 @@ export type TreasureHuntAPI = {
   owner: string;
   location: string;
   estimatedTime: number;
+  creationAt: string;
 }
 
 export const TreasureHuntStatusOpened = 'opened';
