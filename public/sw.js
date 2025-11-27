@@ -11,7 +11,7 @@ cleanupOutdatedCaches();
 // Note: Pensez à incrémenter 'v1' si vous modifiez offline.html manuellement
 precacheAndRoute([
   ...self.__WB_MANIFEST,
-  { url: '/offline.html', revision: 'v1' },
+  { url: '/offline.html', revision: 'v2' },
   { url: '/offline-built.css', revision: 'v1' }
 ]);
 
