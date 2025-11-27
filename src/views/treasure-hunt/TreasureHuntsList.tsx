@@ -56,49 +56,153 @@ export default function TreasureHuntsList() {
         </div>
 
         {/* Filtres */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-          <div className="flex flex-col sm:flex-row gap-4">
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 border border-gray-100">
+          <div className="space-y-4">
             {/* Filtre par statut */}
-            <div className="flex-1">
-              <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-2">
-                Statut
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <span>📊</span>
+                <span>Statut</span>
               </label>
-              <select
-                id="status-filter"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as "all" | "opened" | "closed" | "draft")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value="all">Tous les statuts</option>
-                <option value="opened">Ouvertes</option>
-                <option value="closed">Fermées</option>
-                <option value="draft">Brouillons</option>
-              </select>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter("all")}
+                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
+                    statusFilter === "all"
+                      ? "bg-green-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  Tous
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter("opened")}
+                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
+                    statusFilter === "opened"
+                      ? "bg-green-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  <span className="inline-block mr-1">🟢</span>
+                  Ouvertes
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter("closed")}
+                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
+                    statusFilter === "closed"
+                      ? "bg-green-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  <span className="inline-block mr-1">🔴</span>
+                  Fermées
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter("draft")}
+                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
+                    statusFilter === "draft"
+                      ? "bg-green-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  <span className="inline-block mr-1">📝</span>
+                  Brouillons
+                </button>
+              </div>
             </div>
 
+            {/* Séparateur */}
+            <div className="border-t border-gray-100"></div>
+
             {/* Filtre par difficulté */}
-            <div className="flex-1">
-              <label htmlFor="difficulty-filter" className="block text-sm font-medium text-gray-700 mb-2">
-                Difficulté
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <span>🎯</span>
+                <span>Difficulté</span>
               </label>
-              <select
-                id="difficulty-filter"
-                value={difficultyFilter}
-                onChange={(e) => setDifficultyFilter(e.target.value === "all" ? "all" : Number(e.target.value) as 1 | 2 | 3)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value="all">Toutes les difficultés</option>
-                <option value="1">🔥 Facile</option>
-                <option value="2">🔥🔥 Moyen</option>
-                <option value="3">🔥🔥🔥 Difficile</option>
-              </select>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setDifficultyFilter("all")}
+                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
+                    difficultyFilter === "all"
+                      ? "bg-green-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  Toutes
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDifficultyFilter(1)}
+                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
+                    difficultyFilter === 1
+                      ? "bg-green-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  <span className="inline-block mr-1">🔥</span>
+                  Facile
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDifficultyFilter(2)}
+                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
+                    difficultyFilter === 2
+                      ? "bg-green-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  <span className="inline-block mr-1">🔥🔥</span>
+                  Moyen
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDifficultyFilter(3)}
+                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
+                    difficultyFilter === 3
+                      ? "bg-green-600 text-white shadow-sm"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  <span className="inline-block mr-1">🔥🔥🔥</span>
+                  Difficile
+                </button>
+              </div>
             </div>
+
+            {/* Bouton reset */}
+            {(statusFilter !== "opened" || difficultyFilter !== "all") && (
+              <>
+                <div className="border-t border-gray-100"></div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStatusFilter("opened");
+                    setDifficultyFilter("all");
+                  }}
+                  className="w-full sm:w-auto text-sm text-green-600 hover:text-green-700 hover:bg-green-50 font-medium flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors"
+                >
+                  <span className="text-base">↻</span>
+                  Réinitialiser les filtres
+                </button>
+              </>
+            )}
           </div>
         </div>
 
         {/* Résultats */}
-        <div className="mb-4 text-gray-700">
-          <span className="font-medium">{filteredHunts.length}</span> chasse(s) trouvée(s)
+        <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
+          <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-lg border border-green-200">
+            <span className="text-green-700 font-semibold text-base">{filteredHunts.length}</span>
+            <span className="text-sm text-gray-600">
+              {filteredHunts.length > 1 ? "chasses trouvées" : "chasse trouvée"}
+            </span>
+          </div>
         </div>
 
         {/* Liste des chasses */}
