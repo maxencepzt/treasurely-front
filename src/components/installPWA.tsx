@@ -15,8 +15,8 @@ function InstallPWA() {
 
   const title = needRefresh ? "Mise à jour disponible" : "Installer l'application";
   const description = needRefresh
-    ? "Une nouvelle version de l'application est disponible"
-    : "Installez Treasurely sur votre appareil pour une meilleure expérience";
+    ? "Une nouvelle version de l'application est disponible."
+    : "Installez Treasurely sur votre appareil pour une meilleure expérience.";
   const btnText = needRefresh ? "Mettre à jour" : "Installer";
   const icon = needRefresh ? faRefresh : faDownload;
 
