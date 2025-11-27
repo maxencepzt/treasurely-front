@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import { Loading } from "../../components";
+import ButtonFilter from "../../components/treasure-hunt/ButtonFilter";
 import TreasureHuntCard from "../../components/treasure-hunt/TreasureHuntCard";
 import { useGetAllTreasureHuntsQuery } from "../../store/slices/api";
 import ErrorView from "../error/Error";
@@ -72,53 +73,30 @@ export default function TreasureHuntsList() {
                 <span>Statut</span>
               </label>
               <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
+                <ButtonFilter
+                  label={<>Tous</>}
+                  emoji={"🌐"}
+                  active={statusFilter === "all"}
                   onClick={() => setStatusFilter("all")}
-                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
-                    statusFilter === "all"
-                      ? "bg-green-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  Tous
-                </button>
-                <button
-                  type="button"
+                />
+                <ButtonFilter
+                  label={<>Ouvertes</>}
+                  emoji={"🟢"}
+                  active={statusFilter === "opened"}
                   onClick={() => setStatusFilter("opened")}
-                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
-                    statusFilter === "opened"
-                      ? "bg-green-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <span className="inline-block mr-1">🟢</span>
-                  Ouvertes
-                </button>
-                <button
-                  type="button"
+                />
+                <ButtonFilter
+                  label={<>Fermées</>}
+                  emoji={"🔴"}
+                  active={statusFilter === "closed"}
                   onClick={() => setStatusFilter("closed")}
-                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
-                    statusFilter === "closed"
-                      ? "bg-green-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <span className="inline-block mr-1">🔴</span>
-                  Fermées
-                </button>
-                <button
-                  type="button"
+                />
+                <ButtonFilter
+                  label={<>Brouillons</>}
+                  emoji={"📝"}
+                  active={statusFilter === "draft"}
                   onClick={() => setStatusFilter("draft")}
-                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
-                    statusFilter === "draft"
-                      ? "bg-green-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <span className="inline-block mr-1">📝</span>
-                  Brouillons
-                </button>
+                />
               </div>
             </div>
 
@@ -132,54 +110,30 @@ export default function TreasureHuntsList() {
                 <span>Difficulté</span>
               </label>
               <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
+                <ButtonFilter
+                  label={<>Toutes</>}
+                  emoji={"🌐"}
+                  active={difficultyFilter === "all"}
                   onClick={() => setDifficultyFilter("all")}
-                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
-                    difficultyFilter === "all"
-                      ? "bg-green-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <span className="inline-block mr-1">🌐</span>
-                  Toutes
-                </button>
-                <button
-                  type="button"
+                />
+                <ButtonFilter
+                  label={<>Facile</>}
+                  emoji={"🔥"}
+                  active={difficultyFilter === 1}
                   onClick={() => setDifficultyFilter(1)}
-                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
-                    difficultyFilter === 1
-                      ? "bg-green-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <span className="inline-block mr-1">🔥</span>
-                  Facile
-                </button>
-                <button
-                  type="button"
+                />
+                <ButtonFilter
+                  label={<>Moyen</>}
+                  emoji={"🔥🔥"}
+                  active={difficultyFilter === 2}
                   onClick={() => setDifficultyFilter(2)}
-                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
-                    difficultyFilter === 2
-                      ? "bg-green-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <span className="inline-block mr-1">🔥🔥</span>
-                  Moyen
-                </button>
-                <button
-                  type="button"
+                />
+                <ButtonFilter
+                  label={<>Difficile</>}
+                  emoji={"🔥🔥🔥"}
+                  active={difficultyFilter === 3}
                   onClick={() => setDifficultyFilter(3)}
-                  className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-all ${
-                    difficultyFilter === 3
-                      ? "bg-green-600 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <span className="inline-block mr-1">🔥🔥🔥</span>
-                  Difficile
-                </button>
+                />
               </div>
             </div>
 
