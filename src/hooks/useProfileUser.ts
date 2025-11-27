@@ -13,7 +13,8 @@ export function useProfileUser() {
   // Si userId est undefined, on ne fait pas la requête userById
   const skip = userId === undefined;
   const { data: user, isLoading: isLoadingUser, error: errorUser } = useUserByIdQuery(
-    skip ? ({ id: 0 } as any) : { id: userId }
+    { id: userId ?? 0 },
+    { skip }
   );
 
   useEffect(() => {

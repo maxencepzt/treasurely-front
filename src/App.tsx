@@ -1,6 +1,6 @@
 import { Provider as StoreProvider } from "react-redux";
 
-import { Router } from './components';
+import { InstallPWA, Router } from './components';
 import { TokenRefresh } from './components/TokenRefresh.tsx';
 import { UserProvider } from './contexts/user/provider';
 import store from "./store";
@@ -11,6 +11,7 @@ function App() {
       <TokenRefresh>
           <UserProvider>
             <Router/>
+            <InstallPWA />
           </UserProvider>
       </TokenRefresh>
     </StoreProvider>
