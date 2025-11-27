@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run build:offline && tsc -b && vite build",
+    "build:offline": "npx @tailwindcss/cli -o public/offline-built.css --minify",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "json-server": "npx json-server --watch src/data/db.json --port 3000"
+    "json-server": "npx json-server --watch src/data/db.json --port 3000",
+    "serve": "npx serve -s dist"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
