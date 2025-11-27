@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hors ligne - Treasurely</title>
+  <link rel="stylesheet" href="/offline-built.css">
+
+  <style>
+      @font-face {
+          font-family: 'Inter';
+          src: url('/fonts/Inter.ttf') format('truetype');
+          font-style: normal;
+          font-display: swap;
+      }
+
+      html {
+          font-family: 'Inter', sans-serif;
+      }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+  <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+    <div class="mb-6">
+      <svg class="w-24 h-24 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"></path>
+      </svg>
+    </div>
+
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">
+      Vous êtes hors ligne
+    </h1>
+
+    <p class="text-gray-600 mb-6">
+      Veuillez vérifier votre connexion internet pour accéder à Treasurely.
+    </p>
+
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+      <p class="text-sm text-blue-800">
+        💡 <strong>Astuce :</strong> Une fois reconnecté, rechargez cette page pour continuer.
+      </p>
+    </div>
+
+    <button
+      onclick="location.reload()"
+      class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
+    >
+      Réessayer
+    </button>
+
+    <div class="mt-6 text-sm text-gray-500">
+      <p>Treasurely - Chasses au trésor</p>
+    </div>
+  </div>
+
+  <script>
+    // Vérifier la connexion toutes les 5 secondes
+    setInterval(() => {
+      if (navigator.onLine) {
+        location.reload();
+      }
+    }, 5000);
+
+    // Écouter l'événement online
+    window.addEventListener('online', () => {
+      location.reload();
+    });
+  </script>
+</body>
+</html>
+
