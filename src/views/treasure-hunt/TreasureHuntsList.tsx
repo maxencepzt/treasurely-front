@@ -9,6 +9,7 @@ import ErrorView from "../error/Error";
 export default function TreasureHuntsList() {
   const navigate = useNavigate();
   const { data, isLoading, error } = useGetAllTreasureHuntsQuery();
+  // Par défaut, le filtre est sur 'all' (tous sauf fermés et brouillons)
   const [statusFilter, setStatusFilter] = useState<"all" | "opened" | "closed" | "draft">("all");
   const [difficultyFilter, setDifficultyFilter] = useState<"all" | 1 | 2 | 3>("all");
 
@@ -23,8 +24,14 @@ export default function TreasureHuntsList() {
   const treasureHunts = data?.member || [];
 
   // Filtrer les chasses selon les critères
+  // Documentation : Le filtre 'Tous' exclut les chasses fermées et brouillons
   const filteredHunts = treasureHunts.filter((hunt) => {
-    const matchesStatus = statusFilter === "all" || hunt.status === statusFilter;
+    let matchesStatus = false;
+    if (statusFilter === "all") {
+      matchesStatus = hunt.status !== "closed" && hunt.status !== "draft";
+    } else {
+      matchesStatus = hunt.status === statusFilter;
+    }
     const matchesDifficulty = difficultyFilter === "all" || hunt.difficulty === difficultyFilter;
     return matchesStatus && matchesDifficulty;
   });
@@ -134,6 +141,7 @@ export default function TreasureHuntsList() {
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
+                  <span className="inline-block mr-1">🌐</span>
                   Toutes
                 </button>
                 <button
@@ -176,13 +184,13 @@ export default function TreasureHuntsList() {
             </div>
 
             {/* Bouton reset */}
-            {(statusFilter !== "opened" || difficultyFilter !== "all") && (
+            {(statusFilter !== "all" || difficultyFilter !== "all") && (
               <>
                 <div className="border-t border-gray-100"></div>
                 <button
                   type="button"
                   onClick={() => {
-                    setStatusFilter("opened");
+                    setStatusFilter("all");
                     setDifficultyFilter("all");
                   }}
                   className="w-full sm:w-auto text-sm text-green-600 hover:text-green-700 hover:bg-green-50 font-medium flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors"
@@ -224,4 +232,3 @@ export default function TreasureHuntsList() {
     </div>
   );
 }
-
