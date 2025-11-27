@@ -10,9 +10,8 @@ import type {
   TeamTreasureHuntsAPI,
   TreasureHuntAPI,
   User,
-  UserTeamsAPI
-} from "../../types/api";
-import { getIdFromUrl } from '../../utils/api';
+  UserTeamsAPI,
+} from '../../types/api';
 import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
 
@@ -169,48 +168,14 @@ const api = createApi({
         method: 'GET',
       }),
     }),
-    getParticipateHuntByUserAndHunt: build.query<
-      ParticipateHuntAPI | null,
-      { userId: number; huntId: number }
+    getUserParticipateHunts: build.query<
+      ParticipateHuntAPI[] | null,
+      { userId: number }
     >({
       query: ({ userId }) => ({
         url: `users/${userId}/participate_hunts`,
         method: 'GET',
       }),
-      transformResponse: (response: any, _meta, arg) => {
-        console.log('🔍 Participations de l\'utilisateur:', response);
-        console.log('🎯 Recherche pour huntId:', arg.huntId);
-
-        let participations: ParticipateHuntAPI[] = [];
-
-        // Gérer les réponses Hydra (avec hydra:member)
-        if (response && typeof response === 'object' && 'hydra:member' in response) {
-          participations = response['hydra:member'];
-        } else if (Array.isArray(response)) {
-          participations = response;
-        }
-
-        console.log('📊 Nombre de participations trouvées:', participations.length);
-
-        // Filtrer pour trouver la participation à cette chasse spécifique
-        const matchingParticipation = participations.find((p: ParticipateHuntAPI) => {
-          // Comparer avec l'IRI
-          if (typeof p.treasureHunt === 'string') {
-            const huntId = getIdFromUrl(p.treasureHunt);
-            return huntId === arg.huntId;
-          }
-          // Ou comparer directement si c'est un ID
-          return p.treasureHunt === arg.huntId;
-        });
-
-        if (matchingParticipation) {
-          console.log('✅ Participation trouvée pour cette chasse:', matchingParticipation);
-          return matchingParticipation;
-        }
-
-        console.log('❌ Aucune participation pour cette chasse');
-        return null;
-      },
     }),
     createParticipateHunt: build.mutation<
       ParticipateHuntAPI,
@@ -248,8 +213,6 @@ export const {
   useUserTeamsByIdQuery,
   useRiddleGetByIdQuery,
   useGetTreasureHuntRiddlesQuery,
-  useGetParticipateHuntByUserAndHuntQuery,
-  useLazyGetParticipateHuntByUserAndHuntQuery,
-  useCreateParticipateHuntMutation,
+  useGetUserParticipateHuntsQuery
 } = api;
 export default api;
