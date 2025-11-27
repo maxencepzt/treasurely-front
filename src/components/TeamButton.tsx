@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTeamByIdQuery } from "../store/slices/api.ts";
 import { getIdFromUrl } from "../utils/api.ts";
 import { parseApiError } from "../utils/api.ts";
-import ErrorView from "../views/Error.tsx";
+import ErrorView from "../views/error/Error.tsx";
 
 /**
  * Composant bouton affichant une équipe

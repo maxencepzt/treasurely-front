@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useLogoutMutation, useLogoutSSOMutation } from '../store/slices/api';
 import { logout } from '../store/slices/authSlice';
@@ -43,9 +45,10 @@ function LogoutButton() {
         <button
             type="button"
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition cursor-pointer"
+            className="px-3 py-2 gap-1.5 flex items-center justify-center rounded-lg bg-white/80 hover:bg-red-50 text-gray-700 hover:text-red-700 text-sm font-medium border border-gray-300 hover:border-red-400 shadow-sm hover:shadow transition-all duration-200 cursor-pointer"
         >
-            Se déconnecter
+            <FontAwesomeIcon icon={faRightFromBracket} className="text-xs" />
+            <span>Déconnexion</span>
         </button>
     );
 }

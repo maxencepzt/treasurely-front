@@ -1,8 +1,10 @@
-import Index from './Index.tsx';
-import Login from './Login.tsx';
-import UserUploadProfilePicture from './UserUploadProfilePicture.tsx';
+import Dashboard from './dashboard/Dashboard';
+import Index from './Index';
+import Login from './Login';
+import UserUploadProfilePicture from './UserUploadProfilePicture';
 
 export {
+  Dashboard,
   Index,
   Login,
   UserUploadProfilePicture,

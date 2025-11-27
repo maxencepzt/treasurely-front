@@ -4,11 +4,13 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_CONFIG } from '../../config/api';
 import type {
   AnyRiddleAPI,
+  ParticipateHuntAPI,
   TeamAPI,
   TeamMembersAPI,
+  TeamParticipateHuntsAPI,
   TeamTreasureHuntsAPI,
   TreasureHuntAPI,
-  User,
+  User, UserParticipateHuntsAPI,
   UserTeamsAPI
 } from "../../types/api";
 import type { rootState } from '../index';
@@ -161,6 +163,24 @@ const api = createApi({
         method: 'GET',
       }),
     }),
+    participateHuntGetById: build.query<ParticipateHuntAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `participate_hunts/${id}`,
+        method: 'GET',
+      }),
+    }),
+    teamParticipateHuntsById: build.query<TeamParticipateHuntsAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `teams/${id}/participate_hunts`,
+        method: 'GET',
+      }),
+    }),
+    getUserParticipateHuntsById: build.query<UserParticipateHuntsAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `users/${id}/participate_hunts`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -180,5 +200,8 @@ export const {
   useTeamTreasureHuntsByIdQuery,
   useUserTeamsByIdQuery,
   useRiddleGetByIdQuery,
+  useParticipateHuntGetByIdQuery,
+  useTeamParticipateHuntsByIdQuery,
+  useGetUserParticipateHuntsByIdQuery,
 } = api;
 export default api;
