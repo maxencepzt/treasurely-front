@@ -10,7 +10,7 @@ import type {
   TeamParticipateHuntsAPI,
   TeamTreasureHuntsAPI,
   TreasureHuntAPI,
-  User,
+  User, UserParticipateHuntsAPI,
   UserTeamsAPI
 } from "../../types/api";
 import type { rootState } from '../index';
@@ -175,6 +175,12 @@ const api = createApi({
         method: 'GET',
       }),
     }),
+    getUserParticipateHuntsById: build.query<UserParticipateHuntsAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `users/${id}/participate_hunts`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -196,5 +202,6 @@ export const {
   useRiddleGetByIdQuery,
   useParticipateHuntGetByIdQuery,
   useTeamParticipateHuntsByIdQuery,
+  useGetUserParticipateHuntsByIdQuery,
 } = api;
 export default api;
