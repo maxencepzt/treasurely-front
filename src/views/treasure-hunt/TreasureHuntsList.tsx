@@ -25,14 +25,8 @@ export default function TreasureHuntsList() {
   const treasureHunts = data?.member || [];
 
   // Filtrer les chasses selon les critères
-  // Documentation : Le filtre 'Tous' exclut les chasses fermées et brouillons
   const filteredHunts = treasureHunts.filter((hunt) => {
-    let matchesStatus = false;
-    if (statusFilter === "all") {
-      matchesStatus = hunt.status !== "closed" && hunt.status !== "draft";
-    } else {
-      matchesStatus = hunt.status === statusFilter;
-    }
+    const matchesStatus = statusFilter === "all" || hunt.status === statusFilter;
     const matchesDifficulty = difficultyFilter === "all" || hunt.difficulty === difficultyFilter;
     return matchesStatus && matchesDifficulty;
   });
