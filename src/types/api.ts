@@ -155,3 +155,11 @@ export type UserParticipateHuntsAPI = {
   "@type": string;
   participateHunts: ParticipateHuntAPI[];
 }
+
+export type TreasureHuntCollectionAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  totalItems: number;
+  member: TreasureHuntAPI[];
+}
