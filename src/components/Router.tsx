@@ -20,6 +20,7 @@ function Router() {
         <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />
         <Route path="/treasure-hunt/:id" element={<TreasureHunt />} />
+        <Route path="/treasure-hunt/:id/finished" element={<TreasureHunt />} />
         <Route path="/riddle/:id" element={<Riddle />} />
         <Route path="/teams/:id" element={<Teams />} />
         <Route path="/teams/:id/members" element={<TeamMembers />} />

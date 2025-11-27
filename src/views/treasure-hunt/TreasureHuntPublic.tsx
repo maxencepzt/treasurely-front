@@ -37,21 +37,21 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
   const {data: treasureHuntRiddles } = useGetTreasureHuntRiddlesQuery({ huntId: treasureHunt.id});
 
   const participationExists = () => {
-    let booleanResult = false;
+    let alreadyParticipating = false;
     let RiddleId = null;
-    if (userParticipations && userParticipations["member"].length > 0) {
-      userParticipations["member"].forEach((participation: { hunt: string; currentRiddle: string }) => {
+    if (userParticipations && userParticipations["participateHunts"].length > 0) {
+      userParticipations["participateHunts"].forEach((participation: { hunt: string; currentRiddle: string }) => {
         const participationHuntId = getIdFromUrl(participation.hunt);
           if (participationHuntId === treasureHunt.id) {
-            booleanResult = true;
+            alreadyParticipating = true;
             RiddleId = getIdFromUrl(participation.currentRiddle);
           }
       });
     }
-    return {booleanResult, RiddleId};
+    return {alreadyParticipating, RiddleId};
   }
 
-  const alreadyParticipating = participationExists();
+  const {alreadyParticipating, RiddleId} = participationExists();
 
   const handleParticipate = () => {
     if (!user) {
@@ -59,10 +59,11 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
       return;
     }
 
-    if (alreadyParticipating.booleanResult) {
-      navigate(`/riddle/${alreadyParticipating.RiddleId}`);
+    if (alreadyParticipating) {
+      navigate(`/riddle/${RiddleId}`);
     } else {
       const firstRiddleId = treasureHuntRiddles ? getIdFromUrl(treasureHuntRiddles["riddles"][0]["@id"]) : null;
+      alert(`A implémenter : ${firstRiddleId}`);
     }
   };
 
@@ -165,7 +166,7 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
 
         {/* Bouton participer */}
         <div className="mt-auto px-6 pb-6">
-          <THButton onClick={handleParticipate}>{ alreadyParticipating.booleanResult ? "Reprendre" : "Participer" }</THButton>
+          <THButton onClick={handleParticipate}>{ alreadyParticipating ? "Reprendre" : "Participer" }</THButton>
         </div>
       </div>
     </div>

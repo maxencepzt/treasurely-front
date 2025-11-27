@@ -5,6 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { BackButton } from '../../components';
 import type { TextRiddleAPI } from '../../types/api';
 import { validateTextAnswer } from '../../utils/riddleHelpers';
+import { getIdFromUrl } from '../../utils/api.ts';
+import { useGetTreasureHuntRiddlesQuery } from '../../store/slices/api.ts';
+import { useNavigate } from 'react-router';
+import { RiddleValidation } from '../../utils/riddleValidation.ts';
 
 interface TextRiddleViewProps {
   riddle: TextRiddleAPI;
@@ -14,14 +18,12 @@ export default function TextRiddleView({ riddle }: TextRiddleViewProps) {
   const [userAnswer, setUserAnswer] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const { data: riddles } = useGetTreasureHuntRiddlesQuery({ huntId: getIdFromUrl(riddle.hunt) });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFeedback(null);
     setIsSubmitting(true);
-
-    // Simuler un délai de validation
-    await new Promise(resolve => setTimeout(resolve, 500));
 
     const isCorrect = validateTextAnswer(riddle, userAnswer);
 
@@ -55,7 +57,7 @@ export default function TextRiddleView({ riddle }: TextRiddleViewProps) {
                 <h1 className="text-2xl font-bold text-gray-900">Texte</h1>
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-lg">{"🔥".repeat(riddle.difficulty)}</span>
+                <span className="text-lg">{'🔥'.repeat(riddle.difficulty)}</span>
               </div>
             </div>
           </div>
@@ -71,8 +73,8 @@ export default function TextRiddleView({ riddle }: TextRiddleViewProps) {
               <span>Instructions</span>
             </h3>
             <p className="text-sm text-blue-800">
-              Lisez attentivement la description de l'énigme et saisissez votre réponse dans le champ ci-dessous.
-              La réponse peut être sensible à la casse.
+              Lisez attentivement la description de l'énigme et saisissez votre réponse dans le champ ci-dessous. La
+              réponse peut être sensible à la casse.
             </p>
           </div>
 
@@ -104,9 +106,7 @@ export default function TextRiddleView({ riddle }: TextRiddleViewProps) {
             {feedback && (
               <div
                 className={`rounded-xl p-4 border-2 flex items-center gap-3 ${
-                  feedback.type === 'success'
-                    ? 'bg-green-50 border-green-300'
-                    : 'bg-red-50 border-red-300'
+                  feedback.type === 'success' ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300'
                 }`}
               >
                 <FontAwesomeIcon
