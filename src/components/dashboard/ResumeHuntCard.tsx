@@ -59,13 +59,15 @@ export default function ResumeHuntCard({ participateHunt }: ResumeHuntCardProps)
       </p>
 
       {/* Bouton Reprendre */}
-      <button
-        type="button"
-        onClick={() => navigate(`/treasure-hunt/${treasureHuntId}`)}
-        className="w-full bg-green-700 hover:bg-green-800 active:bg-green-900 text-white font-bold py-4 px-6 rounded-xl shadow-md transition-colors text-lg"
-      >
-        Reprendre
-      </button>
+      <div className="flex justify-center">
+        <button
+          type="button"
+          onClick={() => navigate(`/treasure-hunt/${treasureHuntId}`)}
+          className="w-full md:w-auto md:min-w-[200px] md:px-12 bg-green-700 hover:bg-green-800 active:bg-green-900 text-white font-bold py-4 px-6 rounded-xl shadow-md transition-colors text-lg"
+        >
+          Reprendre
+        </button>
+      </div>
     </div>
   );
 }
