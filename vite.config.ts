@@ -11,6 +11,9 @@ export default defineConfig({
     VitePWA({
       strategies: 'injectManifest',
       includeAssets: ['icons/favicon.ico', 'icons/apple-touch-icon.png', 'icons/android-chrome-512x512.png'],
+      devOptions: {
+        enabled: true
+      },
       manifest: {
         "short_name": "Treasurely",
         "name": "Treasurely",
