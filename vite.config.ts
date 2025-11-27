@@ -10,7 +10,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       strategies: 'injectManifest',
-      includeAssets: ['icons/favicon.ico', 'icons/apple-touch-icon.png', 'icons/android-chrome-512x512.png'],
+      includeAssets: ['icons/favicon.ico', 'icons/apple-touch-icon.png', 'icons/android-chrome-512x512.png', 'offline.html'],
       devOptions: {
         enabled: true,
         type: 'module',
