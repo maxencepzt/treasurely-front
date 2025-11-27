@@ -12,7 +12,8 @@ export default defineConfig({
       strategies: 'injectManifest',
       includeAssets: ['icons/favicon.ico', 'icons/apple-touch-icon.png', 'icons/android-chrome-512x512.png'],
       devOptions: {
-        enabled: true
+        enabled: true,
+        type: 'module',
       },
       manifest: {
         "short_name": "Treasurely",
