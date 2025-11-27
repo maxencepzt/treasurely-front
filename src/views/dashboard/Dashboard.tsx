@@ -6,14 +6,10 @@ import ErrorView from '../error/Error.tsx';
 
 export default function Dashboard() {
   const { user } = useUser();
-
-  // Si le provider fait son travail, user est chargé.
-  // On passe user.id s'il existe, sinon on évite de passer 0 si possible,
-  // mais gardons le comportement actuel en sécurisant juste la logique.
   const userId = user?.id;
 
-  // Note: Idéalement le hook useUserParticipateHunts devrait accepter 'skip' ou null
-  const { teamIds, isLoading, error } = useUserParticipateHunts(userId ?? 0);
+  // Le hook récupère maintenant directement les chasses
+  const { participateHunts, isLoading, error } = useUserParticipateHunts(userId ?? 0);
 
   if (!user) {
     return <ErrorView status={401} message="Vous devez être connecté pour accéder à cette page" />;
@@ -44,11 +40,10 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Liste des chasses avec section de reprise intégrée */}
-        {/* Ajout d'une clé key basée sur l'ID user pour forcer le remount si l'utilisateur change */}
+        {/* Liste des chasses */}
         <UserHuntsList
-          key={user.id}
-          teamIds={teamIds}
+          key={user.id} // Garder la key pour forcer le refresh si l'user change
+          participateHunts={participateHunts}
           isLoading={isLoading}
         />
       </div>
