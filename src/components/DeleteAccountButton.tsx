@@ -6,8 +6,9 @@ import { logout } from "../store/slices/authSlice";
 
 export default function DeleteAccountButton({ userId, isOwner }: { userId: number; isOwner: boolean }) {
   const [showModal, setShowModal] = useState(false);
-  const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const dispatch = useDispatch();
   const [deleteUser, { isLoading }] = useUserDeleteMutation();
 
   const handleDelete = async () => {
@@ -22,8 +23,19 @@ export default function DeleteAccountButton({ userId, isOwner }: { userId: numbe
       dispatch(logout());
       localStorage.clear();
       window.location.href = "/";
-    } catch (err) {
-      console.error("Erreur lors de la suppression du compte :", err);
+    } catch (error) {
+      const apiError = error as {
+        status: number;
+        data?: { detail?: string; description?: string };
+      };
+
+      const message =
+        apiError.data?.detail ||
+        apiError.data?.description ||
+        "Une erreur inconnue est survenue.";
+
+      setErrorMessage(message);
+      console.error("Erreur lors de la suppression du compte :", apiError);
     }
   };
 
@@ -48,14 +60,23 @@ export default function DeleteAccountButton({ userId, isOwner }: { userId: numbe
               Confirmer la suppression
             </h2>
 
-            <p className="text-gray-700 mb-6">
+            <p className="text-gray-700 mb-4">
               Êtes-vous sûr de vouloir supprimer définitivement votre compte ?
             </p>
+
+            {errorMessage && (
+              <div className="mb-4 p-3 rounded bg-red-100 text-red-800 border border-red-300">
+                {errorMessage}
+              </div>
+            )}
 
             <div className="flex justify-end gap-3">
               <button
                 type="button"
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  setShowModal(false);
+                  setErrorMessage(null);
+                }}
                 className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
               >
                 Annuler
