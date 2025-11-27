@@ -56,7 +56,7 @@ export default function UserHuntsList({ participateHunts, isLoading }: UserHunts
             <div className="flex justify-center">
               <button
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/treasure-hunt')}
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
               >
                 Découvrir les chasses au trésor

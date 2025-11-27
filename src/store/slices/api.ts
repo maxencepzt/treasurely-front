@@ -9,7 +9,7 @@ import type {
   TeamMembersAPI,
   TeamParticipateHuntsAPI,
   TeamTreasureHuntsAPI,
-  TreasureHuntAPI,
+  TreasureHuntAPI, TreasureHuntCollectionAPI,
   User, UserParticipateHuntsAPI,
   UserTeamsAPI
 } from "../../types/api";
@@ -181,6 +181,12 @@ const api = createApi({
         method: 'GET',
       }),
     }),
+    getAllTreasureHunts: build.query<TreasureHuntCollectionAPI, void>({
+      query: () => ({
+        url: 'treasure_hunts',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -203,5 +209,6 @@ export const {
   useParticipateHuntGetByIdQuery,
   useTeamParticipateHuntsByIdQuery,
   useGetUserParticipateHuntsByIdQuery,
+  useGetAllTreasureHuntsQuery,
 } = api;
 export default api;
