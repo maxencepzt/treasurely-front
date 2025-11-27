@@ -131,14 +131,11 @@ export type ParticipateHuntAPI = {
   "@id": string;
   "@type": string;
   id: number;
-  user: string;
-  treasureHunt: string;
-  gameTeam?: string;
+  hunter: string;
+  hunt: string;
+  playerTeam?: string;
   currentRiddle: number;
-  startedAt: string;
-  completedAt?: string;
-  totalTime?: number;
-  score?: number;
-  status: 'in_progress' | 'completed';
+  time: number;
+  score: number;
 }
 
