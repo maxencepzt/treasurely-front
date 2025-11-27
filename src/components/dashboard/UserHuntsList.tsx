@@ -1,3 +1,5 @@
+import {useNavigate} from "react-router";
+
 import { useUserHuntsList } from '../../hooks/useUserHuntsList';
 import type {ParticipateHuntAPI} from '../../types/api';
 import { Loading } from '..';
@@ -15,6 +17,7 @@ export default function UserHuntsList({ participateHunts, isLoading }: UserHunts
     sortedHunts,
     mostRecentInProgress,
   } = useUserHuntsList(participateHunts);
+  const navigate = useNavigate();
 
   if (isLoading) {
     return <Loading />;
@@ -47,9 +50,18 @@ export default function UserHuntsList({ participateHunts, isLoading }: UserHunts
           </div>
         ) : (
           <div className="px-8 py-16 bg-white rounded-2xl border-2 border-gray-200 shadow-md">
-            <p className="text-gray-500 text-lg text-center">
+            <p className="text-gray-500 text-lg text-center mb-6">
               Vous n'avez participé à aucune chasse au trésor pour le moment
             </p>
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
+              >
+                Découvrir les chasses au trésor
+              </button>
+            </div>
           </div>
         )}
       </div>
