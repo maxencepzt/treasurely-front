@@ -149,3 +149,9 @@ export type TeamParticipateHuntsAPI = {
   participateHunts: ParticipateHuntAPI[];
 }
 
+export type UserParticipateHuntsAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  participateHunts: ParticipateHuntAPI[];
+}
