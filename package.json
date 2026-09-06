@@ -53,5 +53,10 @@
     "workbox-strategies": "^7.4.0",
     "workbox-background-sync": "^7.4.0",
     "workbox-cacheable-response": "^7.4.0"
+  },
+  "overrides": {
+    "eslint-plugin-react": {
+      "brace-expansion": "^1.1.18"
+    }
   }
 }
