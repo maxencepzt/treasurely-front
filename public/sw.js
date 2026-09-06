@@ -12,7 +12,7 @@ cleanupOutdatedCaches();
 precacheAndRoute([
   ...self.__WB_MANIFEST,
   { url: '/offline.html', revision: 'v2' },
-  { url: '/offline-built.css', revision: 'v1' }
+  { url: '/offline-built.css', revision: 'v2' }
 ]);
 
 // Ne JAMAIS mettre en cache les tokens ou les requêtes de login/refresh
