@@ -187,6 +187,12 @@ const api = createApi({
         method: 'GET',
       }),
     }),
+    userDelete: build.mutation<{ message: string }, { userId: number }>({
+      query: ({ userId }) => ({
+        url: `users/${userId}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -210,5 +216,6 @@ export const {
   useTeamParticipateHuntsByIdQuery,
   useGetUserParticipateHuntsByIdQuery,
   useGetAllTreasureHuntsQuery,
+  useUserDeleteMutation,
 } = api;
 export default api;
