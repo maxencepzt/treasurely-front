@@ -21,7 +21,13 @@ export default function StepProgressBar({ completedSteps, totalSteps }: StepProg
         const isCurrent = status === 'current';
 
         return (
-          <div key={index} className="flex items-center">
+          <div
+            // Les étapes sont anonymes, de longueur fixe et jamais réordonnées :
+            // l'index est ici un identifiant stable.
+            // eslint-disable-next-line @eslint-react/no-array-index-key
+            key={index}
+            className="flex items-center"
+          >
             {/* Point représentant une étape */}
             <div className="relative group">
               <div
