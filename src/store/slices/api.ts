@@ -205,6 +205,15 @@ const api = createApi({
       }),
       invalidatesTags: ['Participations'],
     }),
+    replayHunt: build.mutation<ParticipateHuntAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `participate_hunts/${id}/replay`,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/ld+json' },
+        body: {},
+      }),
+      invalidatesTags: ['Participations'],
+    }),
     attemptRiddle: build.mutation<ParticipateRiddleAPI, { id: number; attempt: RiddleAttempt }>({
       query: ({ id, attempt }) => ({
         url: `riddles/${id}/attempt`,
@@ -251,6 +260,7 @@ export const {
   useGetAllTreasureHuntsQuery,
   useUserDeleteMutation,
   useJoinHuntMutation,
+  useReplayHuntMutation,
   useAttemptRiddleMutation,
   useTreasureHuntScoreboardQuery,
 } = api;
