@@ -5,6 +5,8 @@ import { API_CONFIG } from '../../config/api';
 import type {
   AnyRiddleAPI,
   ParticipateHuntAPI,
+  ParticipateRiddleAPI,
+  RiddleAttempt,
   TeamAPI,
   TeamMembersAPI,
   TeamParticipateHuntsAPI,
@@ -71,6 +73,9 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
+  // Les participations changent à chaque jointure et à chaque énigme résolue :
+  // les mutations concernées invalident la liste plutôt que de la recharger à la main.
+  tagTypes: ['Participations'],
   endpoints: (build) => ({
     getAuthentifiedUser: build.query<User, null>({
       query: () => ({
@@ -180,6 +185,25 @@ const api = createApi({
         url: `users/${id}/participate_hunts`,
         method: 'GET',
       }),
+      providesTags: ['Participations'],
+    }),
+    joinHunt: build.mutation<ParticipateHuntAPI, { hunt: string; playerTeam?: string }>({
+      query: (body) => ({
+        url: 'participate_hunts',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/ld+json' },
+        body,
+      }),
+      invalidatesTags: ['Participations'],
+    }),
+    attemptRiddle: build.mutation<ParticipateRiddleAPI, { id: number; attempt: RiddleAttempt }>({
+      query: ({ id, attempt }) => ({
+        url: `riddles/${id}/attempt`,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/ld+json' },
+        body: attempt,
+      }),
+      invalidatesTags: ['Participations'],
     }),
     getAllTreasureHunts: build.query<TreasureHuntCollectionAPI, void>({
       query: () => ({
@@ -217,5 +241,7 @@ export const {
   useGetUserParticipateHuntsByIdQuery,
   useGetAllTreasureHuntsQuery,
   useUserDeleteMutation,
+  useJoinHuntMutation,
+  useAttemptRiddleMutation,
 } = api;
 export default api;

@@ -96,6 +96,10 @@ export type UserTeamsAPI = {
   teams: string[];
 }
 
+/**
+ * Une énigme telle que le serveur la publie : jamais sa solution. Le sous-type se lit
+ * dans `type`, puisque `@type` vaut "Riddle" pour les quatre.
+ */
 export interface RiddleAPI {
   "@context": string;
   "@id": string;
@@ -104,27 +108,53 @@ export interface RiddleAPI {
   description: string;
   difficulty: 1 | 2 | 3;
   orderNumber: number;
+  maxScoringAttempts: number;
+  hunt: string;
 }
 
 export interface MCQRiddleAPI extends RiddleAPI {
+  type: 'mcq';
   choices: string[];
-  answers: string[];
+  /** Absent quand le concepteur a choisi de ne pas l'annoncer. */
+  expectedAnswerCount?: number;
 }
 
 export interface GPSRiddleAPI extends RiddleAPI {
-  latitude: number;
-  longitude: number;
+  type: 'gps';
 }
 
-export interface QRRiddle extends RiddleAPI {
-  code: string;
+export interface QRRiddleAPI extends RiddleAPI {
+  type: 'qr';
 }
 
 export interface TextRiddleAPI extends RiddleAPI {
-  answer: string;
+  type: 'text';
 }
 
-export type AnyRiddleAPI = MCQRiddleAPI | GPSRiddleAPI | QRRiddle | TextRiddleAPI;
+export type AnyRiddleAPI = MCQRiddleAPI | GPSRiddleAPI | QRRiddleAPI | TextRiddleAPI;
+
+/** Corps de POST /riddles/{id}/attempt : chaque type ne renseigne que son champ. */
+export type RiddleAttempt = {
+  proposal?: string;
+  choices?: string[];
+  latitude?: number;
+  longitude?: number;
+};
+
+export type ParticipateRiddleAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  id: number;
+  startTime: string;
+  finishTime?: string;
+  score: number;
+  attempts: number;
+  attemptsRemaining: number;
+  solved: boolean;
+  hunter: string;
+  riddle: string;
+};
 
 export type ParticipateHuntAPI = {
   "@context": string;
@@ -135,6 +165,7 @@ export type ParticipateHuntAPI = {
   time: number;
   score: number;
   finished: boolean;
+  riddlesSolved: number;
   lastParticipate: string;
   hunter: string;
   hunt: string;
