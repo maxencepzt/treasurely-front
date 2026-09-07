@@ -26,7 +26,7 @@ export default function Dashboard() {
         {/* Header avec bouton de déconnexion */}
         <div className="mb-8">
           <div className="mb-6 flex justify-end gap-2">
-            <LoginSSOButton />
+            {user.roles?.includes('ROLE_ADMIN') && <LoginSSOButton />}
             <LogoutButton />
           </div>
           <div className="text-center">
