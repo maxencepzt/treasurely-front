@@ -18,7 +18,7 @@ export default function ResumeHuntCard({ participateHunt }: ResumeHuntCardProps)
 
   // Utiliser le hook personnalisé pour gérer toute la logique métier
   const {
-    treasureHuntId,
+    currentRiddleId,
     treasureHunt,
     completedSteps,
     totalSteps,
@@ -62,7 +62,7 @@ export default function ResumeHuntCard({ participateHunt }: ResumeHuntCardProps)
       <div className="flex justify-center">
         <button
           type="button"
-          onClick={() => navigate(`/treasure-hunt/${treasureHuntId}`)}
+          onClick={() => navigate(`/riddle/${currentRiddleId}`)}
           className="w-full md:w-auto md:min-w-[200px] md:px-12 bg-green-700 hover:bg-green-800 active:bg-green-900 text-white font-bold py-4 px-6 rounded-xl shadow-md transition-colors text-lg"
         >
           Reprendre
