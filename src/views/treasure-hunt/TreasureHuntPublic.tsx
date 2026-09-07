@@ -9,7 +9,7 @@ import Scoreboard from "../../components/treasure-hunt/Scoreboard.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
 import { useUser } from "../../contexts/user";
 import { useUserParticipateHunts } from "../../hooks/useUserParticipateHunts";
-import { useJoinHuntMutation, useUserTeamsByIdQuery } from "../../store/slices/api.ts";
+import { useJoinHuntMutation, useReplayHuntMutation, useUserTeamsByIdQuery } from "../../store/slices/api.ts";
 import type { TreasureHuntAPI } from "../../types/api.ts";
 import { getIdFromUrl, parseApiError } from "../../utils/api.ts";
 import formatDuration from "../../utils/formatDuration.ts";
@@ -31,6 +31,18 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
   const { participateHunts } = useUserParticipateHunts(user?.id ?? 0);
   const progress = participateHunts.find((participation) => getIdFromUrl(participation.hunt) === treasureHunt.id);
   const [joinHunt, { isLoading: isJoining, error: joinError }] = useJoinHuntMutation();
+  const [replayHunt, { isLoading: isReplaying, error: replayError }] = useReplayHuntMutation();
+
+  // Refaire une chasse terminée : le prochain score remplacera celui-ci
+  const handleReplay = async () => {
+    if (!progress || isReplaying) return;
+    try {
+      const restarted = await replayHunt({ id: progress.id }).unwrap();
+      navigate(`/riddle/${getIdFromUrl(restarted.currentRiddle)}`);
+    } catch {
+      // L'erreur est affichée sous le bouton via replayError
+    }
+  };
 
   // Seules les équipes de joueurs peuvent jouer ; "" vaut « seul »
   const { data: userTeams } = useUserTeamsByIdQuery({ id: user?.id ?? 0 }, { skip: !user });
@@ -157,10 +169,17 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
         {/* Participer, reprendre, ou score final */}
         <div className="mt-auto px-6 pb-6">
           {progress?.finished ? (
-            <div className="mt-6 mb-4 py-3 px-6 rounded-lg bg-green-50 border-2 border-green-200 text-center">
-              <p className="text-green-800 font-semibold">Chasse terminée</p>
-              <p className="text-green-700 text-sm">{progress.score} points</p>
-            </div>
+            <>
+              <div className="mt-6 py-3 px-6 rounded-lg bg-green-50 border-2 border-green-200 text-center">
+                <p className="text-green-800 font-semibold">Chasse terminée</p>
+                <p className="text-green-700 text-sm">{progress.score} points</p>
+              </div>
+              <THButton onClick={() => void handleReplay()}>{isReplaying ? 'Remise à zéro...' : 'Rejouer'}</THButton>
+              <p className="text-xs text-gray-500 text-center -mt-2 mb-4">Le score de la nouvelle partie remplacera celui-ci.</p>
+              {replayError && (
+                <p className="text-red-700 text-sm text-center">{parseApiError(replayError).message}</p>
+              )}
+            </>
           ) : !isOwner && (
             <>
               {!progress && playerTeams.length > 0 && (
