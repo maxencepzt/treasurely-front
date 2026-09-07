@@ -19,6 +19,7 @@ export type User = {
   totalScore: number;
   description?: string;
   teams?: string[];
+  roles?: string[];
 };
 
 export type HuntTypeAPI = {
