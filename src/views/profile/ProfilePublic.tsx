@@ -38,7 +38,7 @@ export function ProfilePublic({ user, isOwner = false }: { user: User, isOwner?:
 
         {/* Teams section */}
         {!isLoading && userTeams && userTeams.teams && userTeams.teams.length > 0 && (
-          <ProfileTeamsList teamRoutes={userTeams.teams} />
+          <ProfileTeamsList teams={userTeams.teams} />
         )}
 
         {/* Stats section */}

@@ -58,16 +58,29 @@ export type TeamMember = {
   nickname: string;
 }
 
+/** `@type` vaut "Team" pour les deux sous-types : `type` est le discriminant. */
+export type TeamType = 'player' | 'designer';
+
 export type TeamAPI = {
   "@context": string;
   "@id": string;
   "@type": string;
   id: number;
   name: string;
+  type: TeamType;
   description: string;
   owner: string;
   members?: TeamMember[];
+  /** Code de recrutement, équipes de joueurs seulement. */
   code?: string;
+}
+
+/** Une équipe telle que listée sur un utilisateur, sans détail. */
+export type TeamSummaryAPI = {
+  "@id": string;
+  "@type": string;
+  name: string;
+  type: TeamType;
 }
 
 export type TeamMembersAPI = {
@@ -93,7 +106,7 @@ export type UserTeamsAPI = {
   "@context": string;
   "@id": string;
   "@type": string;
-  teams: string[];
+  teams: TeamSummaryAPI[];
 }
 
 /**
