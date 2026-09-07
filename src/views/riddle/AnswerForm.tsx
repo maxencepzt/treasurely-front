@@ -4,7 +4,7 @@ import { faCamera, faLocationCrosshairs } from '@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import type { AnyRiddleAPI, MCQRiddleAPI, RiddleAttempt } from '../../types/api';
-import QrScanner, { canScanQrCodes } from './QrScanner';
+import QrScanner from './QrScanner';
 
 interface AnswerFormProps {
   riddle: AnyRiddleAPI;
@@ -34,21 +34,30 @@ export default function AnswerForm({ riddle, disabled, onSubmit }: AnswerFormPro
   }
 }
 
-function ProposalForm({
-  label,
-  placeholder,
-  disabled,
-  proposal,
-  onChange,
-  onSubmit,
-}: {
-  label: string;
-  placeholder: string;
-  disabled: boolean;
-  proposal: string;
-  onChange: (proposal: string) => void;
-  onSubmit: (attempt: RiddleAttempt) => void;
-}) {
+/** La caméra n'est accessible qu'en contexte sécurisé : https, ou localhost en développement. */
+const canScanQrCodes = typeof navigator !== 'undefined' && typeof navigator.mediaDevices?.getUserMedia === 'function';
+
+/** Préfixe commun à tous les codes QR de l'application : le joueur ne saisit que les chiffres. */
+const QR_PREFIX = 'treasurely_';
+const QR_DIGITS = 9;
+
+/**
+ * Les chiffres du code, quelle que soit la forme lue : le code brut, ou l'adresse de cette
+ * page suivie de `?code=`, celle que l'appareil photo du téléphone ouvre directement.
+ */
+function digitsFrom(scanned: string): string {
+  let value = scanned;
+  try {
+    value = new URL(scanned).searchParams.get('code') ?? scanned;
+  } catch {
+    // Pas une adresse : le contenu est le code lui-même
+  }
+  return (value.startsWith(QR_PREFIX) ? value.slice(QR_PREFIX.length) : value).replace(/\D/g, '').slice(0, QR_DIGITS);
+}
+
+function TextForm({ disabled, onSubmit }: { disabled: boolean; onSubmit: (attempt: RiddleAttempt) => void }) {
+  const [proposal, setProposal] = useState('');
+
   return (
     <form
       className="space-y-4"
@@ -58,7 +67,7 @@ function ProposalForm({
       }}
     >
       <label htmlFor="proposal" className="block text-base font-semibold text-gray-900">
-        {label}
+        Votre réponse
       </label>
       <input
         id="proposal"
@@ -66,8 +75,8 @@ function ProposalForm({
         value={proposal}
         maxLength={100}
         autoComplete="off"
-        placeholder={placeholder}
-        onChange={(event) => onChange(event.target.value)}
+        placeholder="Saisissez votre réponse"
+        onChange={(event) => setProposal(event.target.value)}
         className={inputClasses}
       />
       <button type="submit" disabled={disabled || proposal.trim() === ''} className={submitClasses}>
@@ -78,24 +87,15 @@ function ProposalForm({
 }
 
 /**
- * Le contenu du QR code, tel que le concepteur l'a encodé : le code brut, ou l'adresse de
- * cette page suivie de `?code=`, auquel cas scanner avec l'appareil photo du téléphone
- * ouvre directement l'énigme préremplie.
+ * Deux façons d'entrer le même code : le scanner, ou taper ses chiffres derrière le préfixe
+ * affiché d'office. Le préfixe dit au joueur qu'il tient bien un code de l'application.
  */
-function codeFrom(scanned: string): string {
-  try {
-    return new URL(scanned).searchParams.get('code') ?? scanned;
-  } catch {
-    return scanned;
-  }
-}
-
 function QrCodeForm({ disabled, onSubmit }: { disabled: boolean; onSubmit: (attempt: RiddleAttempt) => void }) {
   const [searchParams] = useSearchParams();
-  const [proposal, setProposal] = useState(searchParams.get('code') ?? '');
+  const [digits, setDigits] = useState(() => digitsFrom(searchParams.get('code') ?? ''));
   const [scanning, setScanning] = useState(false);
   const onScan = useCallback((value: string) => {
-    setProposal(codeFrom(value));
+    setDigits(digitsFrom(value));
     setScanning(false);
   }, []);
 
@@ -116,30 +116,38 @@ function QrCodeForm({ disabled, onSubmit }: { disabled: boolean; onSubmit: (atte
           </button>
         )
       )}
-      <ProposalForm
-        label={canScanQrCodes ? 'Ou saisissez le code' : 'Code lu sur le QR code'}
-        placeholder="Saisissez le code du QR code"
-        disabled={disabled}
-        proposal={proposal}
-        onChange={setProposal}
-        onSubmit={onSubmit}
-      />
+      <form
+        className="space-y-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSubmit({ proposal: QR_PREFIX + digits });
+        }}
+      >
+        <label htmlFor="qr-digits" className="block text-base font-semibold text-gray-900">
+          {canScanQrCodes ? 'Ou saisissez les chiffres du code' : 'Chiffres du code'}
+        </label>
+        <div className="flex items-stretch rounded-xl border-2 border-gray-200 overflow-hidden focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-500">
+          <span className="px-3 py-3 bg-gray-100 text-gray-600 font-mono select-none" aria-hidden="true">
+            {QR_PREFIX}
+          </span>
+          <input
+            id="qr-digits"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={QR_DIGITS}
+            autoComplete="off"
+            placeholder="123456789"
+            value={digits}
+            onChange={(event) => setDigits(digitsFrom(event.target.value))}
+            className="flex-1 min-w-0 px-3 py-3 font-mono focus:outline-none"
+          />
+        </div>
+        <button type="submit" disabled={disabled || digits === ''} className={submitClasses}>
+          Valider
+        </button>
+      </form>
     </div>
-  );
-}
-
-function TextForm({ disabled, onSubmit }: { disabled: boolean; onSubmit: (attempt: RiddleAttempt) => void }) {
-  const [proposal, setProposal] = useState('');
-
-  return (
-    <ProposalForm
-      label="Votre réponse"
-      placeholder="Saisissez votre réponse"
-      disabled={disabled}
-      proposal={proposal}
-      onChange={setProposal}
-      onSubmit={onSubmit}
-    />
   );
 }
 

@@ -5,11 +5,32 @@ interface QrScannerProps {
   onClose: () => void;
 }
 
-export const canScanQrCodes = typeof BarcodeDetector !== 'undefined';
+type Detect = (video: HTMLVideoElement) => Promise<string | null>;
 
 /**
- * Lit un QR code avec la caméra arrière, sans bibliothèque : l'API Barcode Detection du
- * navigateur suffit là où elle existe, et la saisie manuelle reste possible partout.
+ * L'API Barcode Detection du navigateur quand elle existe (Android, iOS), un décodeur
+ * JavaScript sinon : le scan est proposé partout où la caméra l'est.
+ */
+async function createDetector(): Promise<Detect> {
+  if (typeof BarcodeDetector !== 'undefined') {
+    const detector = new BarcodeDetector({ formats: ['qr_code'] });
+    return async (video) => (await detector.detect(video))[0]?.rawValue ?? null;
+  }
+  const { default: jsQR } = await import('jsqr');
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d', { willReadFrequently: true });
+  return async (video) => {
+    if (!context) return null;
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    context.drawImage(video, 0, 0);
+    const image = context.getImageData(0, 0, canvas.width, canvas.height);
+    return jsQR(image.data, image.width, image.height, { inversionAttempts: 'dontInvert' })?.data ?? null;
+  };
+}
+
+/**
+ * Lit un QR code avec la caméra arrière et remet son contenu brut à l'appelant.
  */
 export default function QrScanner({ onScan, onClose }: QrScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -22,9 +43,10 @@ export default function QrScanner({ onScan, onClose }: QrScannerProps) {
     let stream: MediaStream | null = null;
     let timer: number | undefined;
     let done = false;
-    const detector = new BarcodeDetector({ formats: ['qr_code'] });
+    const detector = createDetector();
 
     const stop = () => {
+      done = true;
       window.clearInterval(timer);
       stream?.getTracks().forEach((track) => track.stop());
     };
@@ -32,11 +54,10 @@ export default function QrScanner({ onScan, onClose }: QrScannerProps) {
     const look = async () => {
       if (done || video.readyState < HTMLMediaElement.HAVE_ENOUGH_DATA) return;
       try {
-        const [code] = await detector.detect(video);
-        if (code) {
-          done = true;
+        const value = await (await detector)(video);
+        if (value && !done) {
           stop();
-          onScan(code.rawValue);
+          onScan(value);
         }
       } catch {
         // Une image non exploitable : la suivante fera l'affaire
