@@ -200,6 +200,26 @@ export type UserParticipateHuntsAPI = {
   participateHunts: ParticipateHuntAPI[];
 }
 
+/** Une ligne du classement d'une chasse : un finisseur, sa place, son score. */
+export type ScoreboardRowAPI = {
+  "@id": string;
+  "@type": string;
+  rank: number;
+  score: number;
+  time: number;
+  lastParticipate: string;
+  hunter: { "@id": string; nickname: string };
+  playerTeam?: { "@id": string; name: string };
+};
+
+export type ScoreboardAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  totalItems: number;
+  member: ScoreboardRowAPI[];
+};
+
 export type TreasureHuntCollectionAPI = {
   "@context": string;
   "@id": string;
