@@ -7,8 +7,10 @@ import { BackButton, CoverImage, DescriptionModal, TeamButton } from "../../comp
 import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
 import { useUser } from "../../contexts/user";
+import { useUserParticipateHunts } from "../../hooks/useUserParticipateHunts";
+import { useJoinHuntMutation } from "../../store/slices/api.ts";
 import type { TreasureHuntAPI } from "../../types/api.ts";
-import { getIdFromUrl } from "../../utils/api.ts";
+import { getIdFromUrl, parseApiError } from "../../utils/api.ts";
 import formatDuration from "../../utils/formatDuration.ts";
 
 export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: TreasureHuntAPI}) {
@@ -23,6 +25,28 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
     : treasureHunt.description;
 
   const isOwner = user && getIdFromUrl(treasureHunt.owner) === user.id;
+
+  // Participation existante de l'utilisateur à cette chasse, s'il y en a une
+  const { participateHunts } = useUserParticipateHunts(user?.id ?? 0);
+  const progress = participateHunts.find((participation) => getIdFromUrl(participation.hunt) === treasureHunt.id);
+  const [joinHunt, { isLoading: isJoining, error: joinError }] = useJoinHuntMutation();
+
+  const handleParticipate = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    if (progress) {
+      navigate(`/riddle/${getIdFromUrl(progress.currentRiddle)}`);
+      return;
+    }
+    try {
+      const created = await joinHunt({ hunt: treasureHunt["@id"] }).unwrap();
+      navigate(`/riddle/${getIdFromUrl(created.currentRiddle)}`);
+    } catch {
+      // L'erreur est affichée sous le bouton via joinError
+    }
+  };
 
   return (
     <div className="min-h-screen flex justify-center bg-gradient-to-br from-green-50 to-emerald-100">
@@ -121,9 +145,23 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
           </div>
         </div>
 
-        {/* Bouton participer */}
+        {/* Participer, reprendre, ou score final */}
         <div className="mt-auto px-6 pb-6">
-          <THButton onClick={() => {alert('Implémente ça !')}}>Participer</THButton>
+          {progress?.finished ? (
+            <div className="mt-6 mb-4 py-3 px-6 rounded-lg bg-green-50 border-2 border-green-200 text-center">
+              <p className="text-green-800 font-semibold">Chasse terminée</p>
+              <p className="text-green-700 text-sm">{progress.score} points</p>
+            </div>
+          ) : !isOwner && (
+            <>
+              <THButton onClick={() => { if (!isJoining) void handleParticipate(); }}>
+                {isJoining ? 'Inscription...' : progress ? 'Reprendre' : 'Participer'}
+              </THButton>
+              {joinError && (
+                <p className="text-red-700 text-sm text-center">{parseApiError(joinError).message}</p>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
