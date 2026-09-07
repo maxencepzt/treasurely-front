@@ -8,7 +8,7 @@ import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
 import { useUser } from "../../contexts/user";
 import { useUserParticipateHunts } from "../../hooks/useUserParticipateHunts";
-import { useJoinHuntMutation } from "../../store/slices/api.ts";
+import { useJoinHuntMutation, useUserTeamsByIdQuery } from "../../store/slices/api.ts";
 import type { TreasureHuntAPI } from "../../types/api.ts";
 import { getIdFromUrl, parseApiError } from "../../utils/api.ts";
 import formatDuration from "../../utils/formatDuration.ts";
@@ -31,6 +31,11 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
   const progress = participateHunts.find((participation) => getIdFromUrl(participation.hunt) === treasureHunt.id);
   const [joinHunt, { isLoading: isJoining, error: joinError }] = useJoinHuntMutation();
 
+  // Seules les équipes de joueurs peuvent jouer ; "" vaut « seul »
+  const { data: userTeams } = useUserTeamsByIdQuery({ id: user?.id ?? 0 }, { skip: !user });
+  const playerTeams = userTeams?.teams.filter((team) => team.type === 'player') ?? [];
+  const [playerTeam, setPlayerTeam] = useState('');
+
   const handleParticipate = async () => {
     if (!user) {
       navigate('/login');
@@ -41,7 +46,7 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
       return;
     }
     try {
-      const created = await joinHunt({ hunt: treasureHunt["@id"] }).unwrap();
+      const created = await joinHunt({ hunt: treasureHunt["@id"], ...(playerTeam && { playerTeam }) }).unwrap();
       navigate(`/riddle/${getIdFromUrl(created.currentRiddle)}`);
     } catch {
       // L'erreur est affichée sous le bouton via joinError
@@ -154,6 +159,23 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
             </div>
           ) : !isOwner && (
             <>
+              {!progress && playerTeams.length > 0 && (
+                <label className="block text-sm font-medium text-gray-700">
+                  Participer en tant que
+                  <select
+                    value={playerTeam}
+                    onChange={(event) => setPlayerTeam(event.target.value)}
+                    className="mt-1 w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:border-green-500 focus:outline-none"
+                  >
+                    <option value="">Joueur seul</option>
+                    {playerTeams.map((team) => (
+                      <option key={team["@id"]} value={team["@id"]}>
+                        Équipe {team.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
               <THButton onClick={() => { if (!isJoining) void handleParticipate(); }}>
                 {isJoining ? 'Inscription...' : progress ? 'Reprendre' : 'Participer'}
               </THButton>
