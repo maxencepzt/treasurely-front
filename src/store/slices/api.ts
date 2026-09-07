@@ -19,8 +19,17 @@ import type {
 import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
 
+/**
+ * fetchBaseQuery ne sérialise un corps en JSON que si le Content-Type ressemble à
+ * application/json : les types d'API Platform (JSON-LD, merge-patch) partiraient en
+ * « [object Object] ». On les reconnaît aussi.
+ */
+const isJsonContentType = (headers: Headers) =>
+    /application\/(ld\+|merge-patch\+|vnd\.api\+)?json/.test(headers.get('content-type') ?? '');
+
 const baseQuery = fetchBaseQuery({
     baseUrl: API_CONFIG.baseUrl + '/api',
+    isJsonContentType,
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as rootState).auth.token;
         if (token) {
