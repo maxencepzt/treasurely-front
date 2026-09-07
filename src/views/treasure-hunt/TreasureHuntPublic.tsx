@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { BackButton, CoverImage, DescriptionModal, TeamButton } from "../../components";
 import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
+import Scoreboard from "../../components/treasure-hunt/Scoreboard.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
 import { useUser } from "../../contexts/user";
 import { useUserParticipateHunts } from "../../hooks/useUserParticipateHunts";
@@ -149,6 +150,9 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
             ))}
           </div>
         </div>
+
+        {/* Classement des finisseurs */}
+        <Scoreboard huntId={treasureHunt.id} viewer={user?.["@id"]} />
 
         {/* Participer, reprendre, ou score final */}
         <div className="mt-auto px-6 pb-6">

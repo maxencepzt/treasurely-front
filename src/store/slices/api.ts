@@ -7,6 +7,7 @@ import type {
   ParticipateHuntAPI,
   ParticipateRiddleAPI,
   RiddleAttempt,
+  ScoreboardAPI,
   TeamAPI,
   TeamMembersAPI,
   TeamParticipateHuntsAPI,
@@ -187,6 +188,14 @@ const api = createApi({
       }),
       providesTags: ['Participations'],
     }),
+    treasureHuntScoreboard: build.query<ScoreboardAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `treasure_hunts/${id}/scoreboard`,
+        method: 'GET',
+      }),
+      // Le classement dépend du spectateur et bouge à chaque chasse terminée
+      providesTags: ['Participations'],
+    }),
     joinHunt: build.mutation<ParticipateHuntAPI, { hunt: string; playerTeam?: string }>({
       query: (body) => ({
         url: 'participate_hunts',
@@ -243,5 +252,6 @@ export const {
   useUserDeleteMutation,
   useJoinHuntMutation,
   useAttemptRiddleMutation,
+  useTreasureHuntScoreboardQuery,
 } = api;
 export default api;
