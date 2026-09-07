@@ -1,31 +1,12 @@
-import { useTeamByIdQuery } from '../../store/slices/api.ts';
-import { getIdFromUrl } from '../../utils/api.ts';
+import type { TeamSummaryAPI } from '../../types/api.ts';
 import { TeamButton } from "../index.ts";
 
 /**
  * Liste des équipes d'un utilisateur
- * Ne s'affiche que lorsque toutes les équipes sont chargées
- * @param teamRoutes Tableau de routes d'équipes (ex: ["/api/teams/1", "/api/teams/2"])
- * @example <ProfileTeamsList teamRoutes={userTeams.teams} />
+ * @param teams Équipes telles que listées par /users/{id}/teams
+ * @example <ProfileTeamsList teams={userTeams.teams} />
  */
-export default function ProfileTeamsList({ teamRoutes }: { teamRoutes: string[] }) {
-  // Récupérer toutes les équipes
-  const teamQueries = teamRoutes.map((teamRoute) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useTeamByIdQuery({ id: getIdFromUrl(teamRoute) });
-  });
-
-  // Vérifier si au moins une équipe est en cours de chargement
-  const isAnyLoading = teamQueries.some((query) => query.isLoading);
-
-  // Vérifier s'il y a des erreurs
-  const hasErrors = teamQueries.some((query) => query.error);
-
-  // Ne rien afficher tant que toutes les équipes ne sont pas chargées
-  if (isAnyLoading || hasErrors) {
-    return null;
-  }
-
+export default function ProfileTeamsList({ teams }: { teams: TeamSummaryAPI[] }) {
   return (
     <div className="px-4 pb-6">
       <h2 className="pb-3 text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -33,11 +14,10 @@ export default function ProfileTeamsList({ teamRoutes }: { teamRoutes: string[] 
         <span>Équipes</span>
       </h2>
       <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-        {teamRoutes.map((teamRoute) => (
-          <TeamButton key={teamRoute} teamRoute={teamRoute} />
+        {teams.map((team) => (
+          <TeamButton key={team["@id"]} teamRoute={team["@id"]} />
         ))}
       </div>
     </div>
   );
 }
-
