@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSearchParams } from 'react-router';
-import { faLocationCrosshairs } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faLocationCrosshairs } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import type { AnyRiddleAPI, MCQRiddleAPI, RiddleAttempt } from '../../types/api';
+import QrScanner, { canScanQrCodes } from './QrScanner';
 
 interface AnswerFormProps {
   riddle: AnyRiddleAPI;
@@ -27,16 +28,9 @@ export default function AnswerForm({ riddle, disabled, onSubmit }: AnswerFormPro
     case 'gps':
       return <PositionForm disabled={disabled} onSubmit={onSubmit} />;
     case 'qr':
-      return (
-        <ProposalForm
-          label="Contenu du QR code"
-          placeholder="Saisissez le code lu sur le QR code"
-          disabled={disabled}
-          onSubmit={onSubmit}
-        />
-      );
+      return <QrCodeForm disabled={disabled} onSubmit={onSubmit} />;
     case 'text':
-      return <ProposalForm label="Votre réponse" placeholder="Saisissez votre réponse" disabled={disabled} onSubmit={onSubmit} />;
+      return <TextForm disabled={disabled} onSubmit={onSubmit} />;
   }
 }
 
@@ -44,17 +38,17 @@ function ProposalForm({
   label,
   placeholder,
   disabled,
+  proposal,
+  onChange,
   onSubmit,
 }: {
   label: string;
   placeholder: string;
   disabled: boolean;
+  proposal: string;
+  onChange: (proposal: string) => void;
   onSubmit: (attempt: RiddleAttempt) => void;
 }) {
-  // Un QR code peut encoder l'adresse de cette page avec `?code=` : le code est alors prérempli.
-  const [searchParams] = useSearchParams();
-  const [proposal, setProposal] = useState(searchParams.get('code') ?? '');
-
   return (
     <form
       className="space-y-4"
@@ -73,13 +67,79 @@ function ProposalForm({
         maxLength={100}
         autoComplete="off"
         placeholder={placeholder}
-        onChange={(event) => setProposal(event.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         className={inputClasses}
       />
       <button type="submit" disabled={disabled || proposal.trim() === ''} className={submitClasses}>
         Valider
       </button>
     </form>
+  );
+}
+
+/**
+ * Le contenu du QR code, tel que le concepteur l'a encodé : le code brut, ou l'adresse de
+ * cette page suivie de `?code=`, auquel cas scanner avec l'appareil photo du téléphone
+ * ouvre directement l'énigme préremplie.
+ */
+function codeFrom(scanned: string): string {
+  try {
+    return new URL(scanned).searchParams.get('code') ?? scanned;
+  } catch {
+    return scanned;
+  }
+}
+
+function QrCodeForm({ disabled, onSubmit }: { disabled: boolean; onSubmit: (attempt: RiddleAttempt) => void }) {
+  const [searchParams] = useSearchParams();
+  const [proposal, setProposal] = useState(searchParams.get('code') ?? '');
+  const [scanning, setScanning] = useState(false);
+  const onScan = useCallback((value: string) => {
+    setProposal(codeFrom(value));
+    setScanning(false);
+  }, []);
+
+  return (
+    <div className="space-y-4">
+      {scanning ? (
+        <QrScanner onScan={onScan} onClose={() => setScanning(false)} />
+      ) : (
+        canScanQrCodes && (
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => setScanning(true)}
+            className="w-full py-3 rounded-xl border-2 border-green-600 text-green-700 font-semibold hover:bg-green-50 disabled:opacity-50"
+          >
+            <FontAwesomeIcon icon={faCamera} className="mr-2" />
+            Scanner le QR code
+          </button>
+        )
+      )}
+      <ProposalForm
+        label={canScanQrCodes ? 'Ou saisissez le code' : 'Code lu sur le QR code'}
+        placeholder="Saisissez le code du QR code"
+        disabled={disabled}
+        proposal={proposal}
+        onChange={setProposal}
+        onSubmit={onSubmit}
+      />
+    </div>
+  );
+}
+
+function TextForm({ disabled, onSubmit }: { disabled: boolean; onSubmit: (attempt: RiddleAttempt) => void }) {
+  const [proposal, setProposal] = useState('');
+
+  return (
+    <ProposalForm
+      label="Votre réponse"
+      placeholder="Saisissez votre réponse"
+      disabled={disabled}
+      proposal={proposal}
+      onChange={setProposal}
+      onSubmit={onSubmit}
+    />
   );
 }
 
