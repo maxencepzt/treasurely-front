@@ -1,5 +1,6 @@
 import { LogoutButton } from '../../components';
 import UserHuntsList from '../../components/dashboard/UserHuntsList';
+import LoginSSOButton from '../../components/LoginSSOButton';
 import { useUser } from '../../contexts/user';
 import { useUserParticipateHunts } from '../../hooks/useUserParticipateHunts';
 import ErrorView from '../error/Error.tsx';
@@ -24,7 +25,8 @@ export default function Dashboard() {
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header avec bouton de déconnexion */}
         <div className="mb-8">
-          <div className="mb-6 flex justify-end">
+          <div className="mb-6 flex justify-end gap-2">
+            <LoginSSOButton />
             <LogoutButton />
           </div>
           <div className="text-center">
