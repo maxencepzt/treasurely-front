@@ -10,7 +10,7 @@ export const submitClasses =
 
 /** Le bouton final d'une action destructrice, le pendant rouge de `submitClasses`. */
 export const dangerSolidClasses =
-  'min-h-12 px-4 py-2 rounded-lg bg-red-700 text-white text-base font-medium cursor-pointer hover:bg-red-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed';
+  'min-h-11 px-4 py-2 rounded-lg bg-red-700 text-white text-base font-medium cursor-pointer hover:bg-red-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed';
 
 const buttonBase =
   'inline-flex items-center gap-2 min-h-11 px-4 py-2 rounded-lg border bg-white text-base font-medium cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-within:ring-2 disabled:opacity-50 disabled:cursor-not-allowed';

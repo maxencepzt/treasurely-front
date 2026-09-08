@@ -37,7 +37,7 @@ export default function UserSettings({ user, isOwner }: { user: User; isOwner: b
       <section aria-labelledby="settings-session" className="flex flex-col gap-3 mt-8">
         <h2 id="settings-session" className="text-sm font-semibold uppercase tracking-wide text-gray-600">Session et compte</h2>
         <LogoutButton className={`${secondaryClasses} w-full`} />
-        <DeleteAccountButton userId={user.id} isOwner={isOwner} />
+        <DeleteAccountButton user={user} isOwner={isOwner} />
       </section>
     </SettingsLayout>
   );
