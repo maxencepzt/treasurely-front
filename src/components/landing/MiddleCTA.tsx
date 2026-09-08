@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { faRocket, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faRocket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function MiddleCTA() {
@@ -13,14 +13,14 @@ function MiddleCTA() {
           Lancez-vous dans votre première chasse !
         </h2>
         <p className="text-gray-600 mb-6 text-base lg:text-lg">
-          Des centaines de chasses au trésor vous attendent. Créez votre compte gratuitement et commencez l'aventure en moins d'une minute.
+          Des chasses au trésor vous attendent près de chez vous. Connectez-vous et commencez l'aventure en moins d'une minute.
         </p>
         <Link
-          to="/signup"
+          to="/login"
           className="inline-block px-8 py-3 rounded-lg bg-green-700 text-white text-lg font-semibold hover:bg-green-800 transition-colors shadow-lg"
         >
-          <FontAwesomeIcon icon={faUserPlus} className="me-2" />
-          Commencer gratuitement
+          <FontAwesomeIcon icon={faPlay} className="me-2" />
+          Se connecter
         </Link>
       </div>
     </div>

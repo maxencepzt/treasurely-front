@@ -1,4 +1,4 @@
-import { BrowserRouter, Route,Routes } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 
 import { Index, Login } from '../views';
 import ErrorView from '../views/error/Error.tsx';
@@ -12,13 +12,17 @@ import TeamMembers from '../views/teams/TeamMembers.tsx';
 import Teams from "../views/teams/Teams.tsx";
 import TreasureHunt from "../views/treasure-hunt/TreasureHunt.tsx";
 import TreasureHuntsList from "../views/treasure-hunt/TreasureHuntsList.tsx";
+import AppShell from './AppShell.tsx';
 
 function Router() {
   return(
     <BrowserRouter>
+      <AppShell>
       <Routes>
         <Route path="/" element={<Index/>} />
         <Route path="/login" element={<Login/>} />
+        {/* Pas encore d'inscription en ligne : les anciens liens mènent à la connexion */}
+        <Route path="/signup" element={<Navigate to="/login" replace />} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />
@@ -33,6 +37,7 @@ function Router() {
 
         <Route path="*" element={<ErrorView status={404} message="Page introuvable" />} />
       </Routes>
+      </AppShell>
     </BrowserRouter>
   )
 }

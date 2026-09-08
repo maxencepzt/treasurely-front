@@ -1,6 +1,11 @@
+import { Link } from 'react-router';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { LogoutButton } from '../../components';
 import UserHuntsList from '../../components/dashboard/UserHuntsList';
 import LoginSSOButton from '../../components/LoginSSOButton';
+import { submitClasses } from '../../components/settings/fields';
 import { useUser } from '../../contexts/user';
 import { useUserParticipateHunts } from '../../hooks/useUserParticipateHunts';
 import ErrorView from '../error/Error.tsx';
@@ -39,6 +44,11 @@ export default function Dashboard() {
             <p className="text-lg sm:text-xl text-gray-700">
               Bienvenue, <span className="font-semibold text-green-700">{user.nickname}</span> !
             </p>
+            {/* Toujours là, chasses en cours ou non : c'est la porte vers une nouvelle partie */}
+            <Link to="/treasure-hunt" className={`${submitClasses} inline-flex items-center justify-center gap-2 mt-6`}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} aria-hidden="true" />
+              Trouver une chasse
+            </Link>
           </div>
         </div>
 

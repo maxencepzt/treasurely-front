@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import { faPlay, faPuzzlePiece, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function HeroSection() {
@@ -15,17 +15,10 @@ function HeroSection() {
         Partez à l'aventure et découvrez des trésors cachés près de chez vous !
       </p>
 
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Link
-          to="/signup"
-          className="px-6 py-3 rounded-lg bg-green-700 text-white text-lg font-semibold hover:bg-green-800 transition-colors shadow-lg"
-        >
-          <FontAwesomeIcon icon={faUserPlus} className="me-2" />
-          Créer un compte
-        </Link>
+      <div className="flex justify-center">
         <Link
           to="/login"
-          className="px-6 py-3 rounded-lg bg-white text-green-700 text-lg font-semibold border-2 border-green-700 hover:bg-green-50 transition-colors"
+          className="px-6 py-3 rounded-lg bg-green-700 text-white text-lg font-semibold hover:bg-green-800 transition-colors shadow-lg"
         >
           <FontAwesomeIcon icon={faPlay} className="me-2" />
           Se connecter

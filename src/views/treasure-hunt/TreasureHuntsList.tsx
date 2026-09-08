@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
 
 import { Loading } from "../../components";
 import ButtonFilter from "../../components/treasure-hunt/ButtonFilter";
@@ -8,7 +7,6 @@ import { useGetAllTreasureHuntsQuery } from "../../store/slices/api";
 import ErrorView from "../error/Error";
 
 export default function TreasureHuntsList() {
-  const navigate = useNavigate();
   const { data, isLoading, error } = useGetAllTreasureHuntsQuery();
   // Par défaut, le filtre est sur 'all' (tous sauf fermés et brouillons)
   const [statusFilter, setStatusFilter] = useState<"all" | "opened" | "closed" | "draft">("all");
@@ -36,14 +34,6 @@ export default function TreasureHuntsList() {
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="mb-4 text-green-700 hover:text-green-900 font-medium flex items-center gap-2"
-          >
-            ← Retour
-          </button>
-
           <div className="text-center">
             <div className="text-5xl mb-4">
               🗺️
