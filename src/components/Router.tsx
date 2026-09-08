@@ -8,8 +8,10 @@ import Riddle from '../views/riddle/Riddle.tsx';
 import AccountSettings from "../views/settings/AccountSettings.tsx";
 import PasswordSettings from "../views/settings/PasswordSettings.tsx";
 import Settings from "../views/settings/Settings.tsx";
+import TeamCreate from '../views/teams/TeamCreate.tsx';
 import TeamMembers from '../views/teams/TeamMembers.tsx';
 import Teams from "../views/teams/Teams.tsx";
+import TeamsIndex from '../views/teams/TeamsIndex.tsx';
 import TreasureHunt from "../views/treasure-hunt/TreasureHunt.tsx";
 import TreasureHuntsList from "../views/treasure-hunt/TreasureHuntsList.tsx";
 import AppShell from './AppShell.tsx';
@@ -32,6 +34,8 @@ function Router() {
         <Route path="/settings/profile/:id/password" element={<PasswordSettings />} />
         <Route path="/treasure-hunt/:id" element={<TreasureHunt />} />
         <Route path="/riddle/:id" element={<Riddle />} />
+        <Route path="/teams" element={<TeamsIndex />} />
+        <Route path="/teams/new" element={<TeamCreate />} />
         <Route path="/teams/:id" element={<Teams />} />
         <Route path="/teams/:id/members" element={<TeamMembers />} />
 

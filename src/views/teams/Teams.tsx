@@ -4,20 +4,30 @@ import { faChevronRight, faMapLocationDot } from "@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { BackButton, CoverImage, DescriptionModal, Loading } from "../../components";
+import DangerAction from "../../components/DangerAction";
+import JoinRequestButton from "../../components/teams/JoinRequestButton";
+import PendingRequests from "../../components/teams/PendingRequests";
+import TeamCode from "../../components/teams/TeamCode";
 import TeamTreasureHuntCard from "../../components/teams/TeamTreasureHuntCard";
+import { useUser } from "../../contexts/user";
 import { useTeamWithMembers } from "../../hooks/useTeamWithMembers";
-import { parseApiError } from "../../utils/api.ts";
+import { useDeleteTeamMutation, useLeaveTeamMutation } from "../../store/slices/api";
+import { getIdFromUrl, parseApiError } from "../../utils/api.ts";
 import ErrorView from "../error/Error.tsx";
 
 export default function Teams() {
   const params = useParams();
   const navigate = useNavigate();
+  const { user } = useUser();
   const [showModal, setShowModal] = useState(false);
+  const [leave, { isLoading: leaving, error: leaveError }] = useLeaveTeamMutation();
+  const [remove, { isLoading: removing, error: removeError }] = useDeleteTeamMutation();
 
   if (!params.id) {
     throw new Error('No id provided.');
   }
-  const { data: team, isLoading, error } = useTeamWithMembers(parseInt(params.id));
+  const teamId = parseInt(params.id);
+  const { data: team, isLoading, error } = useTeamWithMembers(teamId);
 
   if (isLoading) return <Loading />;
 
@@ -27,6 +37,12 @@ export default function Teams() {
   }
 
   if (!team) return <ErrorView status={404} message="Team introuvable" />;
+
+  // Ma place dans l'équipe : le propriétaire tranche les demandes, un membre partage le code.
+  // Par id numérique : l'IRI de `/api/me` est `/api/me`, pas `/api/users/{id}`.
+  const isOwner = !!user && getIdFromUrl(team.owner) === user.id;
+  const isMember = isOwner || (!!user && (team.members ?? []).some((member) => getIdFromUrl(member["@id"]) === user.id));
+  const isPlayerTeam = team.type === 'player';
 
   const maxLength = 250;
   const isLong = team.description && team.description.length > maxLength;
@@ -91,6 +107,42 @@ export default function Teams() {
             <FontAwesomeIcon icon={faChevronRight} className="text-green-600 text-lg" />
           </button>
         </div>
+
+        {/* Ma place : code à partager, demandes à trancher, départ ou suppression */}
+        {isPlayerTeam && user && (
+          <div className="px-6 pb-6 flex flex-col gap-6">
+            {isMember && <TeamCode teamId={teamId} />}
+            {isOwner && <PendingRequests teamId={teamId} />}
+            {isOwner ? (
+              <DangerAction
+                label="Supprimer l'équipe"
+                question="Supprimer l'équipe ? Ses membres la perdent, ses participations restent."
+                confirmLabel="Supprimer"
+                busy={removing}
+                onConfirm={async () => {
+                  await remove({ id: teamId }).unwrap();
+                  navigate('/teams');
+                }}
+              />
+            ) : isMember ? (
+              <DangerAction
+                label="Quitter l'équipe"
+                question="Quitter l'équipe ? Il faudra son code, ou une nouvelle demande, pour y revenir."
+                confirmLabel="Quitter"
+                busy={leaving}
+                onConfirm={async () => {
+                  await leave({ id: teamId }).unwrap();
+                  navigate('/teams');
+                }}
+              />
+            ) : (
+              <JoinRequestButton teamId={teamId} teamIri={team["@id"]} isMember={false} />
+            )}
+            {(leaveError || removeError) && (
+              <p className="text-sm text-red-700">{parseApiError(leaveError ?? removeError).message}</p>
+            )}
+          </div>
+        )}
 
         {/* Liste des chasses au trésor */}
         <div className="px-6 pb-8">
