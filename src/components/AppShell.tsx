@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router';
-import { faGear, faHouse, faMapLocationDot, faPuzzlePiece, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faGear, faHouse, faMapLocationDot, faPuzzlePiece, faUser, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useUser } from '../contexts/user';
@@ -15,10 +15,16 @@ const tabs = [
     isActive: (pathname: string) => pathname.startsWith('/treasure-hunt') || pathname.startsWith('/riddle'),
   },
   {
+    to: '/teams',
+    label: 'Équipes',
+    icon: faUsers,
+    isActive: (pathname: string) => pathname.startsWith('/teams'),
+  },
+  {
     to: '/profile',
     label: 'Profil',
     icon: faUser,
-    isActive: (pathname: string) => ['/profile', '/settings', '/teams'].some((prefix) => pathname.startsWith(prefix)),
+    isActive: (pathname: string) => ['/profile', '/settings'].some((prefix) => pathname.startsWith(prefix)),
   },
 ];
 
@@ -87,7 +93,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       {withNav && (
         <nav aria-label="Navigation principale" className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
-          <ul className="mx-auto max-w-md grid grid-cols-3">
+          <ul className="mx-auto max-w-md grid grid-cols-4">
             {tabs.map((tab) => {
               const active = tab.isActive(pathname);
               return (

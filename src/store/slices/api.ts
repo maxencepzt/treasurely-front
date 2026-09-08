@@ -6,9 +6,13 @@ import type {
   AnyRiddleAPI,
   ParticipateHuntAPI,
   ParticipateRiddleAPI,
+  PlayerTeamInput,
   RiddleAttempt,
   ScoreboardAPI,
   TeamAPI,
+  TeamCollectionAPI,
+  TeamJoinRequestAPI,
+  TeamJoinRequestCollectionAPI,
   TeamMembersAPI,
   TeamParticipateHuntsAPI,
   TeamTreasureHuntsAPI,
@@ -88,7 +92,9 @@ const api = createApi({
   // Les participations changent à chaque jointure et à chaque énigme résolue :
   // les mutations concernées invalident la liste plutôt que de la recharger à la main.
   // `Me` et `User` suivent le profil : sa mise à jour rafraîchit le contexte et la page profil.
-  tagTypes: ['Participations', 'Me', 'User'],
+  // `Teams` suit la liste des équipes du joueur et l'annuaire, `Team` une équipe et ses membres,
+  // `TeamRequests` les demandes d'adhésion, des deux côtés.
+  tagTypes: ['Participations', 'Me', 'User', 'Teams', 'Team', 'TeamRequests'],
   endpoints: (build) => ({
     getAuthentifiedUser: build.query<User, null>({
       query: () => ({
@@ -176,18 +182,111 @@ const api = createApi({
         url: `teams/${id}`,
         method: 'GET',
       }),
+      providesTags: (_result, _error, { id }) => [{ type: 'Team', id }],
     }),
     userTeamsById: build.query<UserTeamsAPI, { id: number }>({
       query: ({ id }) => ({
         url: `users/${id}/teams`,
         method: 'GET',
       }),
+      providesTags: ['Teams'],
     }),
     teamMembersById: build.query<TeamMembersAPI, { id: number }>({
       query: ({ id }) => ({
         url: `teams/${id}/members`,
         method: 'GET',
       }),
+      providesTags: (_result, _error, { id }) => [{ type: 'Team', id }],
+    }),
+    playerTeams: build.query<TeamCollectionAPI, { name?: string }>({
+      query: ({ name }) => ({
+        url: 'player_teams',
+        method: 'GET',
+        params: name ? { name } : undefined,
+      }),
+      providesTags: ['Teams'],
+    }),
+    createPlayerTeam: build.mutation<TeamAPI, PlayerTeamInput>({
+      query: (body) => ({
+        url: 'player_teams',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/ld+json' },
+        body,
+      }),
+      invalidatesTags: ['Teams'],
+    }),
+    joinTeamByCode: build.mutation<TeamAPI, { code: string }>({
+      query: (body) => ({
+        url: 'player_teams/join',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/ld+json' },
+        body,
+      }),
+      invalidatesTags: (result) => (result ? ['Teams', { type: 'Team', id: result.id }] : ['Teams']),
+    }),
+    leaveTeam: build.mutation<void, { id: number }>({
+      query: ({ id }) => ({
+        url: `teams/${id}/leave`,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/ld+json' },
+        body: {},
+      }),
+      invalidatesTags: (_result, _error, { id }) => ['Teams', { type: 'Team', id }],
+    }),
+    deleteTeam: build.mutation<void, { id: number }>({
+      query: ({ id }) => ({
+        url: `teams/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Teams'],
+    }),
+    // Le code de jointure n'est servi qu'aux membres
+    teamCode: build.query<{ code: string }, { id: number }>({
+      query: ({ id }) => ({
+        url: `player_teams/${id}/code`,
+        method: 'GET',
+      }),
+      providesTags: (_result, _error, { id }) => [{ type: 'Team', id }],
+    }),
+    requestToJoin: build.mutation<TeamJoinRequestAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `player_teams/${id}/requests`,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/ld+json' },
+        body: {},
+      }),
+      invalidatesTags: ['TeamRequests'],
+    }),
+    myTeamRequests: build.query<TeamJoinRequestCollectionAPI, void>({
+      query: () => ({
+        url: 'me/team_requests',
+        method: 'GET',
+      }),
+      providesTags: ['TeamRequests'],
+    }),
+    teamRequests: build.query<TeamJoinRequestCollectionAPI, { id: number }>({
+      query: ({ id }) => ({
+        url: `player_teams/${id}/requests`,
+        method: 'GET',
+      }),
+      providesTags: ['TeamRequests'],
+    }),
+    // Accepter fait entrer le joueur : l'équipe et ses membres se rechargent
+    decideRequest: build.mutation<TeamJoinRequestAPI, { id: number; teamId: number; decision: 'accept' | 'refuse' }>({
+      query: ({ id, decision }) => ({
+        url: `team_requests/${id}/${decision}`,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/ld+json' },
+        body: {},
+      }),
+      invalidatesTags: (_result, _error, { teamId }) => ['TeamRequests', 'Teams', { type: 'Team', id: teamId }],
+    }),
+    withdrawRequest: build.mutation<void, { id: number }>({
+      query: ({ id }) => ({
+        url: `team_requests/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['TeamRequests'],
     }),
     teamTreasureHuntsById: build.query<{ hunts: TeamTreasureHuntsAPI[] }, { id: number }>({
       query: ({ id }) => ({
@@ -283,6 +382,17 @@ export const {
   useTreasureHuntGetByIdQuery,
   useTeamByIdQuery,
   useTeamMembersByIdQuery,
+  usePlayerTeamsQuery,
+  useCreatePlayerTeamMutation,
+  useJoinTeamByCodeMutation,
+  useLeaveTeamMutation,
+  useDeleteTeamMutation,
+  useTeamCodeQuery,
+  useRequestToJoinMutation,
+  useMyTeamRequestsQuery,
+  useTeamRequestsQuery,
+  useDecideRequestMutation,
+  useWithdrawRequestMutation,
   useTeamTreasureHuntsByIdQuery,
   useUserTeamsByIdQuery,
   useRiddleGetByIdQuery,

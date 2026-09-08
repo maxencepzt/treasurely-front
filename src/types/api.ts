@@ -81,9 +81,46 @@ export type TeamAPI = {
   type: TeamType;
   description: string;
   owner: string;
+  memberCount: number;
   members?: TeamMember[];
-  /** Code de recrutement, équipes de joueurs seulement. */
-  code?: string;
+}
+
+/** L'annuaire des équipes de joueurs, vingt par page. */
+export type TeamCollectionAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  member: TeamAPI[];
+  totalItems: number;
+}
+
+/** Ce que le joueur choisit en créant son équipe. */
+export type PlayerTeamInput = {
+  name: string;
+  description?: string;
+}
+
+export type JoinRequestStatus = 'pending' | 'accepted' | 'refused';
+
+/** Une demande d'adhésion à une équipe de joueurs, avec l'équipe et le joueur en résumé. */
+export type TeamJoinRequestAPI = {
+  "@context"?: string;
+  "@id": string;
+  "@type": string;
+  id: number;
+  status: JoinRequestStatus;
+  createdAt: string;
+  decidedAt?: string;
+  team: { "@id": string; "@type": string; id: number; name: string };
+  user: { "@id": string; "@type": string; id: number; nickname: string };
+}
+
+export type TeamJoinRequestCollectionAPI = {
+  "@context": string;
+  "@id": string;
+  "@type": string;
+  member: TeamJoinRequestAPI[];
+  totalItems: number;
 }
 
 /** Une équipe telle que listée sur un utilisateur, sans détail. */
