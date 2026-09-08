@@ -14,7 +14,7 @@ export default function StepProgressBar({ completedSteps, totalSteps }: StepProg
   };
 
   return (
-    <div className="flex items-center justify-center gap-1 py-3">
+    <div role="img" aria-label={`${completedSteps} énigme${completedSteps > 1 ? 's' : ''} sur ${totalSteps} résolue${completedSteps > 1 ? 's' : ''}`} className="flex items-center justify-center gap-1 py-3">
       {Array.from({ length: totalSteps }).map((_, index) => {
         const status = getStepStatus(index);
         const isCompleted = status === 'completed';
@@ -29,7 +29,7 @@ export default function StepProgressBar({ completedSteps, totalSteps }: StepProg
             className="flex items-center"
           >
             {/* Point représentant une étape */}
-            <div className="relative group">
+            <div className="relative">
               <div
                 className={`
                   w-6 h-6 rounded-full transition-all duration-300 ease-in-out transform
@@ -40,7 +40,6 @@ export default function StepProgressBar({ completedSteps, totalSteps }: StepProg
                     : 'bg-gray-200 border-2 border-gray-300 scale-90'
                   }
                   ${(isCompleted || isCurrent) ? 'ring-2 ring-white ring-offset-1' : ''}
-                  hover:scale-125 cursor-pointer
                 `}
                 title={`Énigme ${index + 1}${isCompleted ? ' (complétée)' : isCurrent ? ' (en cours)' : ''}`}
               >
@@ -57,13 +56,6 @@ export default function StepProgressBar({ completedSteps, totalSteps }: StepProg
                     <div className="w-2 h-2 bg-white rounded-full"></div>
                   </div>
                 )}
-              </div>
-
-              {/* Tooltip au survol */}
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-10">
-                Énigme {index + 1}
-                {isCompleted && ' ✓'}
-                {isCurrent && ' (en cours)'}
               </div>
             </div>
 

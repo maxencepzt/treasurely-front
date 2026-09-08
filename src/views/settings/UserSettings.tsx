@@ -4,13 +4,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { LogoutButton } from "../../components";
 import DeleteAccountButton from '../../components/DeleteAccountButton.tsx';
+import LoginSSOButton from '../../components/LoginSSOButton.tsx';
 import { secondaryClasses } from '../../components/settings/fields.ts';
 import ProfilePictureEditor from '../../components/settings/ProfilePictureEditor.tsx';
 import SettingsLayout from '../../components/settings/SettingsLayout.tsx';
+import { useUser } from '../../contexts/user';
 import type { User } from "../../types/api.ts";
 
 /** La page Paramètres : la photo modifiable sur place, les pages du profil en liens décrits, puis la session et le compte. */
 export default function UserSettings({ user, isOwner }: { user: User; isOwner: boolean; }) {
+  const { user: currentUser } = useUser();
   const base = `/settings/profile/${user.id}`;
   const pages = [
     { to: `${base}/account`, label: 'Informations du compte', hint: 'Prénom, nom, email, téléphone, description' },
@@ -36,6 +39,7 @@ export default function UserSettings({ user, isOwner }: { user: User; isOwner: b
 
       <section aria-labelledby="settings-session" className="flex flex-col gap-3 mt-8">
         <h2 id="settings-session" className="text-sm font-semibold uppercase tracking-wide text-gray-600">Session et compte</h2>
+        {currentUser?.roles?.includes('ROLE_ADMIN') && <LoginSSOButton className={`${secondaryClasses} w-full`} />}
         <LogoutButton className={`${secondaryClasses} w-full`} />
         <DeleteAccountButton user={user} isOwner={isOwner} />
       </section>
