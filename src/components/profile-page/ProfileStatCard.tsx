@@ -1,9 +1,11 @@
-export default function ProfileStatCard({ title, emoji, value }: { title: string, emoji: string, value: number | string }) {
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+/** Une tuile de statistique : l'icône décore, le titre nomme, la valeur parle. */
+export default function ProfileStatCard({ title, icon, value }: { title: string; icon: IconDefinition; value: number | string }) {
   return (
-    <div className="bg-gradient-to-br from-white to-green-50 rounded-2xl px-4 py-6 shadow-md text-center border-2 border-green-600 hover:shadow-xl hover:border-green-700 hover:scale-105 transition-all duration-200">
-      <div className="text-3xl mb-2">
-        {emoji}
-      </div>
+    <div className="bg-white rounded-2xl px-4 py-5 shadow-sm text-center border border-gray-200">
+      <FontAwesomeIcon icon={icon} className="text-2xl text-green-700 mb-2" aria-hidden="true" />
       <p className="text-2xl font-bold text-gray-900 mb-1">
         {value}
       </p>
