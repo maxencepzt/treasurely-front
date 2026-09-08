@@ -1,16 +1,43 @@
 import { useState } from "react";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Loading } from "../../components";
+import { inputClasses, secondaryClasses } from "../../components/settings/fields";
 import ButtonFilter from "../../components/treasure-hunt/ButtonFilter";
 import TreasureHuntCard from "../../components/treasure-hunt/TreasureHuntCard";
 import { useGetAllTreasureHuntsQuery } from "../../store/slices/api";
+import type { TreasureHuntAPI } from "../../types/api";
 import ErrorView from "../error/Error";
 
+const DIFFICULTIES = [
+  { value: 1, label: "Facile" },
+  { value: 2, label: "Moyen" },
+  { value: 3, label: "Difficile" },
+] as const;
+
+type Difficulty = (typeof DIFFICULTIES)[number]["value"];
+
+/** Minuscules sans accents : « forêt » trouve « Foret » et l'inverse. */
+function normalize(text: string): string {
+  return text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+}
+
+function matches(hunt: TreasureHuntAPI, search: string): boolean {
+  const needle = normalize(search.trim());
+
+  return needle === "" || normalize(`${hunt.title} ${hunt.location}`).includes(needle);
+}
+
+/**
+ * Les chasses à rejoindre. Le serveur ne liste que les ouvertes à un joueur ; ici on cherche
+ * par titre ou lieu, par catégorie et par difficulté.
+ */
 export default function TreasureHuntsList() {
   const { data, isLoading, error } = useGetAllTreasureHuntsQuery();
-  // Par défaut, le filtre est sur 'all' (tous sauf fermés et brouillons)
-  const [statusFilter, setStatusFilter] = useState<"all" | "opened" | "closed" | "draft">("all");
-  const [difficultyFilter, setDifficultyFilter] = useState<"all" | 1 | 2 | 3>("all");
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<number | "all">("all");
+  const [difficulty, setDifficulty] = useState<Difficulty | "all">("all");
 
   if (error) {
     return <ErrorView status={500} message="Erreur lors du chargement des chasses au trésor" />;
@@ -20,151 +47,100 @@ export default function TreasureHuntsList() {
     return <Loading />;
   }
 
-  const treasureHunts = data?.member || [];
-
-  // Filtrer les chasses selon les critères
-  const filteredHunts = treasureHunts.filter((hunt) => {
-    const matchesStatus = statusFilter === "all" || hunt.status === statusFilter;
-    const matchesDifficulty = difficultyFilter === "all" || hunt.difficulty === difficultyFilter;
-    return matchesStatus && matchesDifficulty;
-  });
+  const treasureHunts = data?.member ?? [];
+  // Les catégories proposées sont celles des chasses listées : pas de puce qui ne trouve rien
+  const categories = [...new Map(treasureHunts.flatMap((hunt) => hunt.huntType).map((type) => [type.id, type])).values()];
+  const filtered = treasureHunts.filter(
+    (hunt) =>
+      matches(hunt, search)
+      && (category === "all" || hunt.huntType.some((type) => type.id === category))
+      && (difficulty === "all" || hunt.difficulty === difficulty),
+  );
+  const filtering = search.trim() !== "" || category !== "all" || difficulty !== "all";
+  const reset = () => {
+    setSearch("");
+    setCategory("all");
+    setDifficulty("all");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-emerald-100">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="text-center">
-            <div className="text-5xl mb-4">
-              🗺️
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Toutes les Chasses au Trésor
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-700">
-              Découvrez toutes les chasses disponibles
-            </p>
-          </div>
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Chasses au trésor</h1>
+          <p className="text-lg text-gray-700">Les chasses ouvertes, à rejoindre seul ou en équipe</p>
         </div>
 
-        {/* Filtres */}
-        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 border border-gray-100">
-          <div className="space-y-4">
-            {/* Filtre par statut */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                <span>📊</span>
-                <span>Statut</span>
-              </label>
+        <section aria-label="Filtres" className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 border border-gray-200 flex flex-col gap-5">
+          <label htmlFor="search" className="flex flex-col gap-1">
+            <span className="text-sm font-medium">Rechercher</span>
+            <span className="relative block">
+              <FontAwesomeIcon icon={faMagnifyingGlass} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+              <input
+                type="search"
+                id="search"
+                autoComplete="off"
+                placeholder="Titre ou lieu"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                className={`${inputClasses} w-full pl-10`}
+              />
+            </span>
+          </label>
+
+          {categories.length > 0 && (
+            <div role="group" aria-labelledby="category-label">
+              <span id="category-label" className="block text-sm font-medium mb-2">Catégorie</span>
               <div className="flex flex-wrap gap-2">
-                <ButtonFilter
-                  label={<>Tous</>}
-                  emoji={"🌐"}
-                  active={statusFilter === "all"}
-                  onClick={() => setStatusFilter("all")}
-                />
-                <ButtonFilter
-                  label={<>Ouvertes</>}
-                  emoji={"🟢"}
-                  active={statusFilter === "opened"}
-                  onClick={() => setStatusFilter("opened")}
-                />
-                <ButtonFilter
-                  label={<>Fermées</>}
-                  emoji={"🔴"}
-                  active={statusFilter === "closed"}
-                  onClick={() => setStatusFilter("closed")}
-                />
-                <ButtonFilter
-                  label={<>Brouillons</>}
-                  emoji={"📝"}
-                  active={statusFilter === "draft"}
-                  onClick={() => setStatusFilter("draft")}
-                />
+                <ButtonFilter label="Toutes" active={category === "all"} onClick={() => setCategory("all")} />
+                {categories.map((type) => (
+                  <ButtonFilter key={type.id} label={type.title} active={category === type.id} onClick={() => setCategory(type.id)} />
+                ))}
               </div>
             </div>
+          )}
 
-            {/* Séparateur */}
-            <div className="border-t border-gray-100"></div>
-
-            {/* Filtre par difficulté */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                <span>🎯</span>
-                <span>Difficulté</span>
-              </label>
-              <div className="flex flex-wrap gap-2">
-                <ButtonFilter
-                  label={<>Toutes</>}
-                  emoji={"🌐"}
-                  active={difficultyFilter === "all"}
-                  onClick={() => setDifficultyFilter("all")}
-                />
-                <ButtonFilter
-                  label={<>Facile</>}
-                  emoji={"🔥"}
-                  active={difficultyFilter === 1}
-                  onClick={() => setDifficultyFilter(1)}
-                />
-                <ButtonFilter
-                  label={<>Moyen</>}
-                  emoji={"🔥🔥"}
-                  active={difficultyFilter === 2}
-                  onClick={() => setDifficultyFilter(2)}
-                />
-                <ButtonFilter
-                  label={<>Difficile</>}
-                  emoji={"🔥🔥🔥"}
-                  active={difficultyFilter === 3}
-                  onClick={() => setDifficultyFilter(3)}
-                />
-              </div>
+          <div role="group" aria-labelledby="difficulty-label">
+            <span id="difficulty-label" className="block text-sm font-medium mb-2">Difficulté</span>
+            <div className="flex flex-wrap gap-2">
+              <ButtonFilter label="Toutes" active={difficulty === "all"} onClick={() => setDifficulty("all")} />
+              {DIFFICULTIES.map((level) => (
+                <ButtonFilter key={level.value} label={level.label} active={difficulty === level.value} onClick={() => setDifficulty(level.value)} />
+              ))}
             </div>
+          </div>
+        </section>
 
-            {/* Bouton reset */}
-            {(statusFilter !== "all" || difficultyFilter !== "all") && (
-              <>
-                <div className="border-t border-gray-100"></div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setStatusFilter("all");
-                    setDifficultyFilter("all");
-                  }}
-                  className="w-full sm:w-auto text-sm text-green-600 hover:text-green-700 hover:bg-green-50 font-medium flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors"
-                >
-                  <span className="text-base">↻</span>
-                  Réinitialiser les filtres
-                </button>
-              </>
+        <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
+          <p role="status" className="text-base text-gray-700">
+            <span className="font-semibold text-green-800">{filtered.length}</span> {filtered.length > 1 ? "chasses" : "chasse"}
+          </p>
+          {filtering && (
+            <button type="button" onClick={reset} className={secondaryClasses}>
+              Réinitialiser les filtres
+            </button>
+          )}
+        </div>
+
+        {filtered.length === 0 ? (
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8 text-center flex flex-col items-center gap-4">
+            <p className="text-lg text-gray-700">
+              {treasureHunts.length === 0 ? "Aucune chasse n'est ouverte pour le moment." : "Aucune chasse ne correspond à ces critères."}
+            </p>
+            {filtering && (
+              <button type="button" onClick={reset} className={secondaryClasses}>
+                Voir toutes les chasses
+              </button>
             )}
           </div>
-        </div>
-
-        {/* Résultats */}
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-3">
-          <div className="inline-flex items-center gap-2 bg-green-50 px-4 py-2 rounded-lg border border-green-200">
-            <span className="text-green-700 font-semibold text-base">{filteredHunts.length}</span>
-            <span className="text-sm text-gray-600">
-              {filteredHunts.length > 1 ? "chasses trouvées" : "chasse trouvée"}
-            </span>
-          </div>
-        </div>
-
-        {/* Liste des chasses */}
-        {filteredHunts.length === 0 ? (
-          <div className="bg-white rounded-lg shadow-md p-8 text-center">
-            <div className="text-6xl mb-4">🔍</div>
-            <p className="text-lg text-gray-600">
-              Aucune chasse au trésor ne correspond à vos critères
-            </p>
-          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredHunts.map((hunt) => (
-              <TreasureHuntCard key={hunt.id} treasureHunt={hunt} />
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filtered.map((hunt) => (
+              <li key={hunt.id}>
+                <TreasureHuntCard treasureHunt={hunt} />
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
     </div>
