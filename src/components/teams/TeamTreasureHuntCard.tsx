@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type {TeamTreasureHuntsAPI} from "../../types/api.ts";
 import { getIdFromUrl } from "../../utils/api.ts";
 import { formatMinutes } from "../../utils/formatDuration.ts";
+import Difficulty from "../Difficulty.tsx";
 
 export default function TeamTreasureHuntCard({teamTreasureHunt}: {teamTreasureHunt: TeamTreasureHuntsAPI}) {
   const treasureHuntId = getIdFromUrl(teamTreasureHunt["@id"]);
@@ -42,9 +43,7 @@ export default function TeamTreasureHuntCard({teamTreasureHunt}: {teamTreasureHu
         </div>
 
         {/* Difficulté */}
-        <span role="img" aria-label={`Difficulté ${teamTreasureHunt.difficulty} sur 3`} title="Difficulté">
-          {"🔥".repeat(teamTreasureHunt.difficulty)}
-        </span>
+        <Difficulty level={teamTreasureHunt.difficulty} className="text-xs" />
       </div>
     </Link>
   );

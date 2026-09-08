@@ -1,3 +1,6 @@
+import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import type { TeamSummaryAPI } from '../../types/api.ts';
 import { TeamButton } from "../index.ts";
 
@@ -10,7 +13,7 @@ export default function ProfileTeamsList({ teams }: { teams: TeamSummaryAPI[] })
   return (
     <div className="px-4 pb-6">
       <h2 className="pb-3 text-xl font-bold text-gray-900 flex items-center gap-2">
-        <span className="text-2xl">👥</span>
+        <FontAwesomeIcon icon={faUsers} className="text-green-700" aria-hidden="true" />
         <span>Équipes</span>
       </h2>
       <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">

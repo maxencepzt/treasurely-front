@@ -24,10 +24,7 @@ export function ProfilePublic({ user, isOwner = false }: { user: User, isOwner?:
         {/* Description section */}
         {user.description && (
           <div className="px-6 pb-6 bg-gradient-to-b from-white to-green-50">
-            <h2 className="pb-3 text-xl font-bold text-gray-900 flex items-center gap-2">
-              <span className="text-2xl">📝</span>
-              <span>À propos</span>
-            </h2>
+            <h2 className="pb-3 text-xl font-bold text-gray-900">À propos</h2>
             <p className="text-gray-700 text-base leading-relaxed bg-white rounded-2xl p-4 border-2 border-green-100 shadow-sm">
               {user.description.length > 150
                 ? `${user.description.slice(0, 150)}...`

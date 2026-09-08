@@ -3,6 +3,7 @@ import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { BackButton, Loading } from '../../components';
+import Difficulty from '../../components/Difficulty';
 import { useUser } from '../../contexts/user';
 import { useUserParticipateHunts } from '../../hooks/useUserParticipateHunts';
 import { useAttemptRiddleMutation, useRiddleGetByIdQuery } from '../../store/slices/api';
@@ -73,9 +74,7 @@ function RiddlePage({ riddleId }: { riddleId: number }) {
               </p>
               <h1 className="text-2xl font-bold text-gray-900">{riddle.title}</h1>
             </div>
-            <span className="text-xl" title="Difficulté">
-              {'🔥'.repeat(riddle.difficulty)}
-            </span>
+            <Difficulty level={riddle.difficulty} className="text-xl shrink-0" />
           </div>
 
           <div className="bg-gradient-to-br from-white to-green-50 rounded-2xl p-6 border-2 border-green-100 shadow-sm">

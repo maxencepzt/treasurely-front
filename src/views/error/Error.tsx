@@ -1,4 +1,6 @@
 import { Link } from 'react-router';
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface ErrorViewProps {
   status?: number | string;
@@ -27,8 +29,8 @@ export default function ErrorView({ status, message, error }: ErrorViewProps) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-emerald-100 flex items-center justify-center p-6">
       <div className="w-full max-w-2xl bg-white/95 backdrop-blur-sm shadow-lg rounded-2xl p-8 text-center">
-        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-50 text-4xl mb-4">
-          ⚠️
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-50 text-4xl text-green-700 mb-4">
+          <FontAwesomeIcon icon={faTriangleExclamation} aria-hidden="true" />
         </div>
 
         {status && (
