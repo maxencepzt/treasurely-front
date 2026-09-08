@@ -19,6 +19,7 @@ import type {
 } from "../../types/api";
 import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
+import { pictureChanged } from './pictureSlice';
 
 /**
  * fetchBaseQuery ne sérialise un corps en JSON que si le Content-Type ressemble à
@@ -132,12 +133,21 @@ const api = createApi({
         method: 'POST',
         body: formData,
       }),
+      // Les avatars gardent leur adresse : la version du store leur fait redemander l'image
+      async onQueryStarted(_arguments, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        dispatch(pictureChanged());
+      },
     }),
     userProfilePictureDelete: build.mutation<{ message: string }, number>({
       query: (userId) => ({
         url: `users/${userId}/picture`,
         method: 'DELETE',
       }),
+      async onQueryStarted(_arguments, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        dispatch(pictureChanged());
+      },
     }),
     userById: build.query<User, { id: number }>({
       query: ({ id }) => ({

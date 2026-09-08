@@ -1,6 +1,6 @@
 import { BrowserRouter, Route,Routes } from "react-router";
 
-import { Index, Login, UserUploadProfilePicture } from '../views';
+import { Index, Login } from '../views';
 import ErrorView from '../views/error/Error.tsx';
 import ErrorRouteWrapper from '../views/error/ErrorRouteWrapper.tsx';
 import Profile from '../views/profile/Profile.tsx';
@@ -24,7 +24,6 @@ function Router() {
         <Route path="/error" element={<ErrorRouteWrapper />} />
         <Route path="/treasure-hunt" element={<TreasureHuntsList />} />
         <Route path="/settings/profile/:id" element={<Settings />} />
-        <Route path="/settings/profile/:id/upload" element={<UserUploadProfilePicture/>} />
         <Route path="/settings/profile/:id/account" element={<AccountSettings />} />
         <Route path="/settings/profile/:id/password" element={<PasswordSettings />} />
         <Route path="/treasure-hunt/:id" element={<TreasureHunt />} />

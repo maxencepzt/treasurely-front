@@ -22,9 +22,9 @@ export function parseApiError(error: unknown): { status: number, message: string
     if ("status" in error) {
       status = typeof error.status === "number" ? error.status : 500;
 
-      // Les contrôleurs maison répondent `message`, API Platform répond `detail` (RFC 7807).
-      const data = "data" in error && error.data && typeof error.data === "object" ? (error.data as { message?: unknown; detail?: unknown }) : {};
-      const text = [data.message, data.detail].find((value) => typeof value === "string");
+      // Les contrôleurs maison répondent `message` ou `error`, API Platform répond `detail` (RFC 7807).
+      const data = "data" in error && error.data && typeof error.data === "object" ? (error.data as { message?: unknown; detail?: unknown; error?: unknown }) : {};
+      const text = [data.message, data.detail, data.error].find((value) => typeof value === "string");
       message = typeof text === "string" ? text : "Server error";
     } else if ("message" in error) {
       message = typeof error.message === "string" ? error.message : message;

@@ -1,4 +1,7 @@
+import { useSelector } from "react-redux";
+
 import { API_CONFIG } from "../config/api";
+import type { rootState } from "../store";
 
 interface ProfilePictureProps {
   type: "user" | "team";
@@ -31,8 +34,10 @@ function ProfilePicture({ type, id, alt, size = "md" }: ProfilePictureProps) {
   const sizeStyle = getSizeStyle();
   const sizeClass = getSizeClass();
 
-  // Construction de l'URL en fonction du type
-  const pictureUrl = `${API_CONFIG.baseUrl}/api/${type === "user" ? "users" : "teams"}/${id}/picture`;
+  // Construction de l'URL en fonction du type ; la version change à chaque photo envoyée ou
+  // supprimée, sinon le navigateur garderait l'ancienne image à la même adresse
+  const version = useSelector((state: rootState) => state.pictures.version);
+  const pictureUrl = `${API_CONFIG.baseUrl}/api/${type === "user" ? "users" : "teams"}/${id}/picture${version ? `?v=${version}` : ""}`;
 
   // Alt text par défaut
   const altText = alt || (type === "user" ? "Photo de profil" : "Photo de l'équipe");
