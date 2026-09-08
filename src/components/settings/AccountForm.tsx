@@ -5,6 +5,7 @@ import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import type { User, UserUpdate } from '../../types/api';
 import { parseApiError, parseViolations } from '../../utils/api';
 import { GENDER_LABELS, toDateInputValue } from '../../utils/user';
+import { inputClasses, submitClasses } from './fields';
 
 type AccountFormProps = {
   user: User;
@@ -16,7 +17,6 @@ type AccountFormProps = {
 
 type Values = Required<Omit<UserUpdate, 'plainPassword' | 'currentPassword'>>;
 
-const inputClasses = 'text-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-700';
 const DESCRIPTION_MAX = 150;
 const PASSWORD_MIN = 8;
 
@@ -283,7 +283,7 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
       <button
         type="submit"
         disabled={isSaving}
-        className="px-4 py-2 rounded-lg bg-green-800 text-white text-base font-medium cursor-pointer hover:bg-green-900 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+        className={submitClasses}
       >
         {isSaving ? 'Enregistrement...' : 'Enregistrer'}
       </button>
