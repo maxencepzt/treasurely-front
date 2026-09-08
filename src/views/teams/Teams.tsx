@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight, faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { BackButton, CoverImage, DescriptionModal, Loading } from "../../components";
@@ -55,10 +55,7 @@ export default function Teams() {
         {/* Description section */}
         {team.description && (
           <div className="px-6 py-6 bg-gradient-to-b from-white to-green-50">
-            <h2 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <span className="text-2xl">📝</span>
-              <span>À propos</span>
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-3">À propos</h2>
             <div
               className={`text-gray-700 text-base leading-relaxed bg-white rounded-2xl p-4 border-2 border-green-100 shadow-sm ${
                 isLong ? "cursor-pointer hover:border-green-200" : ""
@@ -98,7 +95,7 @@ export default function Teams() {
         {/* Liste des chasses au trésor */}
         <div className="px-6 pb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <span className="text-2xl">🗺️</span>
+            <FontAwesomeIcon icon={faMapLocationDot} className="text-green-700" aria-hidden="true" />
             <span>Chasses au trésor</span>
           </h2>
           {team.treasureHunts && team.treasureHunts.length > 0 ? (

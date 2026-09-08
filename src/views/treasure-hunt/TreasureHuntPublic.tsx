@@ -4,6 +4,7 @@ import { faCog, faLocationDot, faMapLocationDot, faStopwatch } from "@fortawesom
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { BackButton, CoverImage, DescriptionModal, TeamButton } from "../../components";
+import Difficulty from "../../components/Difficulty.tsx";
 import { inputClasses, secondaryClasses, submitClasses } from "../../components/settings/fields";
 import FormFeedback from "../../components/settings/FormFeedback";
 import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
@@ -120,12 +121,7 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
               )}
               <h1 className="text-2xl font-bold text-gray-900">{treasureHunt.title}</h1>
             </div>
-            <div className="flex flex-col items-end gap-1">
-              <span className="text-sm font-medium text-gray-600">Difficulté</span>
-              <span className="text-xl" role="img" aria-label={`${treasureHunt.difficulty} sur 3`}>
-                {"🔥".repeat(treasureHunt.difficulty)}
-              </span>
-            </div>
+            <Difficulty level={treasureHunt.difficulty} className="text-xl shrink-0 mt-1" />
           </div>
 
           {/* Équipe conceptrice */}

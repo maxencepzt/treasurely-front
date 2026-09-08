@@ -8,6 +8,7 @@ import type { ParticipateHuntAPI } from '../../types/api';
 import { getIdFromUrl } from '../../utils/api';
 import formatDuration, { formatMinutes } from '../../utils/formatDuration';
 import { Loading } from '..';
+import Difficulty from '../Difficulty';
 
 export default function UserHuntCard({ participateHunt }: { participateHunt: ParticipateHuntAPI }) {
   const treasureHuntId = useMemo(() => {
@@ -30,22 +31,18 @@ export default function UserHuntCard({ participateHunt }: { participateHunt: Par
     <Link
       to={`/treasure-hunt/${treasureHuntId}`}
       aria-labelledby={titleId}
-      className={`block bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-all border-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-700 ${
-        participateHunt.finished 
-          ? 'border-green-300 bg-gradient-to-br from-green-50 to-emerald-50' 
-          : 'border-blue-300 bg-gradient-to-br from-blue-50 to-cyan-50'
-      }`}
+      className="block h-full bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow border border-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-700"
     >
       {/* Badge statut */}
       {participateHunt.finished ? (
         <div className="flex items-center gap-2 text-green-700 mb-3">
-          <FontAwesomeIcon icon={faCheckCircle} className="text-sm" />
+          <FontAwesomeIcon icon={faCheckCircle} className="text-sm" aria-hidden="true" />
           <span className="text-sm font-semibold">Terminée</span>
         </div>
       ) :
       (
         <div className="flex items-center gap-2 text-blue-700 mb-3">
-          <FontAwesomeIcon icon={faCircle} className="text-sm" />
+          <FontAwesomeIcon icon={faCircle} className="text-sm" aria-hidden="true" />
           <span className="text-sm font-semibold">En cours</span>
         </div>
       )}
@@ -76,13 +73,11 @@ export default function UserHuntCard({ participateHunt }: { participateHunt: Par
         </div>
 
         {/* Difficulté */}
-        <span role="img" aria-label={`Difficulté ${treasureHunt.difficulty} sur 3`} title="Difficulté">
-          {"🔥".repeat(treasureHunt.difficulty)}
-        </span>
+        <Difficulty level={treasureHunt.difficulty} />
       </div>
 
       {/* Score si terminée */}
-      <div className={`pt-4 border-t-2 ${participateHunt.finished ? 'border-green-200' : 'border-blue-200'}`}>
+      <div className="pt-4 border-t border-gray-200">
         <div className="flex items-center justify-between text-sm">
           <span className="text-gray-600 font-medium">Score:</span>
           <span className="font-bold text-lg text-green-700">{participateHunt.score} pts</span>

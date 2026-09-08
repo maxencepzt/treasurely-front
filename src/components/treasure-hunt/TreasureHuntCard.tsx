@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import type { TreasureHuntAPI } from "../../types/api.ts";
 import { formatMinutes } from "../../utils/formatDuration.ts";
+import Difficulty from "../Difficulty.tsx";
 
 // Une chasse ouverte n'a pas besoin d'étiquette ; les autres statuts ne se voient qu'en admin
 const statusLabels = {
@@ -68,9 +69,7 @@ export default function TreasureHuntCard({ treasureHunt }: { treasureHunt: Treas
           <span>{formatMinutes(treasureHunt.estimatedTime)}</span>
         </div>
 
-        <span role="img" aria-label={`Difficulté ${treasureHunt.difficulty} sur 3`} title="Difficulté">
-          {"🔥".repeat(treasureHunt.difficulty)}
-        </span>
+        <Difficulty level={treasureHunt.difficulty} />
       </div>
     </Link>
   );
