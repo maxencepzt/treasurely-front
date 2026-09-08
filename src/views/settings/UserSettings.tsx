@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router';
 
-import { BackButton, LogoutButton } from "../../components";
+import { LogoutButton } from "../../components";
 import DeleteAccountButton from '../../components/DeleteAccountButton.tsx';
+import SettingsLayout from '../../components/settings/SettingsLayout.tsx';
 import type { User } from "../../types/api.ts";
 
 export default function UserSettings({ user, isOwner }: { user: User; isOwner: boolean; }) {
@@ -14,6 +15,11 @@ export default function UserSettings({ user, isOwner }: { user: User; isOwner: b
       action: () => navigate(`/settings/profile/${user.id}/account`)
     },
     {
+      id: "password",
+      label: "Changer le mot de passe",
+      action: () => navigate(`/settings/profile/${user.id}/password`)
+    },
+    {
       id: "photo",
       label: "Modifier la photo de profil",
       action: () => navigate(`/settings/profile/${user.id}/upload`)
@@ -23,35 +29,26 @@ export default function UserSettings({ user, isOwner }: { user: User; isOwner: b
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex justify-center">
-      <div className="w-full max-w-md bg-white min-h-screen shadow-xl p-6">
+    <SettingsLayout title="Paramètres de l'utilisateur">
+      <div className="flex flex-col gap-4">
+        {buttons.map((btn) => {
+          if (btn.type === "logout") return <LogoutButton key={btn.id} />;
+          if (btn.type === "delete") {
+            return <DeleteAccountButton key={btn.id} userId={user.id} isOwner={isOwner} />;
+          }
 
-        <BackButton variant="dark" />
-
-        <h1 className="text-2xl font-bold mt-4 mb-6">
-          Paramètres de l'utilisateur
-        </h1>
-
-        <div className="flex flex-col gap-4">
-          {buttons.map((btn) => {
-            if (btn.type === "logout") return <LogoutButton key={btn.id} />;
-            if (btn.type === "delete") {
-              return <DeleteAccountButton key={btn.id} userId={user.id} isOwner={isOwner} />;
-            }
-
-            return (
-              <button
-                type="button"
-                key={btn.id}
-                onClick={btn.action}
-                className="w-full text-left px-5 py-4 rounded-xl border-2 shadow-sm transition hover:shadow-md active:scale-[0.98] border-green-200 bg-white hover:bg-green-50"
-              >
-                {btn.label}
-              </button>
-            );
-          })}
-        </div>
+          return (
+            <button
+              type="button"
+              key={btn.id}
+              onClick={btn.action}
+              className="w-full text-left px-5 py-4 rounded-xl border-2 shadow-sm transition hover:shadow-md active:scale-[0.98] border-green-200 bg-white hover:bg-green-50"
+            >
+              {btn.label}
+            </button>
+          );
+        })}
       </div>
-    </div>
+    </SettingsLayout>
   );
 }
