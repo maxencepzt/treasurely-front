@@ -1,3 +1,4 @@
 import api from "./api";
 import authSlice from './authSlice.ts';
-export { api, authSlice };
+import pictureSlice from './pictureSlice.ts';
+export { api, authSlice, pictureSlice };
