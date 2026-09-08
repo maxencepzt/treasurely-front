@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 
 import { Index, Login } from '../views';
 import ErrorView from '../views/error/Error.tsx';
@@ -21,6 +21,8 @@ function Router() {
       <Routes>
         <Route path="/" element={<Index/>} />
         <Route path="/login" element={<Login/>} />
+        {/* Pas encore d'inscription en ligne : les anciens liens mènent à la connexion */}
+        <Route path="/signup" element={<Navigate to="/login" replace />} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />

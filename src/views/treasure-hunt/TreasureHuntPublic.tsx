@@ -8,6 +8,7 @@ import HuntTypeBadge from "../../components/treasure-hunt/HuntTypebadge.tsx";
 import Scoreboard from "../../components/treasure-hunt/Scoreboard.tsx";
 import THButton from "../../components/treasure-hunt/thButton.tsx";
 import { useUser } from "../../contexts/user";
+import { useDesignerSso } from "../../hooks/useDesignerSso";
 import { useUserParticipateHunts } from "../../hooks/useUserParticipateHunts";
 import { useJoinHuntMutation, useReplayHuntMutation, useUserTeamsByIdQuery } from "../../store/slices/api.ts";
 import type { TreasureHuntAPI } from "../../types/api.ts";
@@ -26,6 +27,8 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
     : treasureHunt.description;
 
   const isOwner = user && getIdFromUrl(treasureHunt.owner) === user.id;
+  // La conception se fait dans la façade du back : l'engrenage y ouvre une session
+  const openDesigner = useDesignerSso();
 
   // Participation existante de l'utilisateur à cette chasse, s'il y en a une
   const { participateHunts } = useUserParticipateHunts(user?.id ?? 0);
@@ -80,9 +83,9 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
               <button
                 type="button"
                 className="w-10 h-10 rounded-full bg-gray-800/70 hover:bg-gray-800 flex items-center justify-center transition-colors cursor-pointer"
-                onClick={() => navigate(`/treasure-hunts/${treasureHunt.id}/edit`)}
-                aria-label="Éditer"
-                title="Éditer la chasse au trésor"
+                onClick={() => void openDesigner()}
+                aria-label="Ouvrir l'espace concepteur"
+                title="Ouvrir l'espace concepteur"
               >
                 <FontAwesomeIcon icon={faCog} className="text-xl text-white" />
               </button>
