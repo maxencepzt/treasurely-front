@@ -39,8 +39,8 @@ function ProfilePicture({ type, id, alt, size = "md" }: ProfilePictureProps) {
   const version = useSelector((state: rootState) => state.pictures.version);
   const pictureUrl = `${API_CONFIG.baseUrl}/api/${type === "user" ? "users" : "teams"}/${id}/picture${version ? `?v=${version}` : ""}`;
 
-  // Alt text par défaut
-  const altText = alt || (type === "user" ? "Photo de profil" : "Photo de l'équipe");
+  // Alt text par défaut ; une chaîne vide est voulue : l'image décore un lien déjà nommé
+  const altText = alt ?? (type === "user" ? "Photo de profil" : "Photo de l'équipe");
 
   return (
     <img

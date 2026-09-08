@@ -1,8 +1,11 @@
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useResumeHunt } from '../../hooks/useResumeHunt';
 import type { ParticipateHuntAPI } from '../../types/api';
 import { Loading } from '..';
+import { submitClasses } from '../settings/fields';
 import StepProgressBar from './StepProgressBar';
 
 interface ResumeHuntCardProps {
@@ -10,13 +13,11 @@ interface ResumeHuntCardProps {
 }
 
 /**
- * Composant qui affiche une carte pour reprendre une chasse au trésor en cours.
- * Affiche la progression avec une barre d'étapes et un bouton pour continuer.
+ * La chasse en cours la plus récente : sa progression et le bouton qui rouvre l'énigme
+ * du moment. La progression vient de la participation, pas de l'énigme, dont la lecture
+ * lancerait le chronomètre.
  */
 export default function ResumeHuntCard({ participateHunt }: ResumeHuntCardProps) {
-  const navigate = useNavigate();
-
-  // Utiliser le hook personnalisé pour gérer toute la logique métier
   const {
     currentRiddleId,
     treasureHunt,
@@ -35,39 +36,23 @@ export default function ResumeHuntCard({ participateHunt }: ResumeHuntCardProps)
   }
 
   return (
-    <div className="bg-gradient-to-br from-green-100 to-emerald-200 rounded-2xl p-8 shadow-lg border-2 border-green-300">
-      {/* Titre de la section */}
-      <div className="flex items-center gap-3 mb-6 justify-center">
-        <span className="text-4xl">🎯</span>
-        <h2 className="text-2xl font-bold text-gray-900">Reprendre votre chasse</h2>
+    <section aria-labelledby="resume-title" className="bg-white rounded-2xl p-6 sm:p-8 shadow-md border border-green-200 flex flex-col gap-4">
+      <div>
+        <p className="text-sm font-semibold uppercase tracking-wide text-green-800">Chasse en cours</p>
+        <h2 id="resume-title" className="text-2xl font-bold text-gray-900">{treasureHunt.title}</h2>
       </div>
 
-      {/* Nom de la TreasureHunt */}
-      <h3 className="text-xl font-semibold text-gray-800 mb-6 text-center">
-        {treasureHunt.title}
-      </h3>
+      <StepProgressBar completedSteps={completedSteps} totalSteps={totalSteps} />
 
-      {/* Step Progress Bar */}
-      <div className="mb-6">
-        <StepProgressBar completedSteps={completedSteps} totalSteps={totalSteps} />
-      </div>
-
-      {/* Texte de progression */}
-      <p className="text-base text-gray-700 mb-6 text-center">
-        <span className="font-bold text-green-700 text-lg">{completedSteps}</span> énigme{completedSteps > 1 ? 's' : ''} sur{' '}
-        <span className="font-bold text-lg">{totalSteps}</span> résolue{completedSteps > 1 ? 's' : ''}
+      <p className="text-base text-gray-700 text-center">
+        <span className="font-bold text-green-800">{completedSteps}</span> énigme{completedSteps > 1 ? 's' : ''} sur{' '}
+        <span className="font-bold">{totalSteps}</span> résolue{completedSteps > 1 ? 's' : ''}
       </p>
 
-      {/* Bouton Reprendre */}
-      <div className="flex justify-center">
-        <button
-          type="button"
-          onClick={() => navigate(`/riddle/${currentRiddleId}`)}
-          className="w-full md:w-auto md:min-w-[200px] md:px-12 bg-green-700 hover:bg-green-800 active:bg-green-900 text-white font-bold py-4 px-6 rounded-xl shadow-md transition-colors text-lg"
-        >
-          Reprendre
-        </button>
-      </div>
-    </div>
+      <Link to={`/riddle/${currentRiddleId}`} className={`${submitClasses} inline-flex items-center justify-center gap-2 sm:self-center sm:min-w-64`}>
+        <FontAwesomeIcon icon={faPlay} aria-hidden="true" />
+        {completedSteps === 0 ? 'Commencer' : 'Reprendre'}
+      </Link>
+    </section>
   );
 }

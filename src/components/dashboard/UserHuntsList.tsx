@@ -34,10 +34,7 @@ export default function UserHuntsList({ participateHunts, isLoading }: UserHunts
 
       {/* List of all hunts */}
       <div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3 justify-center">
-          <span className="text-4xl">🗺️</span>
-          <span>Vos chasses au trésor</span>
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Vos chasses au trésor</h2>
 
         {sortedHunts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
