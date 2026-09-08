@@ -22,6 +22,16 @@ export type User = {
   roles?: string[];
 };
 
+/**
+ * Corps de `PATCH /users/{id}` : les champs que le joueur édite lui-même. Le pseudo n'en fait
+ * pas partie, il identifie le jeton et le refresh token. Le mot de passe actuel est exigé
+ * par le serveur dès qu'un nouveau (`plainPassword`) est envoyé.
+ */
+export type UserUpdate = Partial<Pick<User, 'firstname' | 'lastname' | 'email' | 'phone' | 'birthDate' | 'gender' | 'public' | 'description'>> & {
+  plainPassword?: string;
+  currentPassword?: string;
+};
+
 export type HuntTypeAPI = {
   "@context"?: string;
   "@id": string;

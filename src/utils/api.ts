@@ -33,3 +33,24 @@ export function parseApiError(error: unknown): { status: number, message: string
 
   return { status, message };
 }
+
+/**
+ * Les erreurs de validation d'API Platform (422), par champ
+ * @example parseViolations(error) // retourne { email: "Cette adresse email n'est pas valide." }
+ */
+export function parseViolations(error: unknown): Record<string, string> {
+  const violations: Record<string, string> = {};
+  if (!error || typeof error !== "object" || !("data" in error) || !error.data || typeof error.data !== "object") {
+    return violations;
+  }
+
+  const list = (error.data as { violations?: unknown }).violations;
+  for (const violation of Array.isArray(list) ? list : []) {
+    const { propertyPath, message } = violation as { propertyPath?: unknown; message?: unknown };
+    if (typeof propertyPath === "string" && typeof message === "string" && !(propertyPath in violations)) {
+      violations[propertyPath] = message;
+    }
+  }
+
+  return violations;
+}

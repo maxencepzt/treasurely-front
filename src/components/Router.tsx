@@ -5,6 +5,7 @@ import ErrorView from '../views/error/Error.tsx';
 import ErrorRouteWrapper from '../views/error/ErrorRouteWrapper.tsx';
 import Profile from '../views/profile/Profile.tsx';
 import Riddle from '../views/riddle/Riddle.tsx';
+import AccountSettings from "../views/settings/AccountSettings.tsx";
 import Settings from "../views/settings/Settings.tsx";
 import TeamMembers from '../views/teams/TeamMembers.tsx';
 import Teams from "../views/teams/Teams.tsx";
@@ -23,6 +24,7 @@ function Router() {
         <Route path="/treasure-hunt" element={<TreasureHuntsList />} />
         <Route path="/settings/profile/:id" element={<Settings />} />
         <Route path="/settings/profile/:id/upload" element={<UserUploadProfilePicture/>} />
+        <Route path="/settings/profile/:id/account" element={<AccountSettings />} />
         <Route path="/treasure-hunt/:id" element={<TreasureHunt />} />
         <Route path="/riddle/:id" element={<Riddle />} />
         <Route path="/teams/:id" element={<Teams />} />
