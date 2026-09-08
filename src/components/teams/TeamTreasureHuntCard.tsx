@@ -1,23 +1,23 @@
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 import { faLocationDot, faMap, faStopwatch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import type {TeamTreasureHuntsAPI} from "../../types/api.ts";
 import { getIdFromUrl } from "../../utils/api.ts";
-import formatDuration from "../../utils/formatDuration.ts";
+import { formatMinutes } from "../../utils/formatDuration.ts";
 
 export default function TeamTreasureHuntCard({teamTreasureHunt}: {teamTreasureHunt: TeamTreasureHuntsAPI}) {
-  const navigate = useNavigate();
   const treasureHuntId = getIdFromUrl(teamTreasureHunt["@id"]);
+  const titleId = `team-hunt-${treasureHuntId}-title`;
 
   return (
-    <button
-      type="button"
-      onClick={() => navigate(`/treasure-hunt/${treasureHuntId}`)}
-      className="bg-white rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200"
+    <Link
+      to={`/treasure-hunt/${treasureHuntId}`}
+      aria-labelledby={titleId}
+      className="block bg-white rounded-lg shadow-md p-3 hover:shadow-lg transition-shadow border border-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-700"
     >
       {/* Titre de la chasse */}
-      <h3 className="text-base font-semibold text-gray-900 mb-2 line-clamp-2">
+      <h3 id={titleId} className="text-base font-semibold text-gray-900 mb-2 line-clamp-2">
         {teamTreasureHunt.title}
       </h3>
 
@@ -38,14 +38,14 @@ export default function TeamTreasureHuntCard({teamTreasureHunt}: {teamTreasureHu
         {/* Temps estimé */}
         <div className="flex items-center gap-1" title="Temps estimé">
           <FontAwesomeIcon icon={faStopwatch} className="text-purple-600" />
-          <span>{formatDuration(teamTreasureHunt.estimatedTime)}</span>
+          <span>{formatMinutes(teamTreasureHunt.estimatedTime)}</span>
         </div>
 
         {/* Difficulté */}
-        <div className="flex items-center gap-0.5" title="Difficulté">
+        <span role="img" aria-label={`Difficulté ${teamTreasureHunt.difficulty} sur 3`} title="Difficulté">
           {"🔥".repeat(teamTreasureHunt.difficulty)}
-        </div>
+        </span>
       </div>
-    </button>
+    </Link>
   );
 }

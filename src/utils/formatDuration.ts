@@ -19,3 +19,10 @@ export default function formatDuration(seconds: number): string {
 
   return `${minutes}mins`;
 }
+
+/**
+ * Même format, depuis une durée en minutes : l'unité de `estimatedTime` côté serveur.
+ */
+export function formatMinutes(minutes: number): string {
+  return formatDuration(minutes * 60);
+}

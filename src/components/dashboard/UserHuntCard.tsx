@@ -1,17 +1,15 @@
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import {faCheckCircle, faCircle, faLocationDot, faMap, faStopwatch} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useTreasureHuntGetByIdQuery } from '../../store/slices/api';
 import type { ParticipateHuntAPI } from '../../types/api';
 import { getIdFromUrl } from '../../utils/api';
-import formatDuration from '../../utils/formatDuration';
+import formatDuration, { formatMinutes } from '../../utils/formatDuration';
 import { Loading } from '..';
 
 export default function UserHuntCard({ participateHunt }: { participateHunt: ParticipateHuntAPI }) {
-  const navigate = useNavigate();
-
   const treasureHuntId = useMemo(() => {
     return getIdFromUrl(participateHunt.hunt);
   }, [participateHunt.hunt]);
@@ -26,11 +24,13 @@ export default function UserHuntCard({ participateHunt }: { participateHunt: Par
     return null;
   }
 
+  const titleId = `participation-${participateHunt.id}-title`;
+
   return (
-    <button
-      type="button"
-      onClick={() => navigate(`/treasure-hunt/${treasureHuntId}`)}
-      className={`bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-all cursor-pointer border-2 ${
+    <Link
+      to={`/treasure-hunt/${treasureHuntId}`}
+      aria-labelledby={titleId}
+      className={`block bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition-all border-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-700 ${
         participateHunt.finished 
           ? 'border-green-300 bg-gradient-to-br from-green-50 to-emerald-50' 
           : 'border-blue-300 bg-gradient-to-br from-blue-50 to-cyan-50'
@@ -51,7 +51,7 @@ export default function UserHuntCard({ participateHunt }: { participateHunt: Par
       )}
 
       {/* Titre de la chasse */}
-      <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 min-h-[3.5rem]">
+      <h3 id={titleId} className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 min-h-[3.5rem]">
         {treasureHunt.title}
       </h3>
 
@@ -72,13 +72,13 @@ export default function UserHuntCard({ participateHunt }: { participateHunt: Par
         {/* Temps estimé ou temps réalisé */}
         <div className="flex items-center gap-1.5" title={participateHunt.finished ? "Temps réalisé" : "Temps estimé"}>
           <FontAwesomeIcon icon={faStopwatch} className="text-purple-600" />
-          <span>{formatDuration(participateHunt.finished ? participateHunt.time : treasureHunt.estimatedTime)}</span>
+          <span>{participateHunt.finished ? formatDuration(participateHunt.time) : formatMinutes(treasureHunt.estimatedTime)}</span>
         </div>
 
         {/* Difficulté */}
-        <div className="flex items-center gap-0.5" title="Difficulté">
+        <span role="img" aria-label={`Difficulté ${treasureHunt.difficulty} sur 3`} title="Difficulté">
           {"🔥".repeat(treasureHunt.difficulty)}
-        </div>
+        </span>
       </div>
 
       {/* Score si terminée */}
@@ -88,7 +88,7 @@ export default function UserHuntCard({ participateHunt }: { participateHunt: Par
           <span className="font-bold text-lg text-green-700">{participateHunt.score} pts</span>
         </div>
       </div>
-    </button>
+    </Link>
   );
 }
 
