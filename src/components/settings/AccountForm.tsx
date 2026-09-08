@@ -18,7 +18,6 @@ type AccountFormProps = {
 type Values = Required<Omit<UserUpdate, 'plainPassword' | 'currentPassword'>>;
 
 const DESCRIPTION_MAX = 150;
-const PASSWORD_MIN = 8;
 
 /** Les champs éditables, tels que le serveur les connaît. */
 function valuesOf(user: User): Values {
@@ -35,15 +34,12 @@ function valuesOf(user: User): Values {
 }
 
 /**
- * Formulaire des informations du compte. Il n'envoie que ce qui a changé (merge-patch) et
- * n'ajoute le mot de passe que si un nouveau est saisi, avec l'actuel que le serveur exige.
- * Le pseudo reste en lecture seule : il identifie le jeton, le changer déconnecterait.
+ * Formulaire des informations du compte. Il n'envoie que ce qui a changé (merge-patch).
+ * Le mot de passe a sa propre page ; le pseudo reste en lecture seule : il identifie le
+ * jeton, le changer déconnecterait.
  */
 export default function AccountForm({ user, onSubmit, isSaving, error }: AccountFormProps) {
   const [values, setValues] = useState<Values>(() => valuesOf(user));
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [plainPassword, setPlainPassword] = useState('');
-  const [confirmation, setConfirmation] = useState('');
   const [clientError, setClientError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
@@ -65,27 +61,13 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
       if (values[key] !== initial[key]) Object.assign(update, { [key]: values[key] });
     }
 
-    if (plainPassword !== '') {
-      if (plainPassword !== confirmation) {
-        setClientError('Les deux mots de passe ne correspondent pas.');
-        return;
-      }
-      update.plainPassword = plainPassword;
-      update.currentPassword = currentPassword;
-    }
-
     if (Object.keys(update).length === 0) {
       setClientError('Aucune modification à enregistrer.');
       return;
     }
 
-    if (await onSubmit(update)) {
-      // Les valeurs saisies sont désormais celles du serveur ; seuls les mots de passe s'effacent
-      setSaved(true);
-      setPlainPassword('');
-      setConfirmation('');
-      setCurrentPassword('');
-    }
+    // Les valeurs saisies sont désormais celles du serveur : elles restent en place
+    if (await onSubmit(update)) setSaved(true);
   }
 
   const fieldError = (name: string) =>
@@ -230,55 +212,6 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
         <span className="text-xs text-gray-500 self-end">{values.description.length}/{DESCRIPTION_MAX}</span>
         {fieldError('description')}
       </label>
-
-      <fieldset className="flex flex-col gap-4 border-t border-gray-200 pt-4">
-        <legend className="text-base font-semibold pr-2">Changer le mot de passe</legend>
-
-        <label htmlFor="plainPassword" className="flex flex-col gap-1">
-          <span className="text-sm font-medium">Nouveau mot de passe</span>
-          <input
-            type="password"
-            id="plainPassword"
-            name="plainPassword"
-            autoComplete="new-password"
-            minLength={PASSWORD_MIN}
-            placeholder={`${PASSWORD_MIN} caractères minimum`}
-            value={plainPassword}
-            onChange={(e) => setPlainPassword(e.target.value)}
-            className={inputClasses}
-          />
-          {fieldError('plainPassword')}
-        </label>
-
-        <label htmlFor="confirmation" className="flex flex-col gap-1">
-          <span className="text-sm font-medium">Confirmation</span>
-          <input
-            type="password"
-            id="confirmation"
-            name="confirmation"
-            autoComplete="new-password"
-            required={plainPassword !== ''}
-            value={confirmation}
-            onChange={(e) => setConfirmation(e.target.value)}
-            className={inputClasses}
-          />
-        </label>
-
-        <label htmlFor="currentPassword" className="flex flex-col gap-1">
-          <span className="text-sm font-medium">Mot de passe actuel</span>
-          <input
-            type="password"
-            id="currentPassword"
-            name="currentPassword"
-            autoComplete="current-password"
-            required={plainPassword !== ''}
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            className={inputClasses}
-          />
-          {fieldError('currentPassword')}
-        </label>
-      </fieldset>
 
       <button
         type="submit"

@@ -15,6 +15,11 @@ export default function UserSettings({ user, isOwner }: { user: User; isOwner: b
       action: () => navigate(`/settings/profile/${user.id}/account`)
     },
     {
+      id: "password",
+      label: "Changer le mot de passe",
+      action: () => navigate(`/settings/profile/${user.id}/password`)
+    },
+    {
       id: "photo",
       label: "Modifier la photo de profil",
       action: () => navigate(`/settings/profile/${user.id}/upload`)
