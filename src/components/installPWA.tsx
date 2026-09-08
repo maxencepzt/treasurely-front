@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import usePWA from "../hooks/usePWA";
 
-/** `raised` décale la bannière au-dessus de la barre de navigation basse quand elle est affichée. */
+/** `raised` décale la bannière au-dessus de la barre d'onglets, qui n'existe que sous 768 px. */
 function InstallPWA({ raised = false }: { raised?: boolean }) {
   const { isInstallable, installPWA, needRefresh, updateServiceWorker } = usePWA();
   const [isDismissed, setIsDismissed] = useState(false);
@@ -30,7 +30,7 @@ function InstallPWA({ raised = false }: { raised?: boolean }) {
   };
 
   return (
-    <div className={`fixed ${raised ? 'bottom-[calc(5rem+env(safe-area-inset-bottom))]' : 'bottom-4'} left-4 right-4 sm:left-auto sm:right-4 sm:max-w-md z-50 animate-slide-up`}>
+    <div className={`fixed ${raised ? 'bottom-[calc(5rem+env(safe-area-inset-bottom))] md:bottom-4' : 'bottom-4'} left-4 right-4 sm:left-auto sm:right-4 sm:max-w-md z-50 animate-slide-up`}>
       <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 p-4 sm:p-5">
         {!shouldShow && (
           <div className="mb-3 px-2 py-1 bg-yellow-100 border border-yellow-300 rounded text-xs text-yellow-800">
