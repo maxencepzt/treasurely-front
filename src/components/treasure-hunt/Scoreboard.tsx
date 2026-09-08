@@ -2,19 +2,20 @@ import { faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useTreasureHuntScoreboardQuery } from '../../store/slices/api';
+import { getIdFromUrl } from '../../utils/api';
 import formatDuration from '../../utils/formatDuration';
 
 interface ScoreboardProps {
   huntId: number;
-  /** IRI de l'utilisateur connecté, pour surligner sa ligne */
-  viewer?: string;
+  /** L'id de l'utilisateur connecté, pour surligner sa ligne */
+  viewerId?: number;
 }
 
 /**
  * Les dix finisseurs à qui se comparer, tels que le serveur les choisit : le haut du
  * classement pour qui n'a pas fini la chasse, une fenêtre autour de soi sinon.
  */
-export default function Scoreboard({ huntId, viewer }: ScoreboardProps) {
+export default function Scoreboard({ huntId, viewerId }: ScoreboardProps) {
   const { data, isLoading } = useTreasureHuntScoreboardQuery({ id: huntId });
 
   if (isLoading || !data) return null;
@@ -32,7 +33,7 @@ export default function Scoreboard({ huntId, viewer }: ScoreboardProps) {
       ) : (
         <ol className="bg-white rounded-2xl border-2 border-green-100 shadow-sm divide-y divide-green-50">
           {data.member.map((row) => {
-            const isViewer = row.hunter['@id'] === viewer;
+            const isViewer = viewerId !== undefined && getIdFromUrl(row.hunter['@id']) === viewerId;
             return (
               <li
                 key={row['@id']}
