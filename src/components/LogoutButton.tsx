@@ -8,7 +8,11 @@ import { useLogoutMutation, useLogoutSSOMutation } from '../store/slices/api';
 import { logout } from '../store/slices/authSlice';
 import { Loading } from './';
 
-function LogoutButton() {
+const defaultClasses =
+    'px-3 py-2 gap-1.5 flex items-center justify-center rounded-lg bg-white/80 hover:bg-red-50 text-gray-700 hover:text-red-700 text-sm font-medium border border-gray-300 hover:border-red-400 shadow-sm hover:shadow transition-all duration-200 cursor-pointer';
+
+/** Le bouton de déconnexion ; `className` remplace la pastille par défaut, par exemple par une ligne de liste. */
+function LogoutButton({ className = defaultClasses }: { className?: string }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [logoutPost] = useLogoutMutation();
@@ -45,7 +49,7 @@ function LogoutButton() {
         <button
             type="button"
             onClick={handleLogout}
-            className="px-3 py-2 gap-1.5 flex items-center justify-center rounded-lg bg-white/80 hover:bg-red-50 text-gray-700 hover:text-red-700 text-sm font-medium border border-gray-300 hover:border-red-400 shadow-sm hover:shadow transition-all duration-200 cursor-pointer"
+            className={className}
         >
             <FontAwesomeIcon icon={faRightFromBracket} className="text-xs" />
             <span>Déconnexion</span>

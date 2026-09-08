@@ -12,7 +12,7 @@ export default function PasswordSettings() {
 
   return (
     <SettingsLayout title="Changer le mot de passe">
-      <PasswordForm onSubmit={save} isSaving={isSaving} error={error} />
+      <PasswordForm onSubmit={save} isSaving={isSaving} error={error} settingsPath={`/settings/profile/${owner.id}`} />
     </SettingsLayout>
   );
 }

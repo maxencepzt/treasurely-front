@@ -2,10 +2,13 @@ import { type FormEvent, useState } from 'react';
 import { type SerializedError } from '@reduxjs/toolkit';
 import { type FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
+import { useFocusOnViolation } from '../../hooks/useFocusOnViolation';
 import type { User, UserUpdate } from '../../types/api';
 import { parseApiError, parseViolations } from '../../utils/api';
 import { GENDER_LABELS, toDateInputValue } from '../../utils/user';
-import { inputClasses, submitClasses } from './fields';
+import FieldError from './FieldError';
+import { inputClasses, invalidProps, submitClasses } from './fields';
+import FormFeedback from './FormFeedback';
 
 type AccountFormProps = {
   user: User;
@@ -33,62 +36,60 @@ function valuesOf(user: User): Values {
   };
 }
 
+/** Ce qui diffère du profil connu du serveur : le corps du merge-patch. */
+function changesOf(values: Values, user: User): UserUpdate {
+  const initial = valuesOf(user);
+  const update: UserUpdate = {};
+  for (const key of Object.keys(values) as (keyof Values)[]) {
+    if (values[key] !== initial[key]) Object.assign(update, { [key]: values[key] });
+  }
+
+  return update;
+}
+
 /**
- * Formulaire des informations du compte. Il n'envoie que ce qui a changé (merge-patch).
- * Le mot de passe a sa propre page ; le pseudo reste en lecture seule : il identifie le
- * jeton, le changer déconnecterait.
+ * Formulaire des informations du compte. Il n'envoie que ce qui a changé (merge-patch) et
+ * son bouton reste inactif tant que rien n'a changé. Le mot de passe a sa propre page ;
+ * le pseudo reste en lecture seule : il identifie le jeton, le changer déconnecterait.
  */
 export default function AccountForm({ user, onSubmit, isSaving, error }: AccountFormProps) {
   const [values, setValues] = useState<Values>(() => valuesOf(user));
-  const [clientError, setClientError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
   const violations = parseViolations(error);
+  useFocusOnViolation(error);
   const generalError = error && Object.keys(violations).length === 0 ? parseApiError(error).message : null;
+  const update = changesOf(values, user);
+  const dirty = Object.keys(update).length > 0;
 
   function setValue<K extends keyof Values>(key: K, value: Values[K]) {
+    setSaved(false);
     setValues((previous) => ({ ...previous, [key]: value }));
   }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    setClientError(null);
-    setSaved(false);
-
-    const initial = valuesOf(user);
-    const update: UserUpdate = {};
-    for (const key of Object.keys(values) as (keyof Values)[]) {
-      if (values[key] !== initial[key]) Object.assign(update, { [key]: values[key] });
-    }
-
-    if (Object.keys(update).length === 0) {
-      setClientError('Aucune modification à enregistrer.');
-      return;
-    }
-
-    // Les valeurs saisies sont désormais celles du serveur : elles restent en place
+    // Les valeurs saisies deviennent celles du serveur : elles restent en place
     if (await onSubmit(update)) setSaved(true);
   }
 
-  const fieldError = (name: string) =>
-    violations[name] && <span className="text-xs text-red-600">{violations[name]}</span>;
-
   return (
-    <form onSubmit={handleSubmit} method="post" className="flex flex-col gap-4">
-      {saved && (
-        <div role="status" className="px-4 py-3 rounded-lg bg-green-50 border border-green-200 text-green-800 text-sm">
-          Profil enregistré.
-        </div>
-      )}
-      {(clientError || generalError) && (
-        <div role="alert" className="text-red-600 text-sm">{clientError ?? generalError}</div>
-      )}
-
-      <div className="flex flex-col gap-1">
+    <form onSubmit={handleSubmit} method="post" aria-busy={isSaving} className="flex flex-col gap-4">
+      <label htmlFor="nickname" className="flex flex-col gap-1">
         <span className="text-sm font-medium">Pseudo</span>
-        <input type="text" value={user.nickname} readOnly disabled className={`${inputClasses} bg-gray-100 text-gray-500`} />
-        <span className="text-xs text-gray-500">Le pseudo sert à la connexion et ne peut pas être changé ici.</span>
-      </div>
+        <input
+          type="text"
+          id="nickname"
+          name="nickname"
+          value={user.nickname}
+          readOnly
+          aria-describedby="nickname-note"
+          className={`${inputClasses} bg-gray-50 text-gray-700`}
+        />
+        <span id="nickname-note" className="text-sm text-gray-600">
+          Le pseudo sert à la connexion et ne peut pas être changé ici.
+        </span>
+      </label>
 
       <label htmlFor="firstname" className="flex flex-col gap-1">
         <span className="text-sm font-medium">Prénom</span>
@@ -102,8 +103,9 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
           value={values.firstname}
           onChange={(e) => setValue('firstname', e.target.value)}
           className={inputClasses}
+          {...invalidProps('firstname', violations.firstname)}
         />
-        {fieldError('firstname')}
+        <FieldError id="firstname" message={violations.firstname} />
       </label>
 
       <label htmlFor="lastname" className="flex flex-col gap-1">
@@ -118,8 +120,9 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
           value={values.lastname}
           onChange={(e) => setValue('lastname', e.target.value)}
           className={inputClasses}
+          {...invalidProps('lastname', violations.lastname)}
         />
-        {fieldError('lastname')}
+        <FieldError id="lastname" message={violations.lastname} />
       </label>
 
       <label htmlFor="email" className="flex flex-col gap-1">
@@ -134,8 +137,9 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
           value={values.email}
           onChange={(e) => setValue('email', e.target.value)}
           className={inputClasses}
+          {...invalidProps('email', violations.email)}
         />
-        {fieldError('email')}
+        <FieldError id="email" message={violations.email} />
       </label>
 
       <label htmlFor="phone" className="flex flex-col gap-1">
@@ -149,8 +153,9 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
           value={values.phone}
           onChange={(e) => setValue('phone', e.target.value)}
           className={inputClasses}
+          {...invalidProps('phone', violations.phone)}
         />
-        {fieldError('phone')}
+        <FieldError id="phone" message={violations.phone} />
       </label>
 
       <label htmlFor="birthDate" className="flex flex-col gap-1">
@@ -165,8 +170,9 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
           value={values.birthDate}
           onChange={(e) => setValue('birthDate', e.target.value)}
           className={inputClasses}
+          {...invalidProps('birthDate', violations.birthDate)}
         />
-        {fieldError('birthDate')}
+        <FieldError id="birthDate" message={violations.birthDate} />
       </label>
 
       <label htmlFor="gender" className="flex flex-col gap-1">
@@ -177,25 +183,28 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
           value={values.gender}
           onChange={(e) => setValue('gender', e.target.value as User['gender'])}
           className={`${inputClasses} bg-white`}
+          {...invalidProps('gender', violations.gender)}
         >
           {Object.entries(GENDER_LABELS).map(([value, label]) => (
             <option key={value} value={value}>{label}</option>
           ))}
         </select>
-        {fieldError('gender')}
+        <FieldError id="gender" message={violations.gender} />
       </label>
 
-      <label htmlFor="public" className="flex items-center gap-2 text-sm">
+      <label htmlFor="public" className="flex items-center gap-3 min-h-11 text-base">
         <input
           type="checkbox"
           id="public"
           name="public"
           checked={values.public}
           onChange={(e) => setValue('public', e.target.checked)}
-          className="h-4 w-4 accent-green-700"
+          className="h-5 w-5 accent-green-700"
         />
-        <span className="font-medium">Profil public</span>
-        <span className="text-gray-500">(visible par les autres joueurs)</span>
+        <span className="flex flex-col">
+          <span className="font-medium">Profil public</span>
+          <span className="text-sm text-gray-600">Visible par les autres joueurs</span>
+        </span>
       </label>
 
       <label htmlFor="description" className="flex flex-col gap-1">
@@ -208,17 +217,19 @@ export default function AccountForm({ user, onSubmit, isSaving, error }: Account
           value={values.description}
           onChange={(e) => setValue('description', e.target.value)}
           className={inputClasses}
+          aria-invalid={violations.description ? true : undefined}
+          aria-describedby={violations.description ? 'description-count description-error' : 'description-count'}
         />
-        <span className="text-xs text-gray-500 self-end">{values.description.length}/{DESCRIPTION_MAX}</span>
-        {fieldError('description')}
+        <span id="description-count" className="text-sm text-gray-600 self-end">
+          {values.description.length}/{DESCRIPTION_MAX} caractères
+        </span>
+        <FieldError id="description" message={violations.description} />
       </label>
 
-      <button
-        type="submit"
-        disabled={isSaving}
-        className={submitClasses}
-      >
-        {isSaving ? 'Enregistrement...' : 'Enregistrer'}
+      <FormFeedback success={saved ? 'Profil enregistré.' : null} error={generalError} />
+
+      <button type="submit" disabled={isSaving || !dirty} className={submitClasses}>
+        {isSaving ? 'Enregistrement…' : 'Enregistrer'}
       </button>
     </form>
   );
