@@ -182,7 +182,7 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
         </div>
 
         {/* Classement des finisseurs */}
-        <Scoreboard huntId={treasureHunt.id} viewer={user?.["@id"]} />
+        <Scoreboard huntId={treasureHunt.id} viewerId={user?.id} />
 
         {/* Participer, commencer, reprendre, rejouer : collé en bas de l'écran, au-dessus des onglets */}
         <div className="mt-auto sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] md:bottom-0 px-6 py-4 bg-white border-t border-gray-200 flex flex-col gap-3">
