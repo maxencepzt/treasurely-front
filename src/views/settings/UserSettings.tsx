@@ -8,7 +8,11 @@ export default function UserSettings({ user, isOwner }: { user: User; isOwner: b
   const navigate = useNavigate();
 
   const buttons = [
-    { id: "account", label: "Informations du compte", action: () => {} },
+    {
+      id: "account",
+      label: "Informations du compte",
+      action: () => navigate(`/settings/profile/${user.id}/account`)
+    },
     {
       id: "photo",
       label: "Modifier la photo de profil",
