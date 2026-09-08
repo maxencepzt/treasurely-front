@@ -2,10 +2,8 @@ import { useParams } from "react-router";
 
 import {Loading} from "../../components";
 import { useTreasureHuntGetByIdQuery } from "../../store/slices/api.ts";
-import { TreasureHuntStatusClosed } from '../../types/api';
 import {parseApiError} from "../../utils/api.ts";
 import ErrorView from "../error/Error.tsx";
-import TreasureHuntPrivate from "./TreasureHuntPrivate.tsx";
 import TreasureHuntPublic from "./TreasureHuntPublic.tsx";
 
 export default function TreasureHunt() {
@@ -23,7 +21,7 @@ export default function TreasureHunt() {
   }
 
   if (!treasureHunt) return <ErrorView status={404} message="Chasse introuvable" />;
-  if (treasureHunt.status === TreasureHuntStatusClosed) return <TreasureHuntPrivate />;
+  // Une chasse fermée se lit encore (score, classement) ; un brouillon est refusé par le serveur
 
   return (
     <TreasureHuntPublic treasureHunt={treasureHunt}  />
