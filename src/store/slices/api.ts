@@ -14,7 +14,8 @@ import type {
   TeamTreasureHuntsAPI,
   TreasureHuntAPI, TreasureHuntCollectionAPI,
   User, UserParticipateHuntsAPI,
-  UserTeamsAPI
+  UserTeamsAPI,
+  UserUpdate
 } from "../../types/api";
 import type { rootState } from '../index';
 import { logout, setCredentials } from './authSlice';
@@ -85,13 +86,15 @@ const api = createApi({
   baseQuery: baseQueryWithReauth,
   // Les participations changent à chaque jointure et à chaque énigme résolue :
   // les mutations concernées invalident la liste plutôt que de la recharger à la main.
-  tagTypes: ['Participations'],
+  // `Me` et `User` suivent le profil : sa mise à jour rafraîchit le contexte et la page profil.
+  tagTypes: ['Participations', 'Me', 'User'],
   endpoints: (build) => ({
     getAuthentifiedUser: build.query<User, null>({
       query: () => ({
         url: 'me',
         method: 'GET',
       }),
+      providesTags: ['Me'],
     }),
     login: build.mutation<{ token: string; refresh_token: string }, { nickname: string; password: string }>({
       query: ({ nickname, password }) => ({
@@ -141,6 +144,16 @@ const api = createApi({
         url: `users/${id}`,
         method: 'GET',
       }),
+      providesTags: (_result, _error, { id }) => [{ type: 'User', id }],
+    }),
+    updateUser: build.mutation<User, { id: number } & UserUpdate>({
+      query: ({ id, ...body }) => ({
+        url: `users/${id}`,
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/merge-patch+json' },
+        body,
+      }),
+      invalidatesTags: (_result, _error, { id }) => ['Me', { type: 'User', id }],
     }),
     treasureHuntGetById: build.query<TreasureHuntAPI, { id: number }>({
       query: ({ id }) => ({
@@ -268,6 +281,7 @@ export const {
   useGetUserParticipateHuntsByIdQuery,
   useGetAllTreasureHuntsQuery,
   useUserDeleteMutation,
+  useUpdateUserMutation,
   useJoinHuntMutation,
   useReplayHuntMutation,
   useAttemptRiddleMutation,
