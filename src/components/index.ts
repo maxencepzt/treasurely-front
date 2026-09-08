@@ -8,7 +8,6 @@ import LogoutButton from './LogoutButton.tsx';
 import ProfilePicture from './ProfilePicture.tsx';
 import Router from './Router';
 import TeamButton from './TeamButton.tsx';
-import UploadForm from './UploadForm';
 
 export {
   BackButton,
@@ -21,5 +20,4 @@ export {
   ProfilePicture,
   Router,
   TeamButton,
-  UploadForm,
 };
