@@ -6,14 +6,12 @@ import { useUserProfilePictureDeleteMutation, useUserUploadProfilePictureMutatio
 import type { User } from '../../types/api';
 import { parseApiError } from '../../utils/api';
 import { ProfilePicture } from '../';
+import { dangerClasses, secondaryClasses } from './fields';
 import FormFeedback from './FormFeedback';
 
 /** Les limites du serveur (`ImageUploadService`), rappelées avant l'envoi. */
 const MAX_SIZE = 5 * 1024 * 1024;
 const ACCEPTED = 'image/jpeg,image/png,image/gif,image/webp';
-
-const buttonClasses =
-  'inline-flex items-center gap-2 min-h-11 px-4 rounded-lg border border-gray-300 bg-white text-base font-medium text-gray-900 hover:bg-green-50 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-within:ring-2 focus-within:ring-green-700 focus-visible:ring-2 focus-visible:ring-green-700 focus:outline-none';
 
 /**
  * La photo de profil, changée ou supprimée sur place : le fichier part dès qu'il est choisi.
@@ -66,12 +64,12 @@ export default function ProfilePictureEditor({ user }: { user: User }) {
         <ProfilePicture type="user" id={user.id} size={96} alt={`Photo de ${user.nickname}`} />
         <div className="flex flex-col gap-2 min-w-0">
           <h2 id="settings-picture" className="text-lg font-semibold truncate">{user.nickname}</h2>
-          <label className={buttonClasses}>
+          <label className={secondaryClasses}>
             <FontAwesomeIcon icon={faCamera} aria-hidden="true" />
             {uploading ? 'Envoi…' : 'Changer la photo'}
             <input type="file" accept={ACCEPTED} className="sr-only" disabled={busy} onChange={handleChange} />
           </label>
-          <button type="button" onClick={handleDelete} disabled={busy} className={`${buttonClasses} text-red-700 hover:bg-red-50`}>
+          <button type="button" onClick={handleDelete} disabled={busy} className={dangerClasses}>
             <FontAwesomeIcon icon={faTrash} aria-hidden="true" />
             {removing ? 'Suppression…' : 'Supprimer la photo'}
           </button>
