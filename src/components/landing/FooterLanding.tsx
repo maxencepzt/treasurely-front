@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 /** Le dernier appel à jouer, puis le pied de page : le nom, le code source, l'année. */
 export default function FooterLanding() {
   return (
-    <footer className="bg-green-800 text-white">
+    <footer className="mt-auto bg-green-800 text-white">
       <div className="px-4 sm:px-6 lg:px-8 py-12 lg:py-16 max-w-7xl mx-auto flex flex-col items-center gap-6 text-center">
         <h2 className="text-3xl lg:text-4xl font-bold">Prêt à jouer ?</h2>
         <p className="text-lg text-green-50 max-w-2xl">
