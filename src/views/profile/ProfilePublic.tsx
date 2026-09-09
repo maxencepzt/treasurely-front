@@ -1,3 +1,7 @@
+import { Link } from 'react-router';
+import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { BackButton } from '../../components';
 import { ProfileIdentity } from '../../components/profile-page/ProfileIdentity.tsx';
 import ProfileStatSection from '../../components/profile-page/ProfileStatSection.tsx';
@@ -20,6 +24,19 @@ export function ProfilePublic({ user, isOwner = false }: { user: User, isOwner?:
           </div>
           <ProfileIdentity user={user} editable={isOwner} />
         </div>
+
+        {/* Le propriétaire d'un profil privé est le seul à le voir : on le lui dit, avec le réglage à portée */}
+        {isOwner && !user.public && (
+          <p role="status" className="mx-6 mb-6 flex items-start gap-3 rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-base text-gray-700">
+            <FontAwesomeIcon icon={faLock} className="mt-1 text-gray-500 shrink-0" aria-hidden="true" />
+            <span>
+              Votre profil est privé : vous seul le voyez.{' '}
+              <Link to={`/settings/profile/${user.id}/account`} className="font-medium text-green-800 underline underline-offset-4">
+                Le rendre public
+              </Link>
+            </span>
+          </p>
+        )}
 
         {/* Description section */}
         {user.description && (
