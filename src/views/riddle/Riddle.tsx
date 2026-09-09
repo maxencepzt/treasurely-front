@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router';
-import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimesCircle, faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { BackButton, Loading } from '../../components';
@@ -9,6 +9,7 @@ import { useUserParticipateHunts } from '../../hooks/useUserParticipateHunts';
 import { useAttemptRiddleMutation, useRiddleGetByIdQuery } from '../../store/slices/api';
 import type { RiddleAttempt } from '../../types/api';
 import { getIdFromUrl, parseApiError } from '../../utils/api';
+import formatDuration from '../../utils/formatDuration';
 import ErrorView from '../error/Error';
 import AnswerForm from './AnswerForm';
 
@@ -108,16 +109,7 @@ function RiddlePage({ riddleId }: { riddleId: number }) {
           {submitMessage && <p className="text-sm text-red-700">{submitMessage}</p>}
 
           {solved && progress?.finished && (
-            <div className="space-y-3 text-center">
-              <p className="text-lg font-bold text-gray-900">Chasse terminée : {progress.score} points</p>
-              <button
-                type="button"
-                onClick={() => navigate(`/treasure-hunt/${getIdFromUrl(progress.hunt)}`)}
-                className="w-full py-3 px-6 rounded-xl bg-green-700 text-white font-semibold hover:bg-green-800 transition-colors"
-              >
-                Retour à la chasse
-              </button>
-            </div>
+            <HuntFinished score={progress.score} time={progress.time} onBack={() => navigate(`/treasure-hunt/${getIdFromUrl(progress.hunt)}`)} />
           )}
 
           {solved && progress && !progress.finished && advanced && (
@@ -145,13 +137,45 @@ function RiddlePage({ riddleId }: { riddleId: number }) {
 
           {!solved && isCurrent && <AnswerForm riddle={riddle} disabled={isSubmitting} onSubmit={submit} />}
 
-          {!solved && !isCurrent && progress && (
-            <p className="text-sm text-gray-600">
-              {progress.finished ? 'Vous avez terminé cette chasse.' : 'Cette énigme est déjà résolue.'}
-            </p>
+          {!solved && !isCurrent && progress && progress.finished && (
+            <HuntFinished score={progress.score} time={progress.time} onBack={() => navigate(`/treasure-hunt/${getIdFromUrl(progress.hunt)}`)} />
+          )}
+
+          {!solved && !isCurrent && progress && !progress.finished && (
+            <div className="rounded-2xl border-2 border-green-100 bg-white p-6 text-center shadow-sm space-y-3">
+              <FontAwesomeIcon icon={faCheckCircle} className="text-3xl text-green-600" aria-hidden="true" />
+              <p className="text-lg font-bold text-gray-900">Énigme déjà résolue</p>
+              <button
+                type="button"
+                onClick={() => navigate(`/riddle/${getIdFromUrl(progress.currentRiddle)}`)}
+                className="w-full py-3 px-6 rounded-xl bg-green-700 text-white font-semibold hover:bg-green-800 transition-colors"
+              >
+                Reprendre à l'énigme en cours
+              </button>
+            </div>
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+/** La fin de la chasse, sur la dernière énigme : le trophée, le score et le temps, et la chasse pour le classement. */
+function HuntFinished({ score, time, onBack }: { score: number; time: number; onBack: () => void }) {
+  return (
+    <div role="status" className="rounded-2xl border-2 border-green-100 bg-green-50 p-6 text-center shadow-sm space-y-3">
+      <FontAwesomeIcon icon={faTrophy} className="text-4xl text-yellow-500" aria-hidden="true" />
+      <p className="text-xl font-bold text-gray-900">Chasse terminée</p>
+      <p className="text-base text-gray-700">
+        <span className="font-semibold text-gray-900">{score} points</span> en {formatDuration(time)}
+      </p>
+      <button
+        type="button"
+        onClick={onBack}
+        className="w-full py-3 px-6 rounded-xl bg-green-700 text-white font-semibold hover:bg-green-800 transition-colors"
+      >
+        Voir la chasse et le classement
+      </button>
     </div>
   );
 }
