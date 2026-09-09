@@ -9,9 +9,13 @@ import { secondaryClasses, submitClasses } from '../settings/fields';
 export default function HeroSection() {
   return (
     <header className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      <nav aria-label="Navigation visiteur" className="flex items-center justify-between min-h-16">
+      {/* Sous 640 px, les deux boutons passent sous la marque plutôt que de se replier sur deux lignes */}
+      <nav aria-label="Navigation visiteur" className="flex flex-wrap items-center justify-between gap-3 py-3 sm:min-h-16 sm:py-0">
         <span className="text-xl font-bold text-green-800">Treasurely</span>
-        <Link to="/login" className={secondaryClasses}>Se connecter</Link>
+        <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+          <Link to="/login" className={`${secondaryClasses} whitespace-nowrap`}>Se connecter</Link>
+          <Link to="/signup" className={`${submitClasses} inline-flex items-center min-h-11 whitespace-nowrap`}>Créer un compte</Link>
+        </div>
       </nav>
 
       <div className="grid gap-12 lg:grid-cols-2 lg:items-center py-10 lg:py-20">
