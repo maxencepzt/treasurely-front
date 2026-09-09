@@ -27,6 +27,11 @@ export type User = {
  * pas partie, il identifie le jeton et le refresh token. Le mot de passe actuel est exigé
  * par le serveur dès qu'un nouveau (`plainPassword`) est envoyé.
  */
+/** Ce que `POST /register` exige ; le téléphone est une chaîne, vide s'il n'est pas donné. */
+export type UserRegistration = Pick<User, 'nickname' | 'firstname' | 'lastname' | 'email' | 'phone' | 'birthDate' | 'gender'> & {
+  plainPassword: string;
+};
+
 export type UserUpdate = Partial<Pick<User, 'firstname' | 'lastname' | 'email' | 'phone' | 'birthDate' | 'gender' | 'public' | 'description'>> & {
   plainPassword?: string;
   currentPassword?: string;

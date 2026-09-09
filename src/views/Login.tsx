@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import { Loading, LoginForm } from '../components';
 import { useUser } from '../contexts/user';
@@ -43,6 +43,9 @@ function Login() {
       {isAuthenticating ? (<Loading/>) : (
         <div className="px-6 py-12 space-y-8 max-w-md mx-auto">
           <LoginForm onSubmit={handleSubmit} error={error}/>
+          <p className="text-base text-gray-700 text-center">
+            Pas encore de compte ? <Link to="/signup" className="font-medium text-green-800 underline underline-offset-4">Créer un compte</Link>
+          </p>
         </div>
       )}
     </>
