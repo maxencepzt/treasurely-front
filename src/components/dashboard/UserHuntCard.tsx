@@ -3,11 +3,12 @@ import { Link } from 'react-router';
 import {faCheckCircle, faCircle, faLocationDot, faMap, faStopwatch} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { useTreasureHuntGetByIdQuery } from '../../store/slices/api';
+import { useLeaveHuntMutation, useTreasureHuntGetByIdQuery } from '../../store/slices/api';
 import type { ParticipateHuntAPI } from '../../types/api';
 import { getIdFromUrl } from '../../utils/api';
 import formatDuration, { formatMinutes } from '../../utils/formatDuration';
 import { Loading } from '..';
+import DangerAction from '../DangerAction';
 import Difficulty from '../Difficulty';
 
 export default function UserHuntCard({ participateHunt }: { participateHunt: ParticipateHuntAPI }) {
@@ -16,6 +17,7 @@ export default function UserHuntCard({ participateHunt }: { participateHunt: Par
   }, [participateHunt.hunt]);
 
   const { data: treasureHunt, isLoading } = useTreasureHuntGetByIdQuery({ id: treasureHuntId });
+  const [leaveHunt, { isLoading: isLeaving }] = useLeaveHuntMutation();
 
   if (isLoading) {
     return <Loading />;
@@ -27,11 +29,13 @@ export default function UserHuntCard({ participateHunt }: { participateHunt: Par
 
   const titleId = `participation-${participateHunt.id}-title`;
 
+  // La carte est un lien ; l'action de départ vit à côté, un bouton dans un lien n'étant pas permis
   return (
+    <div className="h-full flex flex-col bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
     <Link
       to={`/treasure-hunt/${treasureHuntId}`}
       aria-labelledby={titleId}
-      className="block h-full bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow border border-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-700"
+      className="block flex-1 p-4 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-green-700"
     >
       {/* Badge statut */}
       {participateHunt.finished ? (
@@ -84,6 +88,20 @@ export default function UserHuntCard({ participateHunt }: { participateHunt: Par
         </div>
       </div>
     </Link>
+      {!participateHunt.finished && (
+        <div className="px-4 pb-4">
+          <DangerAction
+            label="Quitter la chasse"
+            question="Quitter la chasse ? Votre progression et vos points sur celle-ci seront perdus."
+            confirmLabel="Quitter"
+            busy={isLeaving}
+            onConfirm={async () => {
+              await leaveHunt({ id: participateHunt.id }).unwrap();
+            }}
+          />
+        </div>
+      )}
+    </div>
   );
 }
 
