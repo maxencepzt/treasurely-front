@@ -18,6 +18,7 @@ import type {
   TeamTreasureHuntsAPI,
   TreasureHuntAPI, TreasureHuntCollectionAPI,
   User, UserParticipateHuntsAPI,
+  UserRegistration,
   UserTeamsAPI,
   UserUpdate
 } from "../../types/api";
@@ -108,6 +109,14 @@ const api = createApi({
         url: 'auth',
         method: 'POST',
         body: { nickname, password },
+      }),
+    }),
+    register: build.mutation<User, UserRegistration>({
+      query: (body) => ({
+        url: 'register',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/ld+json' },
+        body,
       }),
     }),
     logout: build.mutation<{ message: string }, { refresh_token: string }>({
@@ -372,6 +381,7 @@ const api = createApi({
 export const {
   useGetAuthentifiedUserQuery,
   useLoginMutation,
+  useRegisterMutation,
   useUserUploadProfilePictureMutation,
   useUserProfilePictureDeleteMutation,
   useRefreshTokenMutation,

@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes } from "react-router";
 
 import { Index, Login } from '../views';
 import ErrorView from '../views/error/Error.tsx';
@@ -8,6 +8,7 @@ import Riddle from '../views/riddle/Riddle.tsx';
 import AccountSettings from "../views/settings/AccountSettings.tsx";
 import PasswordSettings from "../views/settings/PasswordSettings.tsx";
 import Settings from "../views/settings/Settings.tsx";
+import Signup from '../views/Signup.tsx';
 import TeamCreate from '../views/teams/TeamCreate.tsx';
 import TeamMembers from '../views/teams/TeamMembers.tsx';
 import Teams from "../views/teams/Teams.tsx";
@@ -23,8 +24,7 @@ function Router() {
       <Routes>
         <Route path="/" element={<Index/>} />
         <Route path="/login" element={<Login/>} />
-        {/* Pas encore d'inscription en ligne : les anciens liens mènent à la connexion */}
-        <Route path="/signup" element={<Navigate to="/login" replace />} />
+        <Route path="/signup" element={<Signup/>} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />

@@ -25,8 +25,8 @@ export default function HeroSection() {
             contre la montre. Plus vous êtes rapides, plus le score grimpe.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-            <Link to="/login" className={`${submitClasses} inline-flex items-center justify-center gap-2 text-lg px-6`}>
-              Se connecter et jouer
+            <Link to="/signup" className={`${submitClasses} inline-flex items-center justify-center gap-2 text-lg px-6`}>
+              Créer un compte
               <FontAwesomeIcon icon={faArrowRight} aria-hidden="true" />
             </Link>
             <a href="#how-it-works" className={`${secondaryClasses} justify-center`}>Comment ça marche</a>

@@ -9,16 +9,22 @@ export default function FooterLanding() {
       <div className="px-4 sm:px-6 lg:px-8 py-12 lg:py-16 max-w-7xl mx-auto flex flex-col items-center gap-6 text-center">
         <h2 className="text-3xl lg:text-4xl font-bold">Prêt à jouer ?</h2>
         <p className="text-lg text-green-50 max-w-2xl">
-          Connectez-vous, rejoignez une équipe et lancez votre première chasse. Vous organisez ? L'espace concepteur
-          s'ouvre avec le même compte.
+          Créez votre compte, rejoignez une équipe et lancez votre première chasse. Vous organisez ? L'espace
+          concepteur s'ouvre avec le même compte.
         </p>
         <Link
-          to="/login"
+          to="/signup"
           className="inline-flex items-center gap-2 min-h-12 px-6 rounded-lg bg-white text-green-900 text-lg font-medium hover:bg-green-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-green-800"
         >
-          Se connecter
+          Créer un compte
           <FontAwesomeIcon icon={faArrowRight} aria-hidden="true" />
         </Link>
+        <p className="text-base text-green-50">
+          Déjà un compte ?{' '}
+          <Link to="/login" className="font-medium text-white underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded">
+            Se connecter
+          </Link>
+        </p>
       </div>
       <div className="border-t border-green-700">
         <div className="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-green-100">
