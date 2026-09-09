@@ -345,6 +345,13 @@ const api = createApi({
       }),
       invalidatesTags: ['Participations'],
     }),
+    leaveHunt: build.mutation<void, { id: number }>({
+      query: ({ id }) => ({
+        url: `participate_hunts/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Participations'],
+    }),
     replayHunt: build.mutation<ParticipateHuntAPI, { id: number }>({
       query: ({ id }) => ({
         url: `participate_hunts/${id}/replay`,
@@ -414,6 +421,7 @@ export const {
   useUpdateUserMutation,
   useJoinHuntMutation,
   useReplayHuntMutation,
+  useLeaveHuntMutation,
   useAttemptRiddleMutation,
   useTreasureHuntScoreboardQuery,
 } = api;
