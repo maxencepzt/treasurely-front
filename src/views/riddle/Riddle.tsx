@@ -53,6 +53,9 @@ function RiddlePage({ riddleId }: { riddleId: number }) {
   const progress = participateHunts.find((participation) => participation.hunt === riddle.hunt);
   const isCurrent = progress?.currentRiddle === riddle['@id'] && !progress.finished;
   const solved = result?.solved === true;
+  // Après une réussite, la liste rechargée désigne l'énigme suivante ou la fin de la chasse ;
+  // tant qu'elle pointe encore ici, elle est en retard : pas de bouton qui mène à cette page
+  const advanced = !!progress && (progress.finished || progress.currentRiddle !== riddle['@id']);
   const submitMessage = submitError ? parseApiError(submitError).message : null;
 
   const submit = (attempt: RiddleAttempt) => {
@@ -117,7 +120,7 @@ function RiddlePage({ riddleId }: { riddleId: number }) {
             </div>
           )}
 
-          {solved && progress && !progress.finished && (
+          {solved && progress && !progress.finished && advanced && (
             <button
               type="button"
               onClick={() => navigate(`/riddle/${getIdFromUrl(progress.currentRiddle)}`)}
@@ -125,6 +128,19 @@ function RiddlePage({ riddleId }: { riddleId: number }) {
             >
               Énigme suivante
             </button>
+          )}
+
+          {solved && progress && !advanced && (
+            <div className="space-y-3 text-center">
+              <p role="status" className="text-sm text-gray-600">Mise à jour de votre progression…</p>
+              <button
+                type="button"
+                onClick={() => navigate(`/treasure-hunt/${getIdFromUrl(progress.hunt)}`)}
+                className="w-full py-3 px-6 rounded-xl border border-gray-300 bg-white text-gray-900 font-semibold hover:bg-gray-50 transition-colors"
+              >
+                Retour à la chasse
+              </button>
+            </div>
           )}
 
           {!solved && isCurrent && <AnswerForm riddle={riddle} disabled={isSubmitting} onSubmit={submit} />}
