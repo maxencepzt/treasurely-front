@@ -12,17 +12,18 @@ export const submitClasses =
 export const dangerSolidClasses =
   'min-h-11 px-4 py-2 rounded-lg bg-red-700 text-white text-base font-medium cursor-pointer hover:bg-red-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 disabled:bg-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed';
 
+// Pas de fond dans la base : deux utilitaires `bg-*` sur un même élément se départagent par l'ordre de la feuille, pas par celui des classes
 const buttonBase =
-  'inline-flex items-center gap-2 min-h-11 px-4 py-2 rounded-lg border bg-white text-base font-medium cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-within:ring-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  'inline-flex items-center gap-2 min-h-11 px-4 py-2 rounded-lg border text-base font-medium cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-within:ring-2 disabled:opacity-50 disabled:cursor-not-allowed';
 
 /** Les boutons et rangées secondaires : même bordure et mêmes coins que les champs. */
-export const secondaryClasses = `${buttonBase} border-gray-300 text-gray-900 hover:bg-gray-50 focus-visible:ring-green-700 focus-within:ring-green-700`;
+export const secondaryClasses = `${buttonBase} border-gray-300 bg-white text-gray-900 hover:bg-gray-50 focus-visible:ring-green-700 focus-within:ring-green-700`;
 
 /** Le bouton principal posé à côté d'un secondaire : même gabarit, bordure transparente, pour s'aligner au pixel. */
 export const primaryClasses = `${buttonBase} border-transparent bg-green-800 text-white hover:bg-green-900 focus-visible:ring-green-700 focus-within:ring-green-700`;
 
 /** Une action destructrice qui ouvre une confirmation : rouge en contour, pas en aplat. */
-export const dangerClasses = `${buttonBase} border-red-300 text-red-700 hover:bg-red-50 focus-visible:ring-red-500 focus-within:ring-red-500`;
+export const dangerClasses = `${buttonBase} border-red-300 bg-white text-red-700 hover:bg-red-50 focus-visible:ring-red-500 focus-within:ring-red-500`;
 
 /** Les attributs qui signalent un champ invalide et le relient à son erreur (`FieldError`). */
 export function invalidProps(id: string, message?: string) {
