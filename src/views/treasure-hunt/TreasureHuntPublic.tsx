@@ -4,6 +4,7 @@ import { faCog, faLocationDot, faMapLocationDot, faStopwatch } from "@fortawesom
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { BackButton, CoverImage, DescriptionModal, TeamButton } from "../../components";
+import DangerAction from "../../components/DangerAction";
 import Difficulty from "../../components/Difficulty.tsx";
 import { inputClasses, secondaryClasses, submitClasses } from "../../components/settings/fields";
 import FormFeedback from "../../components/settings/FormFeedback";
@@ -12,7 +13,7 @@ import Scoreboard from "../../components/treasure-hunt/Scoreboard.tsx";
 import { useUser } from "../../contexts/user";
 import { useDesignerSso } from "../../hooks/useDesignerSso";
 import { useUserParticipateHunts } from "../../hooks/useUserParticipateHunts";
-import { useJoinHuntMutation, useReplayHuntMutation, useUserTeamsByIdQuery } from "../../store/slices/api.ts";
+import { useJoinHuntMutation, useLeaveHuntMutation, useReplayHuntMutation, useUserTeamsByIdQuery } from "../../store/slices/api.ts";
 import type { TreasureHuntAPI } from "../../types/api.ts";
 import { getIdFromUrl, parseApiError } from "../../utils/api.ts";
 import { formatMinutes } from "../../utils/formatDuration.ts";
@@ -48,6 +49,7 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
   const progress = participateHunts.find((participation) => getIdFromUrl(participation.hunt) === treasureHunt.id);
   const [joinHunt, { isLoading: isJoining, error: joinError }] = useJoinHuntMutation();
   const [replayHunt, { isLoading: isReplaying, error: replayError }] = useReplayHuntMutation();
+  const [leaveHunt, { isLoading: isLeaving, error: leaveError }] = useLeaveHuntMutation();
   const [joined, setJoined] = useState(false);
 
   // Refaire une chasse terminée : le prochain score remplacera celui-ci
@@ -233,6 +235,18 @@ export default function TreasureHuntPublic({treasureHunt}: {treasureHunt: Treasu
                 <p className="text-sm text-gray-600 text-center">Le chronomètre démarre à l'ouverture de l'énigme.</p>
               )}
               {joinError && <p className="text-sm text-red-700 text-center">{parseApiError(joinError).message}</p>}
+              {progress && (
+                <DangerAction
+                  label="Quitter la chasse"
+                  question="Quitter la chasse ? Votre progression et vos points sur celle-ci seront perdus."
+                  confirmLabel="Quitter"
+                  busy={isLeaving}
+                  onConfirm={async () => {
+                    await leaveHunt({ id: progress.id }).unwrap();
+                  }}
+                />
+              )}
+              {leaveError && <p className="text-sm text-red-700 text-center">{parseApiError(leaveError).message}</p>}
             </>
           )}
         </div>
