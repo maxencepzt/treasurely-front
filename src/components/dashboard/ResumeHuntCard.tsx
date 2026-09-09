@@ -3,8 +3,10 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { useResumeHunt } from '../../hooks/useResumeHunt';
+import { useLeaveHuntMutation } from '../../store/slices/api';
 import type { ParticipateHuntAPI } from '../../types/api';
 import { Loading } from '..';
+import DangerAction from '../DangerAction';
 import { submitClasses } from '../settings/fields';
 import StepProgressBar from './StepProgressBar';
 
@@ -26,6 +28,7 @@ export default function ResumeHuntCard({ participateHunt }: ResumeHuntCardProps)
     isLoading,
     shouldDisplay,
   } = useResumeHunt(participateHunt);
+  const [leaveHunt, { isLoading: isLeaving }] = useLeaveHuntMutation();
 
   if (isLoading) {
     return <Loading />;
@@ -53,6 +56,18 @@ export default function ResumeHuntCard({ participateHunt }: ResumeHuntCardProps)
         <FontAwesomeIcon icon={faPlay} aria-hidden="true" />
         {completedSteps === 0 ? 'Commencer' : 'Reprendre'}
       </Link>
+
+      <div className="sm:self-center sm:min-w-64">
+        <DangerAction
+          label="Quitter la chasse"
+          question="Quitter la chasse ? Votre progression et vos points sur celle-ci seront perdus."
+          confirmLabel="Quitter"
+          busy={isLeaving}
+          onConfirm={async () => {
+            await leaveHunt({ id: participateHunt.id }).unwrap();
+          }}
+        />
+      </div>
     </section>
   );
 }
