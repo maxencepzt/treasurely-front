@@ -19,7 +19,8 @@ export default function Profile() {
 
   const isOwner = currentUser?.id === user.id;
 
-  if (!user.public) return <ProfilePrivate user={user} />;
+  // Un profil privé se cache aux autres, jamais à son propriétaire
+  if (!user.public && !isOwner) return <ProfilePrivate user={user} />;
 
   return <ProfilePublic user={user} isOwner={isOwner} />;
 }
