@@ -3,7 +3,7 @@ import { faArrowRight, faCheck, faLocationDot, faMap, faStopwatch, faUsers } fro
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Difficulty from '../Difficulty';
-import { secondaryClasses, submitClasses } from '../settings/fields';
+import { primaryClasses, secondaryClasses } from '../settings/fields';
 
 /** L'accroche du visiteur : la promesse, la connexion, et le jeu tel qu'il se joue. */
 export default function HeroSection() {
@@ -14,7 +14,7 @@ export default function HeroSection() {
         <span className="text-xl font-bold text-green-800">Treasurely</span>
         <div className="flex items-center gap-2 sm:gap-3 ml-auto">
           <Link to="/login" className={`${secondaryClasses} whitespace-nowrap`}>Se connecter</Link>
-          <Link to="/signup" className={`${submitClasses} inline-flex items-center min-h-11 whitespace-nowrap`}>Créer un compte</Link>
+          <Link to="/signup" className={`${primaryClasses} whitespace-nowrap`}>Créer un compte</Link>
         </div>
       </nav>
 
@@ -29,11 +29,11 @@ export default function HeroSection() {
             contre la montre. Plus vous êtes rapides, plus le score grimpe.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-            <Link to="/signup" className={`${submitClasses} inline-flex items-center justify-center gap-2 text-lg px-6`}>
+            <Link to="/signup" className={`${primaryClasses} justify-center text-lg px-6`}>
               Créer un compte
               <FontAwesomeIcon icon={faArrowRight} aria-hidden="true" />
             </Link>
-            <a href="#how-it-works" className={`${secondaryClasses} justify-center`}>Comment ça marche</a>
+            <a href="#how-it-works" className={`${secondaryClasses} justify-center text-lg px-6`}>Comment ça marche</a>
           </div>
         </div>
 

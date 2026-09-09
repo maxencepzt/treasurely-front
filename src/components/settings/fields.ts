@@ -18,6 +18,9 @@ const buttonBase =
 /** Les boutons et rangées secondaires : même bordure et mêmes coins que les champs. */
 export const secondaryClasses = `${buttonBase} border-gray-300 text-gray-900 hover:bg-gray-50 focus-visible:ring-green-700 focus-within:ring-green-700`;
 
+/** Le bouton principal posé à côté d'un secondaire : même gabarit, bordure transparente, pour s'aligner au pixel. */
+export const primaryClasses = `${buttonBase} border-transparent bg-green-800 text-white hover:bg-green-900 focus-visible:ring-green-700 focus-within:ring-green-700`;
+
 /** Une action destructrice qui ouvre une confirmation : rouge en contour, pas en aplat. */
 export const dangerClasses = `${buttonBase} border-red-300 text-red-700 hover:bg-red-50 focus-visible:ring-red-500 focus-within:ring-red-500`;
 
