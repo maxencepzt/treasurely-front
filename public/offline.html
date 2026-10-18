@@ -42,7 +42,7 @@
     </div>
 
     <button
-      onclick="location.reload()"
+      id="retry"
       class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
     >
       Réessayer
@@ -54,6 +54,9 @@
   </div>
 
   <script>
+    // Pas d'attribut onclick : la CSP de vercel.json n'autorise que ce script, par son empreinte
+    document.getElementById('retry').addEventListener('click', () => location.reload());
+
     // Vérifier la connexion toutes les 5 secondes
     setInterval(() => {
       if (navigator.onLine) {

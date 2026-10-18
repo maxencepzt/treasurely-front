@@ -83,9 +83,12 @@ lanceur de tests côté front ; les parcours sont vérifiés dans un navigateur.
 
 Le site est servi par Vercel : préréglage Vite, `npm run build`, dossier `dist`, variable
 `VITE_API_BASE_URL` lue à la construction. `vercel.json` réécrit toutes les routes vers
-`index.html` pour `BrowserRouter`. Chaque mise à jour de `main` est déployée. La caméra du
-lecteur de QR code exige un contexte sécurisé (https ou localhost) ; la saisie manuelle reste
-disponible.
+`index.html` pour `BrowserRouter` et pose les en-têtes de sécurité. Sa CSP n'autorise que deux
+scripts en ligne, celui d'`index.html` et celui de `public/offline.html`, par leur empreinte
+SHA-256 : qui modifie l'un d'eux recalcule son empreinte, sinon le navigateur le bloque. Elle nomme
+aussi l'adresse de l'API, à changer si `VITE_API_BASE_URL` change. Chaque mise à jour de `main` est
+déployée. La caméra du lecteur de QR code exige un contexte sécurisé (https ou localhost) ; la
+saisie manuelle reste disponible.
 
 ## Conventions
 
