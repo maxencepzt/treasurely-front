@@ -86,9 +86,10 @@ const topics = [
     title: 'Combien de temps',
     body: (
       <p>
-        Tant que votre compte existe. Le supprimer, depuis vos paramètres, efface vos informations, vos participations
-        et vos scores ; transférez d'abord les équipes et les chasses dont vous êtes propriétaire. Une connexion reste
-        ouverte 30 jours au plus, et l'hébergeur ne garde ses journaux techniques que brièvement.
+        Sans aucune connexion pendant trois ans, votre compte est supprimé avec vos informations, vos participations et
+        vos scores. Vous pouvez aussi le supprimer vous-même dans vos paramètres, après avoir transféré les équipes et
+        les chasses dont vous êtes propriétaire. Une connexion reste ouverte 30 jours au plus, et l'hébergeur ne garde
+        ses journaux techniques que brièvement.
       </p>
     ),
   },
