@@ -10,7 +10,8 @@ porte les règles du jeu, la façade des concepteurs et le back office.
 ## Ce que l'application fait
 
 - **Accueil visiteur** : la promesse du jeu, le déroulé d'une partie, les quatre formes
-  d'énigme, l'inscription et la connexion.
+  d'énigme, ce que deviennent les données des joueurs (aussi sur `/donnees-personnelles`, lié
+  depuis l'inscription et le pied de page), l'inscription et la connexion.
 - **Tableau de bord** : la chasse en cours et sa progression, les chasses jouées et leurs
   scores, les totaux du joueur.
 - **Chasses** : la liste des chasses ouvertes, filtrable par recherche, catégorie et difficulté ;
