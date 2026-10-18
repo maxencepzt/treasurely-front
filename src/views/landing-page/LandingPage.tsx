@@ -1,15 +1,17 @@
 import FooterLanding from '../../components/landing/FooterLanding.tsx';
 import HeroSection from '../../components/landing/HeroSection.tsx';
 import HowItWorks from '../../components/landing/HowItWorks.tsx';
+import PrivacySection from '../../components/landing/PrivacySection.tsx';
 import RiddleTypes from '../../components/landing/RiddleTypes.tsx';
 
-/** La page du visiteur : la promesse, le déroulé, les énigmes, et la connexion comme seule porte. */
+/** La page du visiteur : la promesse, le déroulé, les énigmes, ses données, et la connexion comme seule porte. */
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-green-50 to-emerald-100">
       <HeroSection />
       <HowItWorks />
       <RiddleTypes />
+      <PrivacySection />
       <FooterLanding />
     </div>
   );

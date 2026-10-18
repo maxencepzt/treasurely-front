@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import { faArrowRight, faCode } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-/** Le dernier appel à jouer, puis le pied de page : le nom, le code source, l'année. */
+/** Le dernier appel à jouer, puis le pied de page : le nom, le code source, les données personnelles, l'année. */
 export default function FooterLanding() {
   return (
     <footer className="mt-auto bg-green-800 text-white">
@@ -36,6 +36,12 @@ export default function FooterLanding() {
             <FontAwesomeIcon icon={faCode} aria-hidden="true" />
             Code source
           </a>
+          <Link
+            to="/donnees-personnelles"
+            className="inline-flex items-center min-h-11 underline underline-offset-4 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded"
+          >
+            Données personnelles
+          </Link>
           <span>© {new Date().getFullYear()} Treasurely</span>
         </div>
       </div>

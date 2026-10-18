@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { Index, Login } from '../views';
 import ErrorView from '../views/error/Error.tsx';
 import ErrorRouteWrapper from '../views/error/ErrorRouteWrapper.tsx';
+import Privacy from '../views/privacy/Privacy.tsx';
 import Profile from '../views/profile/Profile.tsx';
 import Riddle from '../views/riddle/Riddle.tsx';
 import AccountSettings from "../views/settings/AccountSettings.tsx";
@@ -25,6 +26,7 @@ function Router() {
         <Route path="/" element={<Index/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<Signup/>} />
+        <Route path="/donnees-personnelles" element={<Privacy />} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/profile/:id" element={<Profile/>} />
         <Route path="/error" element={<ErrorRouteWrapper />} />

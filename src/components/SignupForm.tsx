@@ -230,6 +230,11 @@ export default function SignupForm({ onSubmit, isSaving, error }: SignupFormProp
         {isSaving ? 'Création du compte…' : 'Créer mon compte'}
       </button>
 
+      <p className="text-sm text-gray-600 text-center">
+        Vos données servent seulement à faire fonctionner votre compte et le jeu.{' '}
+        <Link to="/donnees-personnelles" className="font-medium text-green-800 underline underline-offset-4">Tout savoir sur vos données</Link>
+      </p>
+
       <p className="text-base text-gray-700 text-center">
         Déjà un compte ? <Link to="/login" className="font-medium text-green-800 underline underline-offset-4">Se connecter</Link>
       </p>
